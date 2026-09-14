@@ -6,44 +6,6 @@ website:
     background: "#f5ddce"
     title: "Inicio"          # ← click aquí regresa al inicio
     href: "index.html"      # ← esto lo hace link
-  sidebar:
-    style: "docked"        # o "floating"
-    background: "#fdf4f0"  # color opcional
-    contents:
-      - section: "**Tareas**"
-        contents:
-          - text: "1. Formulación de proyectos"
-            href: tareas/tarea_1.html
-          - text: "2. Exploración de datos"
-            href: tareas/tarea_2.html
-          - text: "3. Aprendizaje supervisado"
-            href: "https://colab.research.google.com/drive/18bkOtTiiOmaf1GlsLLZ8YV8hO0cpa513?usp=sharing"
-      - section: "**Notebooks**"
-        contents:
-          - text: "1. Intro Colab"
-            href: "https://colab.research.google.com/drive/1B2PFNPrnTwV3pKuaPzihVRhTUtJArLeO?usp=sharing"
-          - text: "2. EDA"
-            href: "https://colab.research.google.com/drive/1OohLfx6OsZdpGP9N-dBC5bOIyx0PAHL4?usp=sharing"
-          - text: "3. GEDA"
-            href: "https://colab.research.google.com/drive/1TQxFCZHOK5qO8ibK7BXWlLRyn2aZJLqz?usp=sharing"
-          - text: "4. ML no supervisado"
-            href: "https://colab.research.google.com/drive/1g1CwjXJB1Rd261a8lXqWEv6mszA-ilUc?usp=sharing"
-          - text: "5. ML texto"
-            href: "https://colab.research.google.com/drive/11VMLuHZz7X0o7g_S2aw1qKxMd2-WDHcV?usp=sharing"
-
-      - section: "**Materiales adicionales**"
-        contents:
-          - text: "1. Alcance de proyectos"
-            href: "docs/draft_alcance_de_proyecto.docx" 
-          - text: "2. Marco de madurez de datos"
-            href: "docs/marco_madurez_datos.pdf" 
-          - text: "3. Explicación de gráficos"
-            href: docs/tipos_graficas.html
-          - text: "4. Ejemplos de alcances de proyecto"
-            href: "docs/scoping_ejemplos.qmd"
-          - text: "<a href='data/datos.csv' download='datos.csv'>Ejemplo de descarga datos</a>"
-
-
 
 html:
   theme: minty

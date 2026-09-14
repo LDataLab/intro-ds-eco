@@ -1,5 +1,5 @@
 ---
-title: "Introducción a Ciencia de datos para políticas públicas"
+title: "Introducción a Ciencia de datos para Economía"
 subtitle: "Material 01"
 
 format: clean-revealjs
@@ -141,50 +141,6 @@ cuestión (De Unánue, 2018)
 :::
 ::::
 
-# Ciencia de datos (IA) para política pública {background-color="#fdede8"}
-
-- **DSSG (Data Science for Social Good)**
-- Carnegie Mellon University
-- [https://dssgfellowship.org/](https://dssgfellowship.org/)
-    - Sistemas de priorización de recursos
-    - Sistemas de alerta temprana
-
-## Infraestructura hídrica subterránea 
-
-### Ciudad de Syracuse, NY
-
-:::: {.columns}
-::: {.column style="width:50%; font-size: 0.6em;"}
-
-**Contexto y problema**
-
-- La infraestructura hídrica de la ciudad lleva más de un siglo
-- Las tuberías de agua y drenaje tienen gran deterioro y comienzan a fallar costosa e inesperadamente
-    - Roturas, fugas y otros incidentes al año
-- Afectaciones a vecinos, comercios y tráfico
-- El mantenimiento suele ocurrir después del daño
-
-**Meta de la implementación**
-
-- Reducir las fallas en la infraestructura hídrica de la ciudad
-- Reducir costos de reparación de emergencia
-
-**Acción, intervención o programa**
-
-- El Gobierno del estado envía y concentra esfuerzos preventivos en puntos críticos
-
-:::
-::: {.column width="5%"}
-<!-- empty column to create gap -->
-:::
-::: {.column style="width:45%; font-size: 0.6em;"}
-
-![](https://dssgfellowship.org/wp-content/uploads/2017/01/Watermain4.jpg)
-
-- @dssg_preventive_care_infrastructure_2017
-
-:::
-::::
 
 ## Infraestructura hídrica subterránea 
 

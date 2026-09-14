@@ -17,6 +17,47 @@ La clase se impartirá de manera presencial en Mixcoac.
 
 - Mi correo: (villalobos_elena@tec.mx)[villalobos_elena@tec.mx]
 
+### Políticas de la clase
+
+- Suposición de que quieres aprender:
+    - Asistencia importante.
+    - Si necesitas faltar, avisar con anticipación y hacerte responsable de revisar el material visto.
+    - NO se grabarán las clases.
+    - NO SE CALIFICARÁN TAREAS EXTEMPORÁNEAS
+
+
+### Uso de IA generativa en la clase
+
+- El uso de herramientas de IA generativa como ChatGPT, Claude, Gemini, entre otras, está permitido únicamente como apoyo para resolver dudas, entender errores y consultar conceptos, tratándolas como una forma de colaboración.
+
+- Sin embargo, está ESTRICTAMENTE PROHIBIDOO pedir respuestas directas a ejercicios, copiar soluciones o utilizar agentes para resolver tareas de manera automática.
+
+**Advertencia:**
+
+- El uso de agentes o la entrega de trabajo generado como si fuera propio será considerado una **falta de honestidad académica** y se reportará a las autoridades correspondientes.
+
+## Recomendaciones:
+
+Antes de recurrir a un LLM:
+
+- revisa la documentación oficial
+- consulta los recursos compartidos en clase
+- lee con atención la sintaxis, los errores y los resultados que arroje su programa
+- escríbeme a mi correo
+
+
+
+## Evaluación
+
+
+| Concepto                      | Porcentaje |
+|-------------------------------|------------|
+| Tareas                        | 60         |
+| Evaluación intermedia         | 20         |
+| Evaluación final              | 20         |
+| Participación y lecturas      | 10         |
+
+## Temario
 
 
 
@@ -190,3 +231,13 @@ Estas sesiones acompañan transversalmente los contenidos del curso.
 * README
 * Repositorio final reproducible
 
+##### Referencias
+
+- Data Science for Social Good. 2026. “ML for Public Policy Lab (Repositorio GitHub)”. Data Science for Social Good. 2026. https://github.com/dssg/mlforpublicpolicylab.
+- Data Science for Social Good Fellowship. 2026. “Data Science for Social Good Fellowship”. Carnegie Mellon University; Data Science for Social Good Foundation. 2026. https://dssgfellowship.org/.
+- Data Science for Social Good Foundation. 2026. “Solve for Good”. Data Science for Social Good Foundation. 2026. https://solveforgood.org/.
+- Ian Foster, Rayid Ghani, Ron S. Jarmin, Frauke Kreuter, y Julia Lane, eds. 2021. Big Data and Social Science: Data Science Methods and Tools for Research and Practice. Second edition. Chapman y Hall/CRC Statistics en the Social y Behavioural Sciences. Boca Raton, FL: CRC Press.
+- III, Hal Daumé. 2017. A Course in Machine Learning. 0.9 ed. http://ciml.info/.
+- James, Gareth, Daniela Witten, Trevor Hastie, Robert Tibshirani, y Jonathan Taylor. 2023. An Introduction to Statistical Learning: with Applications in Python. 2a ed. Springer Texts en Statistics. New York, NY: Springer. https://doi.org/10.1007/978-3-031-38747-0.
+- Rodolfa, Kit T., Adolfo De Unánue, Matt Gee, y Rayid Ghani. 2019. “An Experience-Centered Approach to Training Effective Data Scientists”. Big Data 7 (4): 249–61. https://doi.org/10.1089/big.2019.0100.
+- Siegel, Eric. 2016. Predictive Analytics: The Power to Predict Who Will Click, Buy, Lie, or Die. Revised and Updated Edition. Hoboken, NJ: Wiley.

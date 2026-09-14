@@ -85,7 +85,7 @@ La clase se impartirá de manera presencial en Mixcoac.
 * Herramientas y técnicas de visualización
 * Visualización de datos geográficos
 
-### 4. Aprendizaje de máquina supervisado y predicción
+### 4. Aprendizaje de máquina supervisado
 
 #### Planteamiento del problema
 
@@ -133,15 +133,7 @@ La clase se impartirá de manera presencial en Mixcoac.
 * Similitud y agrupamiento
 * Introducción a embeddings y modelos de lenguaje
 
-### 6. Evaluación de resultados en proyectos de ciencia de datos
-
-* Asociación, predicción y causalidad
-* Introducción a diseños causales
-* Experimentos y experimentos naturales
-* Heterogeneidad de efectos
-* Predicción de resultados vs. predicción de efectos
-
-### 7. Ética y uso de modelos para la toma de decisiones
+### 6. Evaluación, ética y uso de modelos para la toma de decisiones
 
 * Evaluación de resultados de proyectos de ciencia de datos
 * Ética

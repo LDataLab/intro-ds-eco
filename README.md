@@ -1,5 +1,25 @@
 # Introducción a Ciencia de Datos para Economía
 
+## Escuela de Gobierno y Transformación Pública
+
+La clase se impartirá de manera presencial en Mixcoac.
+
+- Horario: lunes de 18:30 a 21:00 h.
+- Salón: 2.3.
+- Las clases combinarán sesiones de teoría y práctica.
+- El contenido del curso estará disponible en este repositorio.
+    - Para tener acceso, deberán crear una cuenta en GitHub.
+    - Pueden elegir el nombre de usuario que prefieran; no es necesario utilizar su matrícula.
+
+- Las entregas de tareas y los anuncios se realizarán a través de Canvas, mientras que gran parte del trabajo práctico del curso se desarrollará en este repositorio. 
+
+- Para las sesiones prácticas, es muy recomendable contar con una computadora. Una tablet no será suficiente para varias de las actividades que realizaremos.
+
+- Mi correo: (villalobos_elena@tec.mx)[villalobos_elena@tec.mx]
+
+
+
+
 ### 01: Introducción a la Ciencia de Datos para Economía
 
 * ¿Qué es ciencia de datos?

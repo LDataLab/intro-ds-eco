@@ -1,0 +1,22 @@
+{
+  "best_average_value_precision@_100_abs": [
+    20,
+    68,
+    181
+  ],
+  "best_current_value_precision@_100_abs": [
+    63,
+    61,
+    181
+  ],
+  "lowest_metric_variance_precision@_100_abs": [
+    68,
+    19,
+    155
+  ],
+  "most_frequent_best_dist_precision@_100_abs_0.05": [
+    20,
+    21,
+    149
+  ]
+}

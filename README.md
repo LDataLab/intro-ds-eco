@@ -19,7 +19,7 @@ La clase se impartirá de manera presencial en Mixcoac.
 
 - Para las sesiones prácticas, es muy recomendable contar con una computadora. Una tablet no será suficiente para varias de las actividades que realizaremos.
 
-- Mi correo: (villalobos_elena@tec.mx)[villalobos_elena@tec.mx]
+- Mi correo: villalobos_elena@tec.mx
 
 ## Políticas de la clase
 

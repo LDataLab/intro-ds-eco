@@ -2,6 +2,7 @@
 
 ### Escuela de Gobierno y Transformación Pública
 
+- Para ver las diapositivas: https://ldatalab.github.io/intro-ds-eco/ 
 
 ## Generalidades de la clase
 

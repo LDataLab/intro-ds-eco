@@ -4,8 +4,8 @@ project:
 website:
   navbar:
     background: "#f5ddce"
-    title: "Inicio"          # ← click aquí regresa al inicio
     href: "index.html"      # ← esto lo hace link
+
 
 html:
   theme: minty

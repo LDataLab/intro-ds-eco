@@ -141,6 +141,72 @@ cuestión (De Unánue, 2018)
 :::
 ::::
 
+---
+
+
+| **Tipos de análisis en CD** | **Pregunta clave** | **Definición** | **Ejemplo** |
+|---|---|---|---|
+| **Descripción** | ¿Qué ha pasado? | Resume y caracteriza lo ocurrido. | ¿Cuántos estudiantes desertaron el semestre pasado? |
+| **Detección** | ¿Qué es inusual? | Identifica patrones o anomalías. | ¿Qué estudiantes presentan una caída atípica en asistencia o desempeño? |
+| **Predicción** | ¿Qué pasará? | Estima resultados futuros. | ¿Qué estudiantes tienen mayor riesgo de no graduarse? |
+| **Optimización** | ¿Qué conviene hacer? | Asigna recursos o selecciona acciones. | ¿A qué estudiantes asignar los pocos tutores disponibles? |
+| **Inferencia causal** | ¿Qué funciona? | Estima el efecto de una intervención. | ¿La tutoría realmente redujo la deserción? |
+
+::: {.notes}
+Vale la pena detenerse en la diferencia entre predicción e inferencia causal,
+que suele confundirse. Predecir quién desertará no te dice si tu intervención
+funcionó — para eso necesitas diseño causal. En proyectos de política pública
+esta distinción tiene consecuencias reales.
+:::
+
+
+---
+
+## En Ciencia de datos
+
+- En lugar de inferir mecanismos o indicadores sobre una población...
+- CD es la manera de guiar a **nivel individual** 
+  las decisiones, basados en datos/evidencia
+    - Se enfoca en resolver problemas específicos
+    - Se busca identificar entidades importantes que, al intervenir 
+      sobre ellas, se puede resolver el problema
+
+> Un modelo que predice bien no necesariamente identifica una relación económica. Un modelo útil para inferencia causal no necesariamente es el mejor modelo predictivo
+
+
+
+
+---
+
+## Diferente DS de *forecasting*
+
+>Whereas forecasting estimates the total number of ice cream cones to
+> be purchased next month in Nebraska, \[Data science\] tells you which
+> [individual]{.underline} Nebraskans are most likely to be seen with a
+> cone in hand [@siegel2016predictive]
+
+
+- **Forecasting**: Estimación de métricas agregadas, como el número total de celulares que se venderán en la CDMX el próximo mes. Su enfoque es en valores globales o promedios para poblaciones completas.
+- **Ciencia de Datos**: Identificar patrones a nivel individual. En este caso, utiliza datos para predecir qué personas específicas de la CDMX tienen mayor probabilidad de comprar un celular.
+
+
+
+---
+
+
+## *Pipeline* en un proyecto de Ciencia de datos
+
+![](img/pipeline_espa_sencilllo.png)
+
+<small>Fuente original: <a href="https://medium.com/data-science/not-yet-another-article-on-machine-learning-e67f8812ba86">Not Yet Another Article on Machine Learning</a>. Adaptado y traducido con IA.</small>
+
+
+## Equipos multidisciplinarios 
+
+
+![](img/ven_diagram.png)
+
+# Ejemplos de proyectos {background-color="#fdede8"}
 
 ## Infraestructura hídrica subterránea 
 
@@ -173,81 +239,6 @@ cuestión (De Unánue, 2018)
 :::
 ::::
 
-## Ciencia de datos para políticas públicas
-### ¿Cómo es diferente?
-
-- En lugar de inferir mecanismos sobre una población para la 
-  implementación de políticas públicas...
-- Ciencia de datos es la manera de guiar a **nivel individual** 
-  las decisiones, basados en datos/evidencia
-    - Se enfoca en resolver problemas específicos
-    - Se busca identificar entidades importantes que, al intervenir 
-      sobre ellas, se puede resolver el problema
-
-## Ciencia de datos para políticas públicas
-
-
-| | Ciencias Sociales | Ciencia de Datos |
-|---|---|---|
-| **Pregunta** | ¿Por qué ocurre y quién asume el costo? | ¿Dónde, cuándo o sobre quién ocurrirá? |
-| **Unidad de análisis** | Instituciones, incentivos, entidades agregadas | Entidades individuales (tubería, persona, edificio) |
-| **Objetivo** | Explicar, diagnosticar, reformar | Predecir e intervenir |
-| **Uso del dato** | Evidencia para un argumento sobre causas o eficiencia | Insumo para un modelo predictivo |
-| **Resultado esperado** | Cambio institucional, de incentivos o de política pública | Acción operativa focalizada |
-
-> Las ciencias sociales preguntan *por qué el sistema falla*
->    y *quién paga las consecuencias*.
-> La ciencia de datos pregunta *dónde o sobre quién actuar primero*.
-
-::: {.notes}
-Predicciones precisas no son generalmente posibles
-
-Incluso las predicciones con cierta incertidumbre pueden aportar un valor significativo
-al influir en decisiones estratégicas
-
-En lugar de predecir a todos, te enfocas en identificar cierto grupo de personas que (en general) tienden a comportarse de la misma manera
-
-Si el proceso de aprendizaje identifica un grupo cuidadosamente definido de clientes que,
-
-- por ejemplo, tienen una probabilidad tres veces mayor que el promedio de responder positivamente al correo, 
-
-- la empresa obtiene grandes beneficios al eliminar de manera preventiva a los posibles no respondedores de la lista de envíos.
-
-- A su vez, estos no respondedores también se benefician al recibir menos correo no deseado.
-
-:::
-
----
-
-### Diferente de *forecasting*
-
->Whereas forecasting estimates the total number of ice cream cones to
-> be purchased next month in Nebraska, \[Data science\] tells you which
-> [individual]{.underline} Nebraskans are most likely to be seen with a
-> cone in hand [@siegel2016predictive]
-
-
-- **Forecasting**: Estimación de métricas agregadas, como el número total de celulares que se venderán en la CDMX el próximo mes. Su enfoque es en valores globales o promedios para poblaciones completas.
-- **Ciencia de Datos**: Identificar patrones a nivel individual. En este caso, utiliza datos para predecir qué personas específicas de la CDMX tienen mayor probabilidad de comprar un celular.
-
-
-
----
-
-
-## *Pipeline* en un proyecto de Ciencia de datos
-
-![](img/pipeline_espa_sencilllo.png)
-
-<small>Fuente original: <a href="https://medium.com/data-science/not-yet-another-article-on-machine-learning-e67f8812ba86">Not Yet Another Article on Machine Learning</a>. Adaptado y traducido con IA.</small>
-
-
-## Equipos multidisciplinarios 
-
-
-![](img/ven_diagram.png)
-
-# Ejemplos de proyectos {background-color="#fdede8"}
 
 ## Daño estructural en techos
 

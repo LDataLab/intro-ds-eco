@@ -36,7 +36,7 @@ La clase se impartirá de manera presencial en Mixcoac.
 
 - Sin embargo, está ESTRICTAMENTE PROHIBIDOO pedir respuestas directas a ejercicios, copiar soluciones o utilizar agentes para resolver tareas de manera automática.
 
-- **Advertencia:** El uso de agentes o la entrega de trabajo generado como si fuera propio será considerado una **falta de honestidad académica** y se reportará a las autoridades correspondientes.
+- **Advertencia:** El uso de agentes o la entrega de trabajo generado con IA como si fuera propio será considerado una **falta de honestidad académica** y se reportará a las autoridades correspondientes.
 
 - Recomendaciones antes de recurrir a un LLM:
 

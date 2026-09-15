@@ -16,14 +16,13 @@ bibliography: slides/references.bib
 ## Slides
 
 ::: {.callout-tip collapse="false"}
-### 01: Introducción 
-
-- Introducción a Ciencia de datos, IA y su relevancia en economía 
+### 01: Introducción a ciencia de datos
+- Introducción a Ciencia de datos, IA y su relevancia en economía y políticas públicas 
     - [Slides 01](slides/c01_intro.html) 
 
 :::
 
-::: {.callout-important collapse="true"}
+::: {.callout-caution collapse="true"}
 ### 02: Datos, adquisición, almacenamiento
 
 - Formulación de proyectos en Ciencia de datos
@@ -34,7 +33,7 @@ bibliography: slides/references.bib
 
 :::
 
-::: {.callout-important collapse="true"}
+::: {.callout-caution collapse="true"}
 
 ### 03: EDA y GEDA
 
@@ -45,7 +44,7 @@ bibliography: slides/references.bib
 
 :::
 
-::: {.callout-important collapse="true"}
+::: {.callout-caution collapse="true"}
 
 ### 04: Aprendizaje de máquina supervisado
 
@@ -63,7 +62,7 @@ bibliography: slides/references.bib
 :::
 
 
-::: {.callout-important collapse="true"}
+::: {.callout-caution collapse="true"}
 
 ### 05: Aprendizaje de máquina no supervisado y NLP
 
@@ -76,7 +75,7 @@ bibliography: slides/references.bib
 :::
 
 
-::: {.callout-important collapse="true"}
+::: {.callout-caution collapse="true"}
 
 ### 06: Evaluación de resultados en proyectos de ciencia de datos para política pública.
 
@@ -89,16 +88,3 @@ bibliography: slides/references.bib
 
 
 
----
-
-
-##### Nota:
-
-<small>
-
-Este curso está basado principalmente en:
-
-- @solveforgood_platform, @dssg_fellowship, @dssg_ml_public_policy_lab, @rodolfaExperienceCenteredApproachTraining2019, @siegel2016predictive, @ianfosterBigDataSocial2021, @daume2017course, @james2023islp
-
-
-</small>

@@ -55,7 +55,7 @@ La clase se impartirá de manera presencial en Mixcoac.
 | Tareas                        | 60         |
 | Evaluación intermedia         | 20         |
 | Evaluación final              | 20         |
-| Participación y lecturas      | 10         |
+| Participación y lecturas      | 5 (extra)  |
 
 ## Temario
 

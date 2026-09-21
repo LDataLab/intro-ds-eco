@@ -1,15 +1,15 @@
 # Tarea 1
 
+En esta tarea aplicarás el framework de formulación de proyectos que revisamos en clase (Materiales 01 y 02) a un problema real.
+Para eso, explorarás la plataforma **Solve for Good**, que publica proyectos reales de organizaciones sin fines de lucro e instituciones que
+buscan usar ciencia de datos para resolver problemas de impacto social.
 
-En esta tarea aplicarás el framework de formulación de proyectos que revisamos en clase (Materiales 01 y 02) a un problema real. Para eso, explorarás la plataforma **Solve for Good**, que publica proyectos reales de organizaciones sin fines de lucro e instituciones que buscan usar ciencia de datos para resolver problemas de impacto social.
-
-> Se evaluará tu capacidad para pensar en el problema con claridad, identificar metas accionables y razonar sobre qué datos y análisis serían relevantes.
+> Se evaluará su capacidad para pensar en el problema con claridad, identificar metas accionables y razonar sobre qué datos y análisis serían relevantes.
 
 
-## Instrucciones
+## Instrucciones (en parejas)
 
 ### Paso 1. Elige un proyecto
-
 
 Navega por los listados de proyectos reales de organizaciones que usan ciencia
 de datos para resolver problemas de impacto social:
@@ -33,9 +33,8 @@ Una vez que elijas, anota:
 Estos recursos te ayudarán a entender mejor el framework antes de completar
 los pasos 2 y 3:
 
-- [Guía de scoping de proyectos de ciencia de datos](https://datasciencepublicpolicy.org/our-work/tools-guides/data-science-project-scoping-guide/) — DSSG. Incluye plantillas y ejemplos adicionales.
-- [Data Science Education](https://www.rayidghani.com/wp-content/uploads/2020/06/datascienceeducation.pdf) — Rayid Ghani. El marco conceptual en el que está basado este curso.
-
+- [Guía de scoping de proyectos de ciencia de datos](https://datasciencepublicpolicy.org/our-work/tools-guides/data-science-project-scoping-guide/), DSSG. Incluye plantillas y ejemplos adicionales.
+- [Data Science Education](https://www.rayidghani.com/wp-content/uploads/2020/06/datascienceeducation.pdf), Rayid Ghani. El marco conceptual en el que está basado este curso.
 
 
 ### Paso 2. Formula el proyecto usando el framework de *scoping*
@@ -79,7 +78,7 @@ Usando el modelo de los pasos que revisamos en el Material 02, responde las sigu
 
 ### Paso 3. Reflexión final
 
-Responde brevemente (máximo media página en total):
+Responde brevemente (máximo 1/3 página en total):
 
 - ¿Qué fue lo más difícil de definir? ¿Por qué?
 - ¿Crees que el proyecto es accionable tal como está planteado en la plataforma? ¿Qué cambiarías o qué información adicional necesitarías?
@@ -89,6 +88,7 @@ Responde brevemente (máximo media página en total):
 
 - No elijas el proyecto más técnico: elige el que más te permita razonar sobre el problema y las personas afectadas.
 - Si la descripción del proyecto en la plataforma es vaga, **puedes hacer suposiciones razonables**. Explícalas.
+- Existen proyecto mal planteados, replantéalos considerando el material visto en clase. 
 - Recuerda la distinción del Material 01: ciencia de datos no pregunta *por qué falla el sistema*, sino *dónde actuar primero*.
 
 

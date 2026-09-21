@@ -208,38 +208,6 @@ esta distinción tiene consecuencias reales.
 
 # Ejemplos de proyectos {background-color="#fdede8"}
 
-## Infraestructura hídrica subterránea 
-
-### Ciudad de Syracuse, NY
-
-:::: {.columns}
-::: {.column style="width:50%; font-size: 0.6em;"}
-
-**Datos disponibles**
-
-- Antigüedad de tuberías, diagramas históricos hechos a mano
-- Material de las tuberías, contenido del suelo
-- Historial de roturas y reparaciones
-
-**Análisis predictivo que informará mis acciones**
-
-- Identificar qué tuberías específicas tenían mayor riesgo de romperse próximamente
-
-:::
-::: {.column width="5%"}
-<!-- empty column to create gap -->
-:::
-::: {.column style="width:45%; font-size: 0.6em;"}
-
-![](https://dssgfellowship.org/wp-content/uploads/2017/01/image177.png)
-
-
-- @dssg_preventive_care_infrastructure_2017
-
-:::
-::::
-
-
 ## Daño estructural en techos
 
 ### Ciudad de Baltimore
@@ -277,42 +245,6 @@ esta distinción tiene consecuencias reales.
 :::
 ::::
 
-
-## Priorización de carpetas de investigación
-
-### Fiscalía de Zacatecas
-
-:::: {.columns}
-::: {.column style="width:50%; font-size: 0.6em;"}
-- **Problema**
-    - Sobrecarga de trabajo y poca capacidad institucional en fiscalía
-
-- **Meta**
-    - Aumentar la tasa de carpetas procesadas (reducir tiempo de resolución)
-
-- **Acción**
-    - Revisión de carpetas de investigación priorizadas
-
-- **Datos**
-    - Administrativos e información de carpetas de investigación
-
-- **Análisis**
-    - Generar un ranking de carpetas que tienen mayor probabilidad de finalizar en un plazo de 6 meses
-
-
-
-:::
-::: {.column width="5%"}
-<!-- empty column to create gap -->
-:::
-::: {.column style="width:45%; font-size: 0.6em;"}
-
-![](https://enfoquenoticias.com.mx/wp-content/uploads/2022/11/carpetas.jpg)
-
-- Preprint: [https://arxiv.org/abs/2601.00396](https://arxiv.org/abs/2601.00396)
-
-:::
-::::
 
 ## Distribución eficiente de contenedores
 

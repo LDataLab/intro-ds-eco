@@ -26,40 +26,19 @@ bibliography: references.bib
 # *Project scoping* o alcance de proyecto{background-color="#fdede8"}
 
 
-## ¿Por qué la formulación de proyectos es crítica?
+## ¿Por qué la formulación de un alcance de proyecto es crítica?
 ### Importancia del alcance o *scoping*
 
--   Un proyecto bien definido aumenta la probabilidad de que tu trabajo sea utilizado y tenga un impacto
+-   Un proyecto bien definido aumenta la probabilidad de que tu trabajo sea utilizado por las organizaciones y tenga un impacto
 
 
 -   Permite que todos discutan, lleguen a acuerdos y luego se enfoquen en metas tangibles e identifiquen formas accionables para alcanzarlas.
 
--   Comenzamos con el problema (no con los datos) y llegamos al alcance que nos permite conectar los datos para informar las acciones para alcanzar nuestras metas. 
+-   Comenzamos con el problema (no con los datos) 
 
 > Desafortunadamente los proyectos no vienen como problemas
     definidos
 
-
----
-
-### Proceso de scoping orientado a la acción y a las metas
-
-
-![](img/proceso_scoping_scopeaton.png)
-
-
-
-::: {.notes}
-
-Las conversaciones comienzan con los problemas de la organización
-
-*Los fondos disponibles para el programa de asistencia de renta están por reducirse significativamente. ¿Cómo dirigimos los fondos limitados a quienes más los necesitan?*
-
-*El desalojo es una vía conocida hacia el sinhogarismo. ¿Podemos usar los fondos de asistencia de renta como herramienta de prevención?*
-
-*El programa actual de asistencia de renta requiere que los inquilinos en riesgo de desalojo inicien el contacto para recibir ayuda. ¿Podemos comunicarnos proactivamente con las personas vulnerables y ofrecerles ayuda sin esperar a que nos contacten?*
-
-:::
 
 ## Definir el alcance es un proceso iterativo y continuo
 
@@ -92,6 +71,27 @@ Las conversaciones comienzan con los problemas de la organización
 
 :::
 ::::
+
+---
+
+### Proceso de scoping orientado a la acción y a las metas
+
+
+![](img/proceso_scoping_scopeaton.png)
+
+
+
+::: {.notes}
+
+Las conversaciones comienzan con los problemas de la organización
+
+*Los fondos disponibles para el programa de asistencia de renta están por reducirse significativamente. ¿Cómo dirigimos los fondos limitados a quienes más los necesitan?*
+
+*El desalojo es una vía conocida hacia el sinhogarismo. ¿Podemos usar los fondos de asistencia de renta como herramienta de prevención?*
+
+*El programa actual de asistencia de renta requiere que los inquilinos en riesgo de desalojo inicien el contacto para recibir ayuda. ¿Podemos comunicarnos proactivamente con las personas vulnerables y ofrecerles ayuda sin esperar a que nos contacten?*
+
+:::
 
 
 
@@ -141,7 +141,7 @@ Ejemplo de alcance de proyecto
 
 ---
 
-### Criterios iniciales de evaluación para un proyecto de DS en PP
+### Criterios para un proyecto de ciencia de datos con impacto social
 
 ![](img/criterios.png)
 
@@ -150,11 +150,11 @@ Ejemplo de alcance de proyecto
 
 ## Entendiendo el problema
 
+- ¿Cuál es la magnitud del problema? ¿A quién/es o qué afecta? ¿Cuánto les afecta?
 - ¿A qué problema se enfrenta la organización y por qué es una prioridad?
-- ¿Cuál es la magnitud del problema: a quién o qué afecta? ¿Cuánto les afecta?
-- ¿Cómo ha abordado la organización el problema en el pasado y en el presente?
+    - ¿Cómo ha abordado la organización el problema en el pasado y en el presente?
 - ¿Quiénes son los actores involucrados dentro y fuera de la organización y cómo deben participar? (*entrevistas*)
-  - Tomadores de decisiones / Responsables del problema o programa
+  - Tomadores de decisiones / responsables del problema o programa
   - Equipo de datos
   - Usuarios
   - Miembros de la comunidad afectada
@@ -299,28 +299,33 @@ y casi siempre reproduce el status quo.
 ---
 
 
-## 2. Determinar **metas**
+## 1. Determinar **metas**
 
 ![](img/metas_metrica.png)
 
 
-## Ejercicio: ¿Cuáles de estas son metas razonables para un proyecto de DS?
+## Ejercicio: 
+
+### ¿Cuáles de estas son metas razonables para un proyecto de DS?
 
 - Mejorar la calidad educativa en las escuelas públicas de la Ciudad de México
-- Enseñar a los estudiantes cómo hacer proyectos de ciencia de datos
 - Minimizar el tiempo de espera de los pacientes en urgencias
-- Reducir el tiempo promedio de traslado al trabajo
+- Crear una plataforma de monitoreo de calidad del aire
+- Disminuir el número de personas que terminan en situación de calle
+- Construir un sistema de alerta temprana
 - Implementar un modelo de machine learning para seleccionar casas en riesgo de caerse
 
 ---
 
 ## Ejemplos de buenas metas
 
+### ¿Cuáles de estas son metas razonables para un proyecto de DS?
+
 - ~~Mejorar la calidad educativa en las escuelas públicas de la Ciudad de México~~ *(muy abstracta)*
-- ~~Enseñar a los estudiantes cómo hacer scoping~~ *(es una actividad, no una meta de impacto)*
-    - Maximizar la probabilidad de que puedas hacer scoping de un proyecto correctamente en el futuro después del curso
 - Minimizar el tiempo de espera de los pacientes en urgencias ✓
-- Reducir el tiempo promedio de traslado al trabajo ✓
+- ~~Crear una plataforma de monitoreo de calidad del aire~~ *(es medio, no meta)*
+- Disminuir el número de personas que terminan en situación de calle ✓
+- ~~Construir un sistema de alerta temprana~~ *(es medio, no meta)*
 - ~~Implementar un modelo de machine learning para seleccionar casas en riesgo de caerse~~ *(es el análisis, no la meta)*
 
 ---
@@ -338,7 +343,7 @@ y casi siempre reproduce el status quo.
 
 # Acciones {background-color="#fdede8"}
 
-> El trabajo que hacemos solo puede tener un impacto si es accionable.
+> En DS el trabajo que hacemos solo puede tener un impacto si es accionable.
 
 ## 2: Identificar **acciones** 
 
@@ -372,8 +377,8 @@ la "acción" tendría que diseñarse desde cero, lo cual es mucho más difícil.
 - Departamento de salud **inspeccionando viviendas** en busca de riesgos de plomo
 - Gobierno municipal realizando **mantenimiento preventivo de tuberías**
 - Sistema escolar **inscribiendo estudiantes** en programas extracurriculares
-- Centro de salud mental realizando **acercamientos en salud mental**
-- Una organización sin fines de lucro **enviando correos dirigidos** a posibles donantes
+- **Revisión médica prioritaria** durante el embarazo
+- **Asistencia de renta** a hogares 
 
 ---
 
@@ -383,16 +388,16 @@ la "acción" tendría que diseñarse desde cero, lo cual es mucho más difícil.
     - **para prevenir el envenenamiento por plomo**
 
 - Mantenimiento preventivo de tuberías 
-    - **para prevenir roturas**
+    - **para prevenir fugas de agua**
 
 - Inscribir estudiantes en programas extracurriculares 
     - **para apoyar su graduación a tiempo**
 
-- Acercamientos en salud mental 
-    - **para prevenir crisis**
+- Revisión médica prioritaria 
+    - **para prevenir complicaciones durante el embarazo**
 
-- Correos dirigidos a posibles donantes 
-    - **para recaudar fondos**
+- Asistencia de renta
+    - **para reducir personas en situación de calle**
 
 ---
 
@@ -461,25 +466,14 @@ Datos administrativos a nivel individual del almacén de datos del condado: demo
 
 ## ¿Qué datos necesitas?
 
-**Datos para informar las metas:**
+**Datos para informar las metas y acciones:**
 
 - Suficientes datos históricos y confiables
 - Capturan el resultado que nos importa, no un proxy conveniente
 - Permiten identificar la cohorte: ¿sobre quiénes mediremos el éxito?
-
-
-**Datos para informar las acciones:**
-
-- Actualizados al menos con la misma frecuencia que la acción
 - Tienen la misma granularidad que la acción: si la acción es sobre un
   estudiante específico, necesitamos datos a nivel de individuo, no de grupo
 
-::: {.callout-important}
-Si los datos para medir la meta y los datos para informar la acción
-no están sincronizados en tiempo y granularidad, el modelo puede ser
-técnicamente correcto pero llegar demasiado tarde o al nivel equivocado
-para que alguien actúe.
-:::
 
 ::: {.notes}
 Este es uno de los errores más comunes en proyectos reales: construir un
@@ -494,78 +488,12 @@ existen con un año de retraso? ¿Sigue siendo útil el proyecto?
 :::
 
 
----
-
-## Identificando vacíos y preparación de los datos
-
-¿Tenemos suficiente para avanzar o necesitamos enfocarnos en obtener datos adicionales?
-
-- ¿Tenemos suficientes datos históricos?
-- ¿Son confiables hacia atrás?
-- ¿Están al nivel de granularidad correcto para informar las acciones?
-- ¿Se pueden vincular distintos datos entre sí? (identificadores únicos para personas, lugares, etc.)
-- ¿Tenemos los datos correctos para medir los resultados según las metas?
-
-
-
-:::{.notes}
-
-Ejemplo: Prevención de roturas de tuberías en Syracuse
-
-La información clave sobre edad, diámetro y material de las tuberías solo estaba disponible en cuadernos escritos a mano de hace 100 años.
-
-Digitalizar estratégicamente esos registros nos permitió predecir con mayor precisión si una tubería se rompería.
-
-
-Regresando al ejemplo de asistencia de renta
-
-**¿Qué datos necesitamos para tomar la acción?**
-- Datos de desalojos actualizados al menos semanalmente
-- Suficientes características a nivel individual para predecir el resultado
-- Vínculos entre características, datos de desalojo y datos de sinhogarismo
-- Información de contacto para hacer alcance a las personas identificadas
-
-**¿Qué datos necesitamos para evaluar las metas?**
-- Suficientes datos históricos para tener confianza en las predicciones
-- Datos para identificar resultados: ¿quién queda sin hogar?
-- Datos para identificar la cohorte: ¿quién tiene una solicitud de desalojo?
-
-:::
-
 ## Checklist para datos
 
 - [ ] ¿Has explorado fuentes de datos que consideras suficientes para abordar el problema?
 - [ ] ¿Conoces el nivel de detalle, el historial y el formato de los datos?
 - [ ] ¿Has explorado los problemas éticos de cada fuente de datos?
 - [ ] ¿Has identificado vacíos en los datos?
-
----
-
-## 3: Fuentes de **datos**
-
-::: {.callout-tip}
-### Ejemplo 
-
-¿Es suficiente para mejorar lo que hacen hoy? ¿Qué información ayudaría?
-
-| id  | edad_ing | promedio_ing | créditos_1er | ... |  tipo_uni | fecha_ing | 
-|-----|----------|--------------|--------------| --- |-----------|-----------|
-| 1   | 18       | 8.5          | 40           | ... |  Pública  | 2018-08-15| 
-| 2   | 19       | 7.8          | 30           | ... |  Privada  | 2017-08-20| 
-| 3   | 20       | 9.2          | 45           | ... |  Pública  | 2016-08-10| 
-| 4   | 21       | 6.9          | 25           | ... |  Privada  | 2018-01-12| 
-| 5   | 18       | 8.1          | 35           | ... |  Pública  | 2017-09-05| 
-| 6   | 22       | 7.5          | 28           | ... |  Pública  | 2016-07-22| 
-| 7   | 19       | 9.0          | 42           | ... |  Privada  | 2015-08-30| 
-| ..  | ..       | ..           | ..           | ... |  ..       | ..        | 
-
-:::
-
-::: {.notes}
-Vale la pena mencionar que nadie en la organización suele saber qué datos
-tiene toda la institución. Parte del trabajo de scoping es hacer ese inventario.
-No tiene: situación económica, horas de trabajo, distancia al campus.
-:::
 
 
 # Análisis {background-color="#fdede8"}
@@ -581,11 +509,11 @@ mejores decisiones sobre *a quién*, *cuándo* o *dónde* actuar.
 
 ::: {.callout-important}
 El análisis **NO es la meta**. "Construir un modelo predictivo de deserción"
-no es una meta — es una herramienta para alcanzarla.
+no es una meta, es una herramienta para alcanzarla.
 :::
 
+---
 
-## Tipos de análisis
 
 
 | **Tipos de análisis en CD** | **Pregunta clave** | **Definición** | **Ejemplo** |
@@ -638,7 +566,7 @@ esta distinción tiene consecuencias reales.
 ## Checklist para análisis
 
 - [ ] ¿El análisis informa una acción?
-- [ ] ¿Qué tipo de análisis es? (Descripción / Detección / Predicción / Cambio de comportamiento / Optimización)
+- [ ] ¿Qué tipo de análisis es? 
 - [ ] ¿Tenemos acceso a datos relevantes para realizarlo y validarlo?
 - [ ] ¿Cuáles son los problemas éticos? (ej. ¿qué pasa cuando el análisis produce información incorrecta? ¿actuando sobre los resultados se empeorarían los resultados para algunos grupos? ¿cómo mitigamos impactos desproporcionados?)
 
@@ -710,7 +638,6 @@ esta distinción tiene consecuencias reales.
 **Transparencia**
 
 - ¿Qué aspectos del proyecto necesitan conocer los diferentes actores involucrados (tomadores de decisiones, trabajadores de primera línea, personas afectadas, público en general)?
-- ¿Las personas cuyos datos se usan saben que se están utilizando?
 - ¿Las personas a las que "se dirige" saben por qué y si están siendo "seleccionadas"?
 - ¿Qué recurso tienen para impugnar una decisión que proviene de tu análisis?
 
@@ -753,15 +680,6 @@ no un criterio definitivo.
 ## Resumen
 ![](img/resumen_project_scope.png)
 
-
-## Algunas cosas para recordar
-
-- No tengas miedo de hacer preguntas "ingenuas"
-- Debemos abordar estos problemas de manera responsable y ética
-- Dedica tiempo a discutir metas y métricas — no olvides la equidad como meta
-- Entiende cuál es el proceso o solución actual
-- La comunicación es crítica — antes, durante y después
-- Los datos y la tecnología no resuelven problemas, las personas sí
 
 ## Ejemplo completo
 

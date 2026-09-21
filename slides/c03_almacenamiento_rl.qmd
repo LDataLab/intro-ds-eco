@@ -233,6 +233,73 @@ Procesarlos antes dificulta reproducir el análisis, oculta errores y hace difí
 Si solo funciona en tu computadora, no funciona realmente.
 :::
 
+---
+
+---
+
+## 3: Fuentes de **datos**
+
+::: {.callout-tip}
+### Ejemplo 
+
+¿Es suficiente para mejorar lo que hacen hoy? ¿Qué información ayudaría?
+
+| id  | edad_ing | promedio_ing | créditos_1er | ... |  tipo_uni | fecha_ing | 
+|-----|----------|--------------|--------------| --- |-----------|-----------|
+| 1   | 18       | 8.5          | 40           | ... |  Pública  | 2018-08-15| 
+| 2   | 19       | 7.8          | 30           | ... |  Privada  | 2017-08-20| 
+| 3   | 20       | 9.2          | 45           | ... |  Pública  | 2016-08-10| 
+| 4   | 21       | 6.9          | 25           | ... |  Privada  | 2018-01-12| 
+| 5   | 18       | 8.1          | 35           | ... |  Pública  | 2017-09-05| 
+| 6   | 22       | 7.5          | 28           | ... |  Pública  | 2016-07-22| 
+| 7   | 19       | 9.0          | 42           | ... |  Privada  | 2015-08-30| 
+| ..  | ..       | ..           | ..           | ... |  ..       | ..        | 
+
+:::
+
+::: {.notes}
+Vale la pena mencionar que nadie en la organización suele saber qué datos
+tiene toda la institución. Parte del trabajo de scoping es hacer ese inventario.
+No tiene: situación económica, horas de trabajo, distancia al campus.
+:::
+
+
+## Identificando vacíos y preparación de los datos
+
+¿Tenemos suficiente para avanzar o necesitamos enfocarnos en obtener datos adicionales?
+
+- ¿Tenemos suficientes datos históricos?
+- ¿Son confiables hacia atrás?
+- ¿Están al nivel de granularidad correcto para informar las acciones?
+- ¿Se pueden vincular distintos datos entre sí? (identificadores únicos para personas, lugares, etc.)
+- ¿Tenemos los datos correctos para medir los resultados según las metas?
+
+
+
+:::{.notes}
+
+Ejemplo: Prevención de roturas de tuberías en Syracuse
+
+La información clave sobre edad, diámetro y material de las tuberías solo estaba disponible en cuadernos escritos a mano de hace 100 años.
+
+Digitalizar estratégicamente esos registros nos permitió predecir con mayor precisión si una tubería se rompería.
+
+
+Regresando al ejemplo de asistencia de renta
+
+**¿Qué datos necesitamos para tomar la acción?**
+- Datos de desalojos actualizados al menos semanalmente
+- Suficientes características a nivel individual para predecir el resultado
+- Vínculos entre características, datos de desalojo y datos de sinhogarismo
+- Información de contacto para hacer alcance a las personas identificadas
+
+**¿Qué datos necesitamos para evaluar las metas?**
+- Suficientes datos históricos para tener confianza en las predicciones
+- Datos para identificar resultados: ¿quién queda sin hogar?
+- Datos para identificar la cohorte: ¿quién tiene una solicitud de desalojo?
+
+:::
+
 
 ## Marco de madurez de datos
 

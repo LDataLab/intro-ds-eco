@@ -1,5 +1,5 @@
 ---
-title: "Formulación de proyectos para ciencia de datos en política pública"
+title: "Formulación de proyectos para ciencia de datos"
 subtitle: "Material 02"
 
 format: clean-revealjs
@@ -588,24 +588,13 @@ no es una meta — es una herramienta para alcanzarla.
 ## Tipos de análisis
 
 
-| Tipo | Definición | Ejemplo |
-|---|---|---|
-| **Descripción** | Entender el pasado | ¿Cuántos estudiantes no se graduaron a tiempo el año pasado? |
-| **Detección** | Identificar un patrón en el estado actual | Detectar transacciones fraudulentas; identificar patrones de tráfico inseguros |
-| **Predicción** | Predecir un estado futuro | Predecir la probabilidad de quedarse sin hogar en el próximo año |
-| **Optimización** | Asignar / programar recursos | ¿Dónde colocar ambulancias para minimizar el tiempo de respuesta? |
-| **Cambio de comportamiento / Inferencia causal** | Efectividad de intervenciones | ¿Qué programa extracurricular sería más beneficioso para este estudiante? |
-
-
-## Tipos de análisis
-
-| Tipo de análisis | Pregunta que responde | Ejemplo |
-|---|---|---|
-| **Descripción** | ¿Qué ha pasado? | ¿Cuántos estudiantes desertaron el semestre pasado y en qué momento? |
-| **Detección** | ¿Qué es inusual? | ¿Qué tuberías muestran patrones de falla atípicos? |
-| **Predicción** | ¿Qué pasará? ¿A quién le pasará? | ¿Qué estudiantes tienen mayor riesgo de no graduarse? |
-| Optimización | ¿Cuál es la mejor asignación de recursos? | ¿A qué estudiantes asignar los pocos tutores disponibles? |
-| Inferencia causal | ¿Qué funciona? | ¿La tutoría realmente redujo la deserción o solo atendió a quienes ya iban a graduarse? |
+| **Tipos de análisis en CD** | **Pregunta clave** | **Definición** | **Ejemplo** |
+|---|---|---|---|
+| **Descripción** | ¿Qué ha pasado? | Resume y caracteriza lo ocurrido. | ¿Cuántos estudiantes desertaron el semestre pasado? |
+| **Detección** | ¿Qué es inusual? | Identifica patrones o anomalías. | ¿Qué estudiantes presentan una caída atípica en asistencia o desempeño? |
+| **Predicción** | ¿Qué pasará? | Estima resultados futuros. | ¿Qué estudiantes tienen mayor riesgo de no graduarse? |
+| **Optimización** | ¿Qué conviene hacer? | Asigna recursos o selecciona acciones. | ¿A qué estudiantes asignar los pocos tutores disponibles? |
+| **Inferencia causal** | ¿Qué funciona? | Estima el efecto de una intervención. | ¿La tutoría realmente redujo la deserción? |
 
 
 ::: {.notes}

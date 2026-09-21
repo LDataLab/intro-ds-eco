@@ -2,6 +2,7 @@
 
 ### Escuela de Gobierno y Transformación Pública
 
+- Para ver las diapositivas: https://ldatalab.github.io/intro-ds-eco/ 
 
 ## Generalidades de la clase
 
@@ -18,7 +19,7 @@ La clase se impartirá de manera presencial en Mixcoac.
 
 - Para las sesiones prácticas, es muy recomendable contar con una computadora. Una tablet no será suficiente para varias de las actividades que realizaremos.
 
-- Mi correo: (villalobos_elena@tec.mx)[villalobos_elena@tec.mx]
+- Mi correo: villalobos_elena@tec.mx
 
 ## Políticas de la clase
 
@@ -35,7 +36,7 @@ La clase se impartirá de manera presencial en Mixcoac.
 
 - Sin embargo, está ESTRICTAMENTE PROHIBIDOO pedir respuestas directas a ejercicios, copiar soluciones o utilizar agentes para resolver tareas de manera automática.
 
-- **Advertencia:** El uso de agentes o la entrega de trabajo generado como si fuera propio será considerado una **falta de honestidad académica** y se reportará a las autoridades correspondientes.
+- **Advertencia:** El uso de agentes o la entrega de trabajo generado con IA como si fuera propio será considerado una **falta de honestidad académica** y se reportará a las autoridades correspondientes.
 
 - Recomendaciones antes de recurrir a un LLM:
 
@@ -54,7 +55,7 @@ La clase se impartirá de manera presencial en Mixcoac.
 | Tareas                        | 60         |
 | Evaluación intermedia         | 20         |
 | Evaluación final              | 20         |
-| Participación y lecturas      | 10         |
+| Participación y lecturas      | 5 (extra)  |
 
 ## Temario
 

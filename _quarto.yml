@@ -1,10 +1,21 @@
 project:
   type: website
 
+
+
 website:
   navbar:
     background: "#f5ddce"
+    title: "Inicio"          # ← click aquí regresa al inicio
     href: "index.html"      # ← esto lo hace link
+  sidebar:
+    style: "docked"        # o "floating"
+    background: "#fdf4f0"  # color opcional
+    contents:
+      - section: "**Documentos**"
+        contents:
+          - text: "Infraestructura"
+            href: docs/infra.html
 
 
 html:

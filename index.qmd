@@ -37,7 +37,7 @@ bibliography: slides/references.bib
 :::
 
 
-::: {.callout-caution collapse="true"}
+::: {.callout-tip collapse="false"}
 ### 02: Datos, adquisición, almacenamiento
 
 - Tipos de datos, formato *tidy*, almacenamiento, retos de limipieza

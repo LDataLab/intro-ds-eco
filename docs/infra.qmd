@@ -1,0 +1,1478 @@
+---
+title: "Infraestructura"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    theme: cosmo
+    highlight-style: github
+date: today
+---
+
+# Infraestructura {background-color="#fdede8"}
+
+> ¿Qué necesitamos, como mínimo, para desarrollar y mantener un producto de datos?
+
+Un proyecto de datos no es solamente:
+
+```text
+datos → Python → resultado
+```
+
+En la práctica necesitamos decidir:
+
+```text
+¿Dónde viven los datos?
+        ↓
+¿Dónde se procesan?
+        ↓
+¿Dónde vive el código?
+        ↓
+¿Cómo reproducimos el proceso?
+        ↓
+¿Quién puede acceder?
+        ↓
+¿Qué pasa cuando el proceso falla?
+```
+
+## Pensar en pipelines reproducibles
+
+> Un buen *pipeline* puede repetirse, auditarse y mantenerse.
+
+- **Repetible**: el mismo proceso puede ejecutarse nuevamente.
+- **Trazable**: podemos saber qué ocurrió y con qué datos.
+- **Automatizable**: no depende de copiar, pegar o ejecutar pasos manualmente.
+- **Con dependencias explícitas**: sabemos qué necesita cada paso.
+- **Recuperable**: un error no obliga a comenzar desde cero.
+- **Portable**: idealmente puede ejecutarse fuera de la computadora de quien lo desarrolló.
+
+::: {.callout-important}
+Si solo funciona en tu computadora, tenemos un prototipo, no todavía una infraestructura reproducible.
+:::
+
+## Componentes básicos
+
+1. **Cómputo**
+2. **Almacenamiento**
+3. **Código**
+4. **Ambientes y reproducibilidad**
+5. **Orquestación**
+6. **Identidad, permisos y secretos**
+7. **Red y comunicación**
+8. **Backups y recuperación**
+9. **Logs y monitoreo**
+10. **Metadatos y documentación**
+
+::: {.callout-note}
+No todos los proyectos necesitan todos estos componentes desde el primer día.
+:::
+
+## Mapa general
+
+```text
+                    INFRAESTRUCTURA DE UN PRODUCTO DE DATOS
+
+                           ┌───────────────┐
+                           │   Usuarios    │
+                           │ analistas/API │
+                           └───────┬───────┘
+                                   │
+                         identidad / red
+                                   │
+             ┌─────────────────────┼─────────────────────┐
+             │                     │                     │
+       ┌─────▼─────┐         ┌────▼──────┐        ┌────▼─────┐
+       │  Cómputo  │         │   Datos   │        │  Código  │
+       │           │         │           │        │          │
+       │ CPU / RAM │         │ archivos  │        │ Git      │
+       │ GPU       │         │ BD        │        │ GitHub   │
+       │ Python/R  │         │ objetos   │        │ paquetes │
+       └─────┬─────┘         └────┬──────┘        └────┬─────┘
+             │                    │                    │
+             └────────────────────┼────────────────────┘
+                                  │
+                         pipelines / procesos
+                                  │
+                       ┌──────────▼──────────┐
+                       │    Reproducibilidad │
+                       │ ambientes / Docker  │
+                       │ CI/CD / workflows   │
+                       └─────────────────────┘
+
+        + permisos + secretos + logs + monitoreo + backups + metadatos
+```
+
+# Cómputo / procesamiento {background-color="#eef6ff"}
+
+## ¿Dónde se ejecuta nuestro código?
+
+Puede ser nuestra propia computadora:
+
+- CPU
+- RAM
+- disco
+- GPU
+
+O una máquina remota:
+
+- servidor institucional;
+- servidor dedicado;
+- máquina virtual;
+- infraestructura en la nube.
+
+## Máquinas virtuales en la nube
+
+| Proveedor | Servicio de máquinas virtuales |
+|---|---|
+| AWS | EC2 |
+| Microsoft Azure | Azure Virtual Machines |
+| Google Cloud | Compute Engine |
+
+En esas máquinas podemos ejecutar:
+
+```text
+Python
+R
+Julia
+Stata
+SQL
+modelos
+pipelines
+APIs
+```
+
+## Acceso remoto
+
+Una opción habitual es conectarnos con `ssh`:
+
+```bash
+ssh usuario@servidor
+```
+
+SSH permite conectarnos de manera segura a una computadora remota.
+
+```text
+Laptop
+  │
+  │ SSH
+  ▼
+Servidor
+  │
+  ├── Python
+  ├── R
+  ├── bases de datos
+  └── pipelines
+```
+
+## Cómputo y almacenamiento pueden estar separados
+
+```text
+              ┌──────────────┐
+              │   Servidor   │
+              │   Python     │
+              └──────┬───────┘
+                     │
+              red / credenciales
+                     │
+        ┌────────────┴────────────┐
+        ▼                         ▼
+    PostgreSQL                    S3
+ datos tabulares              archivos
+```
+
+::: {.callout-note}
+El servidor donde corre Python no necesariamente es el mismo lugar donde viven los datos.
+:::
+
+# Almacenamiento {background-color="#f4f1ff"}
+
+## ¿Dónde viven nuestros datos?
+
+En vez de pensar solamente en "estructurados" y "no estructurados", conviene distinguir **qué problema resuelve cada tecnología**.
+
+```text
+Almacenamiento
+│
+├── Archivos
+│
+├── Bases de datos
+│
+├── Object storage / data lakes
+│
+└── Sistemas especializados
+```
+
+## Archivos
+
+La infraestructura más sencilla puede ser un *filesystem*.
+
+```text
+proyecto/
+├── data/
+│   ├── raw/
+│   ├── processed/
+│   └── external/
+├── src/
+└── outputs/
+```
+
+## Formatos frecuentes
+
+| Tipo de datos | Formatos comunes |
+|---|---|
+| Tabulares | `.csv`, `.xlsx`, `.parquet`, `.feather` |
+| Texto/documentos | `.txt`, `.json`, `.xml`, `.pdf` |
+| Imágenes | `.jpg`, `.png`, `.tiff` |
+| Bases exportadas | `.dump`, `.sql` |
+
+## Comparación rápida
+
+| Formato | Ventaja | Problema |
+|---|---|---|
+| CSV | Universal y legible | Tipos débiles, archivos grandes |
+| Excel | Cómodo para humanos | Poco reproducible |
+| JSON | Flexible, común en APIs | Puede crecer mucho |
+| Parquet | Comprimido y eficiente | No es legible directamente |
+
+## Parquet
+
+Parquet es un formato **columnar**.
+
+```text
+CSV
+fila → fila → fila → fila
+
+Parquet
+columna A ↓
+columna B ↓
+columna C ↓
+```
+
+Es útil porque:
+
+- comprime bien;
+- conserva tipos;
+- permite leer solo columnas necesarias;
+- es frecuente en pipelines y *data lakes*.
+
+## Bases de datos relacionales
+
+> Útiles cuando necesitamos consultar, actualizar y relacionar datos de manera sistemática.
+
+Ejemplos:
+
+- PostgreSQL
+- SQLite
+- MySQL
+- SQL Server
+- Oracle Database
+
+```text
+PostgreSQL
+│
+├── tabla personas
+├── tabla transacciones
+└── tabla municipios
+        │
+        └── relaciones mediante llaves
+```
+
+## Clientes de bases de datos
+
+Herramientas para conectarnos y consultar bases:
+
+- DBeaver
+- DataGrip
+- pgAdmin
+
+::: {.callout-note}
+DBeaver no es una base de datos. Es un cliente que permite conectarnos a distintas bases de datos.
+:::
+
+## Sistemas empresariales
+
+SAP y Salesforce no son equivalentes a PostgreSQL.
+
+Son sistemas empresariales que **generan, administran y exponen datos**.
+
+```text
+Sistemas que generan datos
+
+CRM                   ERP
+│                     │
+Salesforce             SAP
+│                     │
+└─────────┬───────────┘
+          ▼
+       datos
+          ▼
+      warehouse /
+     base de datos
+```
+
+## Object storage / Data Lake
+
+El concepto central es guardar grandes cantidades de archivos como **objetos**, separados de la computadora que los procesa.
+
+Ejemplos:
+
+- Amazon S3
+- Azure Blob Storage / Azure Data Lake Storage
+- Google Cloud Storage
+- MinIO
+
+```text
+bucket/
+├── raw/
+│   ├── 2025/
+│   └── 2026/
+├── processed/
+└── models/
+```
+
+## ¿Qué puede guardar un bucket?
+
+```text
+CSV
+Parquet
+JSON
+imágenes
+videos
+modelos
+backups
+```
+
+```text
+CÓMPUTO                    ALMACENAMIENTO
+
+EC2                         S3
+Python  ────────────────►   datos
+R      ◄────────────────    archivos
+```
+
+::: {.callout-tip}
+Un *data lake* no es un tipo de archivo: es una forma de organizar y almacenar grandes colecciones de datos.
+:::
+
+## Bases de datos especializadas
+
+No todos los datos encajan naturalmente en tablas.
+
+Ejemplos:
+
+- **MongoDB**: documentos.
+- **Neo4j**: grafos.
+- **Elasticsearch/OpenSearch**: búsqueda de texto.
+- **PostGIS**: datos geoespaciales sobre PostgreSQL.
+
+## Documentos: MongoDB
+
+MongoDB almacena principalmente documentos, normalmente similares a JSON.
+
+```json
+{
+  "persona": "Ana",
+  "compras": [
+    {"producto": "A", "precio": 10},
+    {"producto": "B", "precio": 20}
+  ]
+}
+```
+
+## Grafos: Neo4j
+
+Útil cuando lo central son las relaciones.
+
+```text
+Elena ──trabaja_en──► Universidad
+  │
+  └──colabora_con──► Ana
+```
+
+Casos frecuentes:
+
+- redes sociales;
+- fraude;
+- relaciones empresariales;
+- redes de conocimiento.
+
+# Datos geoespaciales {background-color="#edf7ed"}
+
+## ¿Qué tienen de especial?
+
+Los datos geoespaciales contienen información sobre ubicación, forma, distancia o superficie.
+
+Ejemplos:
+
+- ubicación de escuelas;
+- límites municipales;
+- rutas de transporte;
+- zonas de riesgo;
+- imágenes satelitales;
+- temperatura o precipitación por región.
+
+## Dos grandes representaciones
+
+```text
+DATOS GEOESPACIALES
+
+        ┌────────────┴────────────┐
+        ▼                         ▼
+     VECTOR                    RASTER
+ puntos / líneas /          celdas / píxeles
+ polígonos
+```
+
+## Datos vectoriales
+
+Representan objetos discretos.
+
+```text
+Punto
+   •
+
+Línea
+────────
+
+Polígono
+┌───────┐
+│       │
+└───────┘
+```
+
+Ejemplos:
+
+- hospitales → puntos;
+- carreteras → líneas;
+- municipios → polígonos.
+
+## Formatos vectoriales
+
+Formatos comunes:
+
+```text
+.geojson
+.gpkg       GeoPackage
+.shp        Shapefile
+.parquet    GeoParquet
+```
+
+::: {.callout-note}
+Shapefile es muy común, pero es un formato antiguo. Para proyectos nuevos suelen ser más cómodos GeoPackage, GeoJSON o GeoParquet.
+:::
+
+## Datos raster
+
+Representan una superficie mediante una matriz de celdas.
+
+```text
+┌──┬──┬──┬──┐
+│12│14│17│20│
+├──┼──┼──┼──┤
+│11│13│16│19│
+├──┼──┼──┼──┤
+│10│12│15│18│
+└──┴──┴──┴──┘
+```
+
+Ejemplos:
+
+- imágenes satelitales;
+- elevación;
+- temperatura;
+- precipitación;
+- cobertura vegetal.
+
+## Formatos raster
+
+Formatos frecuentes:
+
+```text
+.tif / GeoTIFF
+COG / Cloud Optimized GeoTIFF
+```
+
+::: {.callout-tip}
+COG permite leer partes de una imagen geográfica grande sin descargar todo el archivo.
+:::
+
+## PostGIS
+
+Para datos geoespaciales en bases de datos, una herramienta central es:
+
+```text
+PostgreSQL
+    +
+ PostGIS
+    │
+    ▼
+datos espaciales
+```
+
+PostGIS permite almacenar geometrías directamente dentro de PostgreSQL.
+
+```sql
+id | nombre       | geometry
+---|--------------|------------------------
+1  | Hospital A   | POINT(...)
+2  | Hospital B   | POINT(...)
+```
+
+## Consultas espaciales
+
+Con PostGIS podemos hacer preguntas como:
+
+```sql
+-- ¿Qué hospitales están dentro de este municipio?
+SELECT *
+FROM hospitales h
+JOIN municipios m
+  ON ST_Within(h.geometry, m.geometry);
+```
+
+```sql
+-- ¿Qué viviendas están a menos de 1 km de una estación?
+SELECT *
+FROM viviendas v
+JOIN estaciones e
+  ON ST_DWithin(v.geometry, e.geometry, 1000);
+```
+
+## Índices espaciales
+
+Sin índice:
+
+```text
+comparar punto contra
+TODOS los polígonos
+```
+
+Con índice espacial:
+
+```text
+buscar primero
+solo candidatos cercanos
+```
+
+Los índices espaciales permiten acelerar consultas geográficas.
+
+## Preguntas típicas en economía y política pública
+
+- ¿Qué población vive cerca de una estación?
+- ¿Qué municipios concentran cierto fenómeno?
+- ¿Qué escuelas están dentro de zonas de riesgo?
+- ¿Cómo cambia el acceso a servicios por distancia?
+- ¿Cómo unir datos censales con límites geográficos?
+
+# Código {background-color="#fff7e8"}
+
+## ¿Dónde vive la lógica?
+
+```text
+Código
+│
+├── Python
+├── R
+├── SQL
+└── scripts
+```
+
+El código transforma los datos:
+
+```text
+datos crudos
+    ↓
+limpieza
+    ↓
+variables
+    ↓
+modelo / análisis
+    ↓
+resultados
+```
+
+## Control de versiones
+
+```text
+Git
+```
+
+Servicios para alojar repositorios:
+
+- GitHub
+- GitLab
+- Bitbucket
+
+```text
+Git ≠ GitHub
+
+Git
+sistema de control
+de versiones
+
+GitHub
+servicio que aloja
+repositorios Git
+```
+
+## ¿Qué debería versionarse?
+
+Sí:
+
+- código;
+- documentación;
+- configuración del proyecto;
+- archivos pequeños de ejemplo;
+- instrucciones de reproducción.
+
+No necesariamente:
+
+- bases completas pesadas;
+- credenciales;
+- archivos temporales;
+- resultados enormes.
+
+# Reproducibilidad {background-color="#eef6ff"}
+
+## Ambientes y dependencias
+
+Un programa también depende de:
+
+```text
+Python 3.12
+pandas
+numpy
+geopandas
+scikit-learn
+...
+```
+
+Por eso necesitamos registrar las dependencias.
+
+Ejemplos:
+
+```text
+pyproject.toml
+uv.lock
+requirements.txt
+renv.lock
+environment.yml
+```
+
+## Docker
+
+Docker empaqueta la aplicación y su entorno.
+
+```text
+┌─────────────────────────┐
+│       Contenedor        │
+│                         │
+│ Python 3.12             │
+│ pandas                  │
+│ geopandas               │
+│ postgres client         │
+│ nuestro código          │
+└─────────────────────────┘
+```
+
+::: {.callout-note}
+Docker es una herramienta para reproducibilidad, pero no sustituye buenas prácticas de código, datos, documentación y control de versiones.
+:::
+
+## Reproducibilidad no es solo Docker
+
+```text
+Reproducibilidad
+│
+├── código versionado
+├── dependencias explícitas
+├── ambientes
+├── configuración
+├── datos identificables
+├── documentación
+└── contenedores
+```
+
+# Orquestación {background-color="#f4f1ff"}
+
+## ¿Quién ejecuta el pipeline?
+
+Un pipeline puede tener varios pasos:
+
+```text
+Descargar
+   ↓
+Validar
+   ↓
+Limpiar
+   ↓
+Transformar
+   ↓
+Modelar
+   ↓
+Publicar
+```
+
+Un **orquestador** coordina cuándo y cómo se ejecutan esas tareas.
+
+## Ejemplos de orquestación
+
+- `cron`
+- GitHub Actions
+- Airflow
+- Prefect
+- Dagster
+
+::: {.callout-question}
+¿Quién ejecuta el pipeline mañana a las 3:00 a. m. si nadie está frente a la computadora?
+:::
+
+# Seguridad {background-color="#fdeff4"}
+
+## Identidad, autenticación y autorización
+
+Tres preguntas distintas:
+
+```text
+Identidad
+¿Quién eres?
+
+Autenticación
+¿Cómo compruebas quién eres?
+
+Autorización
+¿Qué puedes hacer?
+```
+
+## Roles y permisos
+
+```text
+usuario_analista
+    └── SELECT
+
+usuario_pipeline
+    ├── SELECT
+    └── INSERT
+
+administrador
+    └── ALL
+```
+
+## Secretos
+
+Nunca:
+
+```python
+password = "supersecreto123"
+```
+
+Preferir:
+
+```text
+variables de entorno
+secret managers
+archivos .env no versionados
+```
+
+::: {.callout-important}
+Las credenciales no deben almacenarse en Git.
+:::
+
+# Red y comunicación {background-color="#eef6ff"}
+
+## Conexiones
+
+```text
+Laptop
+  │
+Internet
+  │
+VPN / firewall
+  │
+Servidor
+  │
+PostgreSQL
+```
+
+Conceptos básicos:
+
+- dirección IP;
+- puerto;
+- firewall;
+- VPN;
+- SSH;
+- HTTPS.
+
+::: {.callout-note}
+Que un servidor exista no significa automáticamente que podamos conectarnos a él.
+:::
+
+# Backups, logs y monitoreo {background-color="#f4f1ff"}
+
+## Backups y recuperación
+
+Preguntas importantes:
+
+- ¿Qué pasa si borramos una tabla?
+- ¿Qué pasa si falla el servidor?
+- ¿Podemos reconstruir los datos?
+- ¿Cuánto tiempo nos tomaría recuperarnos?
+
+```text
+datos originales
+      │
+      ├────► backup 1
+      ├────► backup 2
+      └────► backup 3
+```
+
+::: {.callout-warning}
+Backup ≠ copia local ≠ Git.
+:::
+
+## Logs
+
+Un pipeline automático necesita decirnos qué ocurrió.
+
+```text
+02:00 pipeline iniciado
+02:03 datos descargados
+02:05 12,340 registros procesados
+02:06 ERROR: conexión a PostgreSQL
+```
+
+Los logs permiten:
+
+- detectar errores;
+- investigar qué ocurrió;
+- auditar procesos;
+- medir tiempos.
+
+## Monitoreo
+
+Los logs responden:
+
+> ¿Qué ocurrió?
+
+El monitoreo responde:
+
+> ¿El sistema está funcionando?
+
+Ejemplos:
+
+- uso de CPU/RAM;
+- espacio en disco;
+- procesos fallidos;
+- tiempos de ejecución;
+- disponibilidad de servicios.
+
+# Metadatos y documentación {background-color="#fff7e8"}
+
+## Datos sobre los datos
+
+No basta con tener:
+
+```text
+datos.csv
+```
+
+Necesitamos saber:
+
+```text
+¿de dónde salió?
+¿cuándo se descargó?
+¿qué significa cada variable?
+¿quién lo produjo?
+¿qué transformaciones sufrió?
+```
+
+Eso son **metadatos**.
+
+## Data lineage
+
+*Data lineage* describe el recorrido y las transformaciones de un dato.
+
+```text
+API
+ │
+ ▼
+raw.parquet
+ │
+ ▼
+clean.parquet
+ │
+ ▼
+tabla_modelo
+ │
+ ▼
+predicción
+```
+
+## Documentación mínima
+
+Para cada conjunto de datos conviene registrar:
+
+- fuente;
+- fecha de descarga;
+- unidad de observación;
+- variables;
+- cobertura temporal;
+- cobertura geográfica;
+- restricciones de uso;
+- transformaciones realizadas.
+
+# Arquitectura mínima {background-color="#fdede8"}
+
+## Una arquitectura posible
+
+```text
+                   USUARIA / ANALISTA
+                          │
+                          │ SSH / HTTPS
+                          ▼
+                  ┌───────────────┐
+                  │    CÓMPUTO    │
+                  │               │
+                  │ Python / R    │
+                  │ CPU / RAM     │
+                  └───────┬───────┘
+                          │
+              ┌───────────┴────────────┐
+              │                        │
+              ▼                        ▼
+     ┌────────────────┐       ┌────────────────┐
+     │ Base de datos  │       │ Object storage │
+     │                │       │                │
+     │ PostgreSQL     │       │ S3             │
+     │ + PostGIS      │       │ Parquet        │
+     └────────────────┘       └────────────────┘
+
+                  ┌──────────────────┐
+                  │      CÓDIGO      │
+                  │   Git / GitHub   │
+                  └──────────────────┘
+
+                  ┌──────────────────┐
+                  │     ENTORNO      │
+                  │ uv / Docker      │
+                  └──────────────────┘
+
+          ───────────────────────────────────
+          identidad · permisos · secretos
+          logs · backups · monitoreo
+          documentación · metadatos
+```
+
+## ¿Necesitamos todo esto?
+
+**No.**
+
+Para un análisis pequeño:
+
+```text
+Laptop
++
+Git
++
+Python/R
++
+CSV/Parquet
+```
+
+puede ser suficiente.
+
+## Cuando crece el proyecto
+
+Para un equipo:
+
+```text
+GitHub
++
+PostgreSQL
++
+servidor
++
+ambientes reproducibles
+```
+
+Para un producto en operación:
+
+```text
+cómputo
++
+almacenamiento
++
+pipelines
++
+seguridad
++
+backups
++
+logs
++
+monitoreo
+```
+
+## Idea central
+
+> La infraestructura debe crecer con el problema, no al revés.
+
+El objetivo no es convertirnos en especialistas en *cloud engineering*, sino poder entender:
+
+```text
+¿dónde está cada cosa?
+¿para qué sirve?
+¿cómo se conecta?
+¿qué puede fallar?
+¿cómo se reproduce?
+```
+
+
+# Infraestructura {background-color="#fdede8"}
+
+> ¿Qué se necesita para tener lo mínimo en infraestructura para el desarrollo de un producto de datos?
+
+## **Pensar** en pipelines reproducibles
+
+> Un buen *pipeline* puede repetirse, auditarse y mantenerse.
+
+- **Repetible**: el mismo proceso produce el mismo resultado
+- **Controlable**: cada paso está documentado y es verificable
+- **Automatizable**: no depende de intervención manual
+- **Con dependencias explícitas**: se sabe qué necesita qué
+
+::: {.callout-important}
+Si solo funciona en tu computadora, no funciona realmente.
+:::
+
+
+## Elementos
+
+1. Cómputo/procesamiento
+
+2. Almacenamiento
+    - Datos estructurados
+    - Datos no estructurados
+
+3. Código
+
+4. Reproducibilidad
+
+5. Identidad permisos
+
+
+## Cómputo / procesamiento
+
+- Computadoras: CPU/GPU/RAM
+- Servidores en la nube:
+    - AWS: EC2
+    - Azure: Máquinas virtuales
+    - 
+- Acceso a través de ssh o con credenciales de acceso
+- Aquí es donde se corre python
+
+## Almacenamiento
+
+### Datos estructurados 
+
+- Software?
+
+    - Postgres
+    - SQLlite
+    - MySQL
+    - Oracle 
+    - SAP
+    - Salesforce (CRM)
+
+Tipos de archivos de almacenamiento. 
+- .dump
+- .csv
+- .xlsx
+- .sql
+
+- DBeaver es un IDE de estas bases de datos 
+
+## Almacenamiento
+
+### Datos no estructurados
+
+- Software?
+    - Hadoop
+    - Mongo db
+    - Azure Data Lake Storage
+    - AWS: s3
+    - Neo4j: base de datos de grafos
+
+Tipos de archivos de almacenamiento
+
+- .parquet
+
+## Código
+
+- Git: 
+
+En la nube:
+
+- Github
+- Gitlab
+- Bitbucket
+
+
+## Reproducibilidad
+
+- Docker
+
+## Seguridad
+
+- Manejo de roles
+- Credenciales
+- usuarios
+
+
+
+
+```
+                   INFRAESTRUCTURA DE DATOS
+
+                           ┌───────────┐
+                           │ Usuarios │
+                           └─────┬─────┘
+                                 │
+                        red / seguridad
+                                 │
+              ┌──────────────────┴─────────────────┐
+              │                                    │
+        ┌─────▼─────┐                        ┌─────▼─────┐
+        │  Cómputo  │                        │   Datos   │
+        │           │                        │           │
+        │ servidor  │                        │ Postgres  │
+        │ CPU / RAM │                        │ S3        │
+        │ Python    │                        │ archivos  │
+        └─────┬─────┘                        └───────────┘
+              │
+        ┌─────▼──────┐
+        │   Código   │
+        │ Git/GitHub │
+        │ ambientes  │
+        └────────────┘
+
+             + identidad / permisos / secretos
+             + logs / backups / monitoreo
+```
+
+# Infraestructura {background-color="#fdede8"}
+
+> ¿Qué se necesita, como mínimo, en infraestructura para desarrollar un producto de datos?
+
+## **Pensar** en pipelines reproducibles
+
+> Un buen *pipeline* puede repetirse, auditarse y mantenerse.
+
+- **Repetible**: el mismo proceso con los mismos insumos produce el mismo resultado
+- **Controlable**: cada paso está documentado y es verificable
+- **Automatizable**: no depende de intervención manual
+- **Con dependencias explícitas**: se sabe qué paso necesita a cuál, y qué versiones de software usa
+- **Idempotente**: si se corre dos veces, no duplica ni corrompe datos
+
+::: {.callout-important}
+Si solo funciona en tu computadora, no funciona realmente.
+:::
+
+## Elementos
+
+1. **Cómputo / procesamiento**: dónde corre el código
+2. **Almacenamiento**: dónde viven los datos
+   - Estructurados
+   - Semiestructurados
+   - No estructurados
+   - Georreferenciados
+3. **Código**: control de versiones
+4. **Ambientes y reproducibilidad**: con qué versiones corre
+5. **Orquestación**: cuándo y en qué orden corre
+6. **Identidad, permisos y seguridad**: quién puede ver o hacer qué
+7. **Operación**: logs, respaldos, monitoreo y costos
+
+## Cómputo / procesamiento
+
+- **Recursos**: CPU (procesos generales), GPU (modelos de *deep learning*), RAM (cuántos datos caben en memoria)
+- **Local**: tu computadora; suficiente para muchos proyectos
+- **Servidores en la nube** (máquinas virtuales):
+  - AWS: EC2
+  - Azure: Virtual Machines
+  - Google Cloud: Compute Engine
+- **Entornos gestionados**: Google Colab, Databricks, SageMaker, Azure ML
+- **Serverless**: funciones que corren solo cuando se llaman (AWS Lambda, Cloud Functions)
+- Acceso: `ssh` con llaves o credenciales de acceso
+- Aquí es donde corre Python (o R, SQL, etc.)
+
+::: {.callout-tip}
+Antes de pedir un servidor más grande, pregunta: ¿el problema es de RAM, de CPU o de un código ineficiente?
+:::
+
+## Almacenamiento: tipos de datos
+
+| Tipo | Ejemplo | Dónde se guarda típicamente |
+|---|---|---|
+| Estructurado | tablas con filas y columnas | bases relacionales, Parquet |
+| Semiestructurado | JSON de una API, XML | MongoDB, columnas `jsonb` en Postgres, *data lake* |
+| No estructurado | PDF, texto, imágenes, audio | almacenamiento de objetos (S3, Azure Blob) |
+| Georreferenciado | polígonos de municipios, imágenes satelitales | PostGIS, GeoParquet, GeoTIFF |
+
+## Almacenamiento
+
+### Datos estructurados: bases de datos relacionales
+
+- **Transaccionales (OLTP)**: muchas escrituras pequeñas, para operar sistemas
+  - PostgreSQL, MySQL, SQLite, Oracle, SQL Server
+- **Analíticas (OLAP)**: consultas sobre muchos registros, para analizar
+  - DuckDB (local), BigQuery, Snowflake, Redshift
+- Sistemas empresariales que **usan** bases de datos por dentro:
+  - SAP (ERP), Salesforce (CRM)
+- **IDE / clientes**: DBeaver, pgAdmin, DataGrip
+
+::: {.callout-note}
+SQLite y DuckDB son un solo archivo: no necesitan servidor. Excelentes para empezar.
+:::
+
+## Almacenamiento
+
+### Formatos de archivo
+
+| Formato | Qué es | Cuándo usarlo |
+|---|---|---|
+| `.csv` | texto plano, separado por comas | intercambio simple; sin tipos de dato |
+| `.xlsx` | hoja de cálculo | entrega a usuarios finales, no como fuente |
+| `.parquet` | columnar, comprimido, con tipos | análisis de datos tabulares grandes |
+| `.json` | anidado, semiestructurado | respuestas de APIs |
+| `.sql` | script de SQL | crear tablas, cargar datos |
+| `.dump` | respaldo de una base de datos | restaurar/migrar una base completa |
+
+::: {.callout-tip}
+Parquet es para datos **estructurados**: suele ocupar una fracción del CSV y se lee mucho más rápido.
+:::
+
+## Almacenamiento
+
+### Datos semiestructurados y no estructurados
+
+- **Almacenamiento de objetos** (*object storage*): guarda cualquier archivo
+  - AWS S3, Azure Blob Storage / Data Lake Storage, Google Cloud Storage
+- **Data lake**: repositorio de archivos crudos en su formato original
+- **Bases NoSQL**:
+  - Documentos: MongoDB (JSON)
+  - Grafos: Neo4j (redes, relaciones)
+  - Llave-valor: Redis
+- **Bases vectoriales**: *embeddings* para búsqueda semántica y agentes de IA
+  - pgvector (extensión de Postgres), Pinecone, Chroma
+- **Ecosistemas distribuidos**: Hadoop (HDFS) → hoy más común Spark sobre S3
+
+## Almacenamiento
+
+### Arquitecturas por capas
+
+```
+  crudo (raw)   →   limpio (clean)   →   analítico (curated)
+  tal como llega    tipos, llaves,        tablas listas para
+  (JSON, CSV, PDF)  duplicados            modelos y tableros
+```
+
+- También llamada arquitectura *medallion*: bronce → plata → oro
+- **Nunca** se sobrescriben los datos crudos
+- *Data warehouse*: estructurado y curado · *Data lake*: crudo y flexible · *Lakehouse*: ambos
+
+# Datos georreferenciados {background-color="#fdede8"}
+
+## ¿Qué los hace distintos?
+
+- Además de atributos, tienen **geometría** y un **sistema de referencia de coordenadas (CRS)**
+- Dos modelos:
+  - **Vectorial**: puntos (escuelas), líneas (carreteras), polígonos (municipios, AGEB)
+  - **Raster**: cuadrícula de pixeles (imágenes satelitales, luces nocturnas, temperatura)
+
+::: {.callout-important}
+Sin CRS, las coordenadas son solo números. Siempre documenta y verifica el CRS.
+:::
+
+## Sistemas de referencia (CRS)
+
+- **Geográfico** (grados): EPSG:4326 (WGS84), el de GPS y la mayoría de las APIs
+- **Proyectado** (metros): necesario para calcular **distancias y áreas**
+  - Para México: EPSG:6372 (Lambert Cónica Conforme, ITRF2008), usado por INEGI
+- Unir capas con CRS distintos = errores silenciosos
+
+```python
+import geopandas as gpd
+mun = gpd.read_file("municipios.gpkg")
+mun.crs                      # ¿en qué CRS viene?
+mun = mun.to_crs(6372)       # reproyectar a metros
+mun["area_km2"] = mun.area / 1e6
+```
+
+## Formatos de archivo geoespaciales
+
+| Formato | Tipo | Comentario |
+|---|---|---|
+| Shapefile (`.shp` + `.shx` + `.dbf` + `.prj`) | vectorial | el más común, pero antiguo: varios archivos, nombres de columna ≤ 10 caracteres, máx. 2 GB |
+| GeoPackage (`.gpkg`) | vectorial | un solo archivo (SQLite); **recomendado** |
+| GeoJSON (`.geojson`) | vectorial | texto; ideal para web y APIs, pesado para datos grandes |
+| GeoParquet (`.parquet`) | vectorial | columnar; rápido para análisis a escala |
+| KML / KMZ | vectorial | Google Earth |
+| GeoTIFF / COG (`.tif`) | raster | *Cloud Optimized GeoTIFF* se lee por partes desde la nube |
+| NetCDF / Zarr | raster multidimensional | clima: variable × tiempo × espacio |
+
+## Bases de datos geoespaciales
+
+- **PostGIS**: extensión de PostgreSQL; el estándar abierto
+- **DuckDB spatial** y **SpatiaLite**: sin servidor, para trabajo local
+- **BigQuery GIS**, Snowflake: en la nube a gran escala
+- Clave: **índices espaciales** (GiST en PostGIS) para que las consultas sean rápidas
+
+```sql
+-- ¿Cuántas clínicas hay en cada municipio?
+SELECT m.cvegeo, m.nom_mun, COUNT(c.id) AS n_clinicas
+FROM municipios m
+LEFT JOIN clinicas c
+  ON ST_Contains(m.geom, c.geom)
+GROUP BY m.cvegeo, m.nom_mun;
+```
+
+## Herramientas y buenas prácticas
+
+- **Python**: `geopandas`, `shapely`, `pyproj`, `rasterio`, `xarray`; `h3` para hexágonos
+- **Visual**: QGIS (libre), kepler.gl, `folium`
+- **Fuentes en México**: Marco Geoestadístico de INEGI (llave `CVEGEO`), DENUE, CONABIO
+- Buenas prácticas:
+  - Guarda en GeoPackage o GeoParquet, no en shapefile
+  - Une por **clave** (`CVEGEO`) cuando se pueda; por geometría solo cuando sea necesario
+  - Simplifica geometrías para visualizar; conserva las originales para calcular
+  - Cuida la privacidad: una coordenada exacta puede identificar a una persona
+
+# Código, ambientes y orquestación {background-color="#fdede8"}
+
+## Código
+
+- **Git**: control de versiones local
+- En la nube: GitHub, GitLab, Bitbucket
+- Qué **sí** va en Git: código, SQL, documentación, configuración
+- Qué **no**: datos grandes, credenciales, archivos `.env`
+  - Usa `.gitignore`
+  - Para versionar datos: DVC o Git LFS
+
+::: {.callout-warning}
+Una contraseña subida a GitHub debe considerarse comprometida, aunque borres el commit.
+:::
+
+## Ambientes y reproducibilidad
+
+- **Ambientes virtuales**: aíslan las dependencias de cada proyecto
+  - `venv`, `conda`, `uv`
+- **Dependencias explícitas y fijas**: `requirements.txt`, `pyproject.toml` + *lockfile*
+- **Contenedores (Docker)**: empaquetan sistema operativo + librerías + código
+  - `Dockerfile` → **imagen** (receta) → **contenedor** (instancia corriendo)
+  - `docker compose`: levanta varios servicios juntos (p. ej. Python + Postgres/PostGIS)
+- Semillas aleatorias fijas, rutas relativas, parámetros en archivos de configuración
+
+## Orquestación
+
+> ¿Quién corre el pipeline, cuándo y en qué orden?
+
+- Programación simple: `cron`
+- En el repositorio: GitHub Actions
+- Orquestadores: Airflow, Prefect, Dagster
+- Transformaciones en SQL: dbt
+- Modelan el pipeline como un **grafo de dependencias (DAG)**: si un paso falla, los siguientes no corren
+
+# Seguridad y operación {background-color="#fdede8"}
+
+## Identidad, permisos y seguridad
+
+- **Usuarios y roles**: permisos por rol, no por persona (IAM en la nube, `GRANT` en SQL)
+- **Principio de mínimo privilegio**: cada quien accede solo a lo que necesita
+- **Secretos**: variables de entorno, archivos `.env`, gestores (AWS Secrets Manager, Azure Key Vault)
+- **Acceso**: llaves SSH, autenticación de dos factores
+- **Datos personales**: anonimizar/seudonimizar, cifrar, cumplir el marco legal de protección de datos
+- **Red**: firewalls, bases de datos no expuestas a internet
+
+## Operación
+
+- **Logs**: qué corrió, cuándo y con qué resultado
+- **Monitoreo y alertas**: enterarte de que falló antes que el usuario
+- **Respaldos**: regla 3-2-1 (3 copias, 2 medios distintos, 1 fuera de sitio), y probar que se pueden restaurar
+- **Costos**: la nube cobra por uso; apaga instancias, define presupuestos y alertas
+- **Documentación**: README, diccionario de datos, diagrama de arquitectura
+
+## De lo mínimo a lo escalable
+
+| Componente | Mínimo viable | Escalable |
+|---|---|---|
+| Cómputo | laptop | VM / Databricks / serverless |
+| Datos tabulares | Parquet + DuckDB | Postgres, BigQuery, Snowflake |
+| Datos geo | GeoPackage + geopandas | PostGIS, GeoParquet en S3 |
+| No estructurados | carpeta organizada | S3 / Blob Storage |
+| Código | Git + GitHub | + revisión de código y CI |
+| Ambientes | `uv` / `venv` + lockfile | Docker |
+| Orquestación | un script `main.py` | Airflow / Prefect / Dagster |
+| Seguridad | `.env` fuera de Git | IAM, roles, gestor de secretos |
+
+## Panorama general
+
+```
+                     INFRAESTRUCTURA DE DATOS
+
+                           ┌──────────┐
+                           │ Usuarios │
+                           └────┬─────┘
+                                │
+                    identidad / permisos / red
+                                │
+        ┌───────────────────────┼────────────────────────┐
+        │                       │                        │
+  ┌─────▼──────┐         ┌──────▼──────┐          ┌──────▼───────┐
+  │  Cómputo   │ ◄─────► │    Datos    │          │  Productos   │
+  │            │         │             │ ───────► │              │
+  │ laptop/VM  │         │ crudo       │          │ tableros     │
+  │ CPU/GPU    │         │ → limpio    │          │ APIs         │
+  │ RAM        │         │ → analítico │          │ modelos      │
+  │ Python     │         │ Postgres    │          │ reportes     │
+  └─────▲──────┘         │ PostGIS     │          └──────────────┘
+        │                │ S3/Parquet  │
+  ┌─────┴──────┐         └─────────────┘
+  │   Código   │
+  │ Git/GitHub │
+  │ ambientes  │
+  │ Docker     │
+  └─────▲──────┘
+        │
+  ┌─────┴────────┐
+  │ Orquestación │
+  │ cron/Airflow │
+  └──────────────┘
+
+      + secretos / logs / respaldos / monitoreo / costos
+```
+
+
+## Reglas de procesamiento
+
+Al transformar datos, seguir estas guías:
+
+1. Absorbe y preserva todas las modalidades originales
+2. Reduce la pérdida de información hasta el final del proceso
+3. Modela la temporalidad de los datos
+4. Registra la *data provenance* (de dónde viene cada dato)
+5. Preserva la intencionalidad de cada paso
+6. Haz visible qué está pasando en cada transformación
+
+## Otros problemas frecuentes en tablas
+
+
+- **Valores faltantes**: celdas vacías sin indicar por qué
+- **Violaciones de restricción**: un CP de Chicago asociado a San Francisco
+- **Errores tipográficos**: "New Yrk" en vez de "New York"
+- **Posibles duplicados**: mismo nombre, distinto registro
+- **Múltiples valores en una celda**: "30k–40k" en lugar de un número
+
+
+
+
+

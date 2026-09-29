@@ -1,0 +1,734 @@
+---
+title: "Sesión técnica 1"
+subtitle: "Configuración del ambiente de trabajo"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    theme: cosmo
+    highlight-style: github
+date: today
+---
+
+# Configuración del ambiente de trabajo
+
+En este curso utilizaremos varias herramientas que nos permitirán trabajar de manera ordenada con código, proyectos y ambientes de Python.
+
+Trabajaremos con:
+
+* **Git**
+* **SSH**
+* **Python**
+* **uv**
+* **Visual Studio Code**
+
+La principal diferencia entre sistemas operativos será la terminal:
+
+```text
+Windows → PowerShell
+macOS   → Terminal / zsh
+```
+
+La idea general de nuestro ambiente será:
+
+```text
+Sistema operativo
+      │
+      ├── Terminal
+      │     ├── PowerShell  (Windows)
+      │     └── zsh         (macOS)
+      │
+      ├── Git
+      ├── SSH
+      ├── Python
+      ├── uv
+      │
+      └── Visual Studio Code
+```
+
+No es necesario entender a detalle todas estas herramientas desde el principio.
+
+Durante el curso iremos aprendiendo para qué sirve cada una.
+
+Por ahora, nuestro objetivo es dejar listo un ambiente en el que podamos:
+
+* descargar los materiales del curso;
+* ejecutar código en Python;
+* instalar librerías;
+* crear ambientes virtuales;
+* trabajar cómodamente desde Visual Studio Code.
+
+---
+
+## 1. Git
+
+**Git** es un sistema de control de versiones.
+
+Nos permite llevar registro de los cambios que hacemos en nuestros archivos y colaborar en proyectos de código.
+
+En este curso también lo utilizaremos para descargar y actualizar los materiales disponibles en GitHub.
+
+### Windows
+
+Descarga e instala **Git for Windows** desde:
+
+[https://git-scm.com/downloads/win](https://git-scm.com/downloads/win)
+
+Durante la instalación puedes conservar las opciones predeterminadas.
+
+Una vez terminada la instalación, **cierra y vuelve a abrir PowerShell o Visual Studio Code**.
+
+Después verifica:
+
+```powershell
+git --version
+```
+
+Deberías obtener algo parecido a:
+
+```text
+git version 2.x.x
+```
+
+También puedes instalarlo desde PowerShell con:
+
+```powershell
+winget install --id Git.Git -e --source winget
+```
+
+### macOS
+
+En macOS, Git puede instalarse automáticamente al instalar las herramientas de línea de comandos de Apple.
+
+Primero intenta:
+
+```bash
+git --version
+```
+
+Si Git no está instalado, macOS normalmente te pedirá instalar las **Command Line Tools**.
+
+También puedes instalarlas manualmente con:
+
+```bash
+xcode-select --install
+```
+
+Una vez terminada la instalación:
+
+```bash
+git --version
+```
+
+---
+
+## 2. SSH
+
+**SSH** es un protocolo que permite establecer conexiones seguras entre computadoras y servicios.
+
+En nuestro caso lo utilizaremos principalmente para comunicarnos con **GitHub** sin tener que introducir usuario y contraseña cada vez que trabajamos con un repositorio.
+
+Tanto Windows como macOS incluyen herramientas para trabajar con SSH.
+
+### Verificar SSH
+
+En Windows:
+
+```powershell
+ssh -V
+```
+
+En macOS:
+
+```bash
+ssh -V
+```
+
+Si aparece información sobre la versión de OpenSSH, no necesitas instalar nada adicional.
+
+
+### Crear una llave SSH
+
+El procedimiento es prácticamente el mismo en ambos sistemas.
+
+
+En PowerShell y en Terminal:
+
+```bash
+ssh-keygen -t ed25519 -C "tu_correo@ejemplo.com"
+```
+
+Presiona `Enter` para aceptar la ubicación predeterminada y no coloques passphase, solo colocan `Enter`
+
+Se crearán dos archivos dentro de la carpeta `.ssh`.
+
+### Windows
+
+```text
+C:\Users\TU_USUARIO\.ssh\
+```
+
+### macOS
+
+```text
+~/.ssh/
+```
+
+Normalmente encontrarás:
+
+```text
+id_ed25519
+id_ed25519.pub
+```
+
+El archivo:
+
+```text
+id_ed25519
+```
+
+es tu **llave privada** y no debe compartirse.
+
+El archivo:
+
+```text
+id_ed25519.pub
+```
+
+es tu **llave pública** y es la que registraremos en GitHub.
+
+
+### Ver la llave pública
+
+#### Windows
+
+```powershell
+Get-Content ~/.ssh/id_ed25519.pub
+```
+
+#### macOS
+
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
+
+Copia todo el contenido.
+
+Después entra a GitHub y ve a:
+
+```text
+Settings
+→ SSH and GPG keys
+→ New SSH key
+```
+
+Pega ahí tu llave pública.
+
+Finalmente verifica la conexión.
+
+En ambos sistemas:
+
+```bash
+ssh -T git@github.com
+```
+
+La primera vez puede aparecer una pregunta para confirmar la identidad del servidor.
+
+Escribe:
+
+```text
+yes
+```
+
+Si la configuración fue correcta, GitHub reconocerá tu cuenta.
+
+
+## 3. Python
+
+**Python** será el lenguaje de programación principal del curso.
+
+Lo utilizaremos para cargar datos, transformarlos, analizarlos y construir visualizaciones y modelos.
+
+### Windows
+
+Descarga Python desde:
+
+https://www.python.org/downloads/
+
+Después abre una nueva terminal de PowerShell y ejecuta:
+
+```powershell
+python --version
+```
+
+Deberías observar algo parecido a:
+
+```text
+Python 3.x.x
+```
+
+También puedes revisar dónde está instalado:
+
+```powershell
+Get-Command python
+```
+
+### macOS
+
+En macOS recomiendo instalar Python con `uv`, que veremos en la siguiente sección.
+
+Si ya tienes Python instalado puedes verificarlo con:
+
+```bash
+python3 --version
+```
+
+Es importante notar que en macOS normalmente utilizaremos:
+
+```bash
+python3
+```
+
+en lugar de:
+
+```bash
+python
+```
+
+aunque esto puede cambiar dependiendo de cómo esté configurado el sistema.
+
+
+## 4. uv
+
+Cuando trabajamos en Python, diferentes proyectos pueden necesitar distintas librerías o incluso diferentes versiones de Python.
+
+Para evitar conflictos utilizaremos **ambientes virtuales**.
+
+Un ambiente virtual permite que cada proyecto tenga sus propias dependencias:
+
+```text
+proyecto_A
+├── pandas
+├── numpy
+└── scikit-learn
+
+proyecto_B
+├── pandas
+├── matplotlib
+└── statsmodels
+```
+
+sin que las librerías de un proyecto interfieran con las de otro.
+
+Para administrar estos ambientes utilizaremos **uv**.
+
+`uv` permite administrar Python, ambientes virtuales y dependencias.
+
+
+### Instalar uv en Windows
+
+Desde PowerShell:
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+Después cierra y vuelve a abrir PowerShell.
+
+Verifica:
+
+```powershell
+uv --version
+```
+
+
+### Instalar uv en macOS
+
+Desde Terminal:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Después cierra y vuelve a abrir la terminal.
+
+Verifica:
+
+```bash
+uv --version
+```
+
+
+## 5. Visual Studio Code
+
+**Visual Studio Code** será nuestro editor de código.
+
+Podemos pensar en él como el lugar donde vamos a organizar el proyecto, editar nuestros archivos y ejecutar comandos.
+
+Descárgalo desde:
+
+https://code.visualstudio.com/
+
+Está disponible tanto para Windows como para macOS.
+
+---
+
+## Instalar la extensión de Python
+
+En la barra lateral izquierda selecciona:
+
+```text
+Extensions
+```
+
+Busca:
+
+```text
+Python
+```
+
+e instala la extensión oficial de **Microsoft**.
+
+Esto permitirá que Visual Studio Code reconozca:
+
+* archivos `.py`;
+* ambientes virtuales;
+* notebooks;
+* intérpretes de Python;
+* herramientas de depuración.
+
+
+## 6. Verificar nuestra instalación
+
+Desde Visual Studio Code abre:
+
+```text
+Terminal
+→ New Terminal
+```
+
+### En Windows
+
+La terminal debería mostrar algo parecido a:
+
+```text
+PS C:\Users\tu_usuario>
+```
+
+Ejecuta:
+
+```powershell
+git --version
+ssh -V
+python --version
+uv --version
+code --version
+```
+
+### En macOS
+
+La terminal debería mostrar algo parecido a:
+
+```text
+tu_usuario@MacBook ~ %
+```
+
+Ejecuta:
+
+```bash
+git --version
+ssh -V
+python3 --version
+uv --version
+code --version
+```
+
+Si instalaste alguna herramienta mientras Visual Studio Code estaba abierto y el comando no aparece, **cierra completamente Visual Studio Code y vuelve a abrirlo**.
+
+
+## 7. Descargar el repositorio del curso
+
+Los materiales del curso estarán almacenados en un repositorio de GitHub.
+
+En lugar de descargar manualmente archivos `.zip`, utilizaremos Git para crear una copia del repositorio en nuestra computadora.
+
+Primero crea una carpeta donde guardar tus proyectos.
+
+
+## Windows
+
+Desde PowerShell:
+
+```powershell
+cd ~/Documents
+mkdir github
+cd github
+```
+
+Revisa dónde te encuentras:
+
+```powershell
+pwd
+```
+
+---
+
+## macOS
+
+Desde Terminal:
+
+```bash
+cd ~/Documents
+mkdir github
+cd github
+```
+
+Revisa dónde te encuentras:
+
+```bash
+pwd
+```
+
+En ambos sistemas puedes usar prácticamente el mismo flujo.
+
+---
+
+## Clonar el repositorio
+
+En ambos sistemas:
+
+```bash
+git clone git@github.com:ORGANIZACION/REPOSITORIO.git
+```
+
+Esto creará una nueva carpeta:
+
+```text
+github
+└── REPOSITORIO
+```
+
+Entra a ella:
+
+```bash
+cd REPOSITORIO
+```
+
+y verifica:
+
+```bash
+git status
+```
+
+Deberías observar algo similar a:
+
+```text
+On branch main
+Your branch is up to date with 'origin/main'.
+```
+
+
+## 8. Abrir el proyecto en Visual Studio Code
+
+Desde la carpeta del repositorio ejecuta:
+
+```bash
+code .
+```
+
+El punto:
+
+```text
+.
+```
+
+significa **la carpeta actual**.
+
+Por lo tanto:
+
+```bash
+code .
+```
+
+significa:
+
+> abre esta carpeta como proyecto en Visual Studio Code.
+
+Intenta abrir tus proyectos de esta manera, en lugar de abrir archivos individuales.
+
+Esto permite que Visual Studio Code reconozca correctamente la estructura completa del proyecto.
+
+---
+
+# 9. Crear un ambiente virtual
+
+Dentro del repositorio crea un ambiente virtual:
+
+```bash
+uv venv
+```
+
+Se creará una carpeta:
+
+```text
+.venv
+```
+
+Nuestro proyecto podría verse así:
+
+```text
+repositorio/
+├── .venv/
+├── data/
+├── notebooks/
+├── src/
+├── README.md
+└── ...
+```
+
+La carpeta `.venv` contiene el ambiente de Python correspondiente únicamente a este proyecto.
+
+---
+
+# 10. Activar el ambiente virtual
+
+Aquí sí cambia el comando según el sistema operativo.
+
+### Windows
+
+En PowerShell:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+Si se activó correctamente, verás algo parecido a:
+
+```text
+(.venv) PS C:\Users\usuario\Documents\github\repositorio>
+```
+
+### macOS
+
+En Terminal:
+
+```bash
+source .venv/bin/activate
+```
+
+Si se activó correctamente, verás algo parecido a:
+
+```text
+(.venv) usuario@MacBook repositorio %
+```
+
+En ambos casos:
+
+```text
+(.venv)
+```
+
+nos indica que estamos trabajando dentro del ambiente virtual.
+
+---
+
+# 11. Instalar paquetes
+
+Una vez dentro del ambiente podemos instalar las librerías que necesitemos.
+
+En ambos sistemas:
+
+```bash
+uv pip install pandas numpy matplotlib
+```
+
+Podemos revisar las librerías instaladas con:
+
+```bash
+uv pip list
+```
+
+Más adelante veremos formas más reproducibles de especificar las dependencias de un proyecto.
+
+Por ahora lo importante es entender que:
+
+```text
+computadora
+│
+├── Python
+│
+└── proyecto
+      │
+      ├── código
+      ├── datos
+      │
+      └── .venv
+            └── librerías de este proyecto
+```
+
+---
+
+# 12. Flujo de trabajo habitual
+
+Cada vez que quieras trabajar en el proyecto:
+
+### Windows
+
+```powershell
+cd ~/Documents/github/REPOSITORIO
+code .
+```
+
+Después:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+### macOS
+
+```bash
+cd ~/Documents/github/REPOSITORIO
+code .
+```
+
+Después:
+
+```bash
+source .venv/bin/activate
+```
+
+A partir de ahí podremos ejecutar Python, trabajar con notebooks o correr scripts.
+
+---
+
+# Nuestro ambiente de trabajo
+
+La estructura general será la misma para todos:
+
+```text
+Windows                          macOS
+   │                               │
+PowerShell                        zsh
+   │                               │
+   └──────────────┬────────────────┘
+                  │
+                 Git
+                  │
+                 SSH
+                  │
+                GitHub
+                  │
+                 uv
+                  │
+                .venv
+                  │
+               Python
+                  │
+          Visual Studio Code
+```
+
+El objetivo no es memorizar todos los comandos inmediatamente.
+
+Lo importante es empezar a reconocer qué herramienta cumple cada función y acostumbrarnos gradualmente a este flujo de trabajo.
+

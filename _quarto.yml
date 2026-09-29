@@ -16,6 +16,9 @@ website:
         contents:
           - text: "Infraestructura"
             href: docs/infra.html
+          - text: "Sesión técnica 01"
+            href: docs/st01.html
+
 
 
 html:

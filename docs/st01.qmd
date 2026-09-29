@@ -24,14 +24,14 @@ Trabajaremos con:
 
 La principal diferencia entre sistemas operativos será la terminal:
 
-```text
+```python
 Windows → PowerShell
 macOS   → Terminal / zsh
 ```
 
 La idea general de nuestro ambiente será:
 
-```text
+```python
 Sistema operativo
       │
       ├── Terminal
@@ -58,7 +58,6 @@ Por ahora, nuestro objetivo es dejar listo un ambiente en el que podamos:
 * crear ambientes virtuales;
 * trabajar cómodamente desde Visual Studio Code.
 
----
 
 ## 1. Git
 
@@ -72,11 +71,11 @@ En este curso también lo utilizaremos para descargar y actualizar los materiale
 
 Descarga e instala **Git for Windows** desde:
 
-[https://git-scm.com/downloads/win](https://git-scm.com/downloads/win)
+- [https://git-scm.com/downloads/win](https://git-scm.com/downloads/win)
 
 Durante la instalación puedes conservar las opciones predeterminadas.
 
-Una vez terminada la instalación, **cierra y vuelve a abrir PowerShell o Visual Studio Code**.
+Una vez terminada la instalación, **cierra y vuelve a abrir PowerShell**.
 
 Después verifica:
 
@@ -86,15 +85,22 @@ git --version
 
 Deberías obtener algo parecido a:
 
-```text
+```powershell
 git version 2.x.x
 ```
 
-También puedes instalarlo desde PowerShell con:
+
+
+::: {.callout-note}
+## Otra manera de instalar git
+
+Ó también puedes instalarlo desde PowerShell con:
 
 ```powershell
 winget install --id Git.Git -e --source winget
 ```
+
+:::
 
 ### macOS
 
@@ -120,7 +126,6 @@ Una vez terminada la instalación:
 git --version
 ```
 
----
 
 ## 2. SSH
 
@@ -128,17 +133,14 @@ git --version
 
 En nuestro caso lo utilizaremos principalmente para comunicarnos con **GitHub** sin tener que introducir usuario y contraseña cada vez que trabajamos con un repositorio.
 
+- Crea una cuenta de **GitHub**, si no tienes una: [github.com](https://github.com/). Te recomiendo utilizar un 
+correo personal, y un nombre de usuario que te gusten.
+
 Tanto Windows como macOS incluyen herramientas para trabajar con SSH.
 
 ### Verificar SSH
 
-En Windows:
-
-```powershell
-ssh -V
-```
-
-En macOS:
+En Windows y macOs:
 
 ```bash
 ssh -V
@@ -162,69 +164,49 @@ Presiona `Enter` para aceptar la ubicación predeterminada y no coloques passpha
 
 Se crearán dos archivos dentro de la carpeta `.ssh`.
 
-### Windows
+- En Windows se crean en:
 
-```text
+```python
 C:\Users\TU_USUARIO\.ssh\
 ```
 
-### macOS
+- En mac se crean en: 
 
-```text
+```python
 ~/.ssh/
 ```
 
-Normalmente encontrarás:
+Dentro de estas carpetas se encontrarán estos dos archivos que son tus llaves:
 
-```text
-id_ed25519
-id_ed25519.pub
+```python
+id_ed25519                 ## es tu llave privada y NUNCA debe compartirse
+id_ed25519.pub             ## es tu llave pública
 ```
 
-El archivo:
-
-```text
-id_ed25519
-```
-
-es tu **llave privada** y no debe compartirse.
-
-El archivo:
-
-```text
-id_ed25519.pub
-```
-
-es tu **llave pública** y es la que registraremos en GitHub.
-
+- La llave que no tiene terminación es tu **llave privada** y **NUNCA** debes compartirla. 
+- La llave que tiene terminación `.pub` es tu **llave pública** y es la que registraremos en GitHub.
 
 ### Ver la llave pública
 
-#### Windows
+- En Windows y macOs
 
-```powershell
-Get-Content ~/.ssh/id_ed25519.pub
-```
-
-#### macOS
 
 ```bash
-cat ~/.ssh/id_ed25519.pub
+cat .ssh/id_ed25519.pub
 ```
 
-Copia todo el contenido.
+Copia todo el contenido que comienza desde `ssh-ed25519` y termina con el correo de tu cuenta de github.
+
 
 Después entra a GitHub y ve a:
 
-```text
+```python
 Settings
 → SSH and GPG keys
 → New SSH key
 ```
 
-Pega ahí tu llave pública.
-
-Finalmente verifica la conexión.
+Pega ahí tu llave pública, coloca un Título que te ayude a identificar tu computadora y finalmente verifica la conexión.
 
 En ambos sistemas:
 
@@ -236,8 +218,9 @@ La primera vez puede aparecer una pregunta para confirmar la identidad del servi
 
 Escribe:
 
-```text
+```bash
 yes
+
 ```
 
 Si la configuración fue correcta, GitHub reconocerá tu cuenta.
@@ -251,9 +234,7 @@ Lo utilizaremos para cargar datos, transformarlos, analizarlos y construir visua
 
 ### Windows
 
-Descarga Python desde:
-
-https://www.python.org/downloads/
+Descarga Python desde: [python.org/downloads](https://www.python.org/downloads/) y sigue las instrucciones.
 
 Después abre una nueva terminal de PowerShell y ejecuta:
 
@@ -263,19 +244,11 @@ python --version
 
 Deberías observar algo parecido a:
 
-```text
+```powershell
 Python 3.x.x
 ```
 
-También puedes revisar dónde está instalado:
-
-```powershell
-Get-Command python
-```
-
 ### macOS
-
-En macOS recomiendo instalar Python con `uv`, que veremos en la siguiente sección.
 
 Si ya tienes Python instalado puedes verificarlo con:
 
@@ -306,7 +279,7 @@ Para evitar conflictos utilizaremos **ambientes virtuales**.
 
 Un ambiente virtual permite que cada proyecto tenga sus propias dependencias:
 
-```text
+```python
 proyecto_A
 ├── pandas
 ├── numpy
@@ -365,29 +338,15 @@ uv --version
 
 Podemos pensar en él como el lugar donde vamos a organizar el proyecto, editar nuestros archivos y ejecutar comandos.
 
-Descárgalo desde:
+Descárgalo desde: [code.visualstudio.com](https://code.visualstudio.com/)
 
-https://code.visualstudio.com/
 
 Está disponible tanto para Windows como para macOS.
 
----
 
-## Instalar la extensión de Python
+### Dentro de VS, instalar la extensión de Python
 
-En la barra lateral izquierda selecciona:
-
-```text
-Extensions
-```
-
-Busca:
-
-```text
-Python
-```
-
-e instala la extensión oficial de **Microsoft**.
+En la barra lateral izquierda selecciona `Extensions`. Busca `Python` e instala la extensión oficial de **Microsoft**.
 
 Esto permitirá que Visual Studio Code reconozca:
 
@@ -398,11 +357,13 @@ Esto permitirá que Visual Studio Code reconozca:
 * herramientas de depuración.
 
 
-## 6. Verificar nuestra instalación
+## 6. Verificar nuestra instalación y entrega de tarea
 
-Desde Visual Studio Code abre:
+Entrega **un solo archivo PDF** con capturas de pantalla de tu terminal en las que pueda verificarse lo siguiente:
 
-```text
+Desde Visual Studio Code en la parte superior busca:
+
+```python
 Terminal
 → New Terminal
 ```
@@ -411,7 +372,7 @@ Terminal
 
 La terminal debería mostrar algo parecido a:
 
-```text
+```python
 PS C:\Users\tu_usuario>
 ```
 
@@ -429,13 +390,13 @@ code --version
 
 La terminal debería mostrar algo parecido a:
 
-```text
+```python
 tu_usuario@MacBook ~ %
 ```
 
 Ejecuta:
 
-```bash
+```python
 git --version
 ssh -V
 python3 --version
@@ -446,267 +407,11 @@ code --version
 Si instalaste alguna herramienta mientras Visual Studio Code estaba abierto y el comando no aparece, **cierra completamente Visual Studio Code y vuelve a abrirlo**.
 
 
-## 7. Descargar el repositorio del curso
-
-Los materiales del curso estarán almacenados en un repositorio de GitHub.
-
-En lugar de descargar manualmente archivos `.zip`, utilizaremos Git para crear una copia del repositorio en nuestra computadora.
-
-Primero crea una carpeta donde guardar tus proyectos.
-
-
-## Windows
-
-Desde PowerShell:
-
-```powershell
-cd ~/Documents
-mkdir github
-cd github
-```
-
-Revisa dónde te encuentras:
-
-```powershell
-pwd
-```
-
----
-
-## macOS
-
-Desde Terminal:
-
-```bash
-cd ~/Documents
-mkdir github
-cd github
-```
-
-Revisa dónde te encuentras:
-
-```bash
-pwd
-```
-
-En ambos sistemas puedes usar prácticamente el mismo flujo.
-
----
-
-## Clonar el repositorio
-
-En ambos sistemas:
-
-```bash
-git clone git@github.com:ORGANIZACION/REPOSITORIO.git
-```
-
-Esto creará una nueva carpeta:
-
-```text
-github
-└── REPOSITORIO
-```
-
-Entra a ella:
-
-```bash
-cd REPOSITORIO
-```
-
-y verifica:
-
-```bash
-git status
-```
-
-Deberías observar algo similar a:
-
-```text
-On branch main
-Your branch is up to date with 'origin/main'.
-```
-
-
-## 8. Abrir el proyecto en Visual Studio Code
-
-Desde la carpeta del repositorio ejecuta:
-
-```bash
-code .
-```
-
-El punto:
-
-```text
-.
-```
-
-significa **la carpeta actual**.
-
-Por lo tanto:
-
-```bash
-code .
-```
-
-significa:
-
-> abre esta carpeta como proyecto en Visual Studio Code.
-
-Intenta abrir tus proyectos de esta manera, en lugar de abrir archivos individuales.
-
-Esto permite que Visual Studio Code reconozca correctamente la estructura completa del proyecto.
-
----
-
-# 9. Crear un ambiente virtual
-
-Dentro del repositorio crea un ambiente virtual:
-
-```bash
-uv venv
-```
-
-Se creará una carpeta:
-
-```text
-.venv
-```
-
-Nuestro proyecto podría verse así:
-
-```text
-repositorio/
-├── .venv/
-├── data/
-├── notebooks/
-├── src/
-├── README.md
-└── ...
-```
-
-La carpeta `.venv` contiene el ambiente de Python correspondiente únicamente a este proyecto.
-
----
-
-# 10. Activar el ambiente virtual
-
-Aquí sí cambia el comando según el sistema operativo.
-
-### Windows
-
-En PowerShell:
-
-```powershell
-.venv\Scripts\Activate.ps1
-```
-
-Si se activó correctamente, verás algo parecido a:
-
-```text
-(.venv) PS C:\Users\usuario\Documents\github\repositorio>
-```
-
-### macOS
-
-En Terminal:
-
-```bash
-source .venv/bin/activate
-```
-
-Si se activó correctamente, verás algo parecido a:
-
-```text
-(.venv) usuario@MacBook repositorio %
-```
-
-En ambos casos:
-
-```text
-(.venv)
-```
-
-nos indica que estamos trabajando dentro del ambiente virtual.
-
----
-
-# 11. Instalar paquetes
-
-Una vez dentro del ambiente podemos instalar las librerías que necesitemos.
-
-En ambos sistemas:
-
-```bash
-uv pip install pandas numpy matplotlib
-```
-
-Podemos revisar las librerías instaladas con:
-
-```bash
-uv pip list
-```
-
-Más adelante veremos formas más reproducibles de especificar las dependencias de un proyecto.
-
-Por ahora lo importante es entender que:
-
-```text
-computadora
-│
-├── Python
-│
-└── proyecto
-      │
-      ├── código
-      ├── datos
-      │
-      └── .venv
-            └── librerías de este proyecto
-```
-
----
-
-# 12. Flujo de trabajo habitual
-
-Cada vez que quieras trabajar en el proyecto:
-
-### Windows
-
-```powershell
-cd ~/Documents/github/REPOSITORIO
-code .
-```
-
-Después:
-
-```powershell
-.venv\Scripts\Activate.ps1
-```
-
-### macOS
-
-```bash
-cd ~/Documents/github/REPOSITORIO
-code .
-```
-
-Después:
-
-```bash
-source .venv/bin/activate
-```
-
-A partir de ahí podremos ejecutar Python, trabajar con notebooks o correr scripts.
-
----
-
 # Nuestro ambiente de trabajo
 
 La estructura general será la misma para todos:
 
-```text
+```python
 Windows                          macOS
    │                               │
 PowerShell                        zsh
@@ -720,8 +425,6 @@ PowerShell                        zsh
                 GitHub
                   │
                  uv
-                  │
-                .venv
                   │
                Python
                   │

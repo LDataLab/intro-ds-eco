@@ -1,0 +1,235 @@
+---
+title: "Sesión técnica 2"
+subtitle: "Configuración del ambiente de trabajo"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    theme: cosmo
+    highlight-style: github
+date: today
+---
+
+
+## 7. Descargar el repositorio del curso
+
+Los materiales del curso estarán almacenados en un repositorio de GitHub.
+
+En lugar de descargar manualmente archivos `.zip`, utilizaremos Git para crear una copia del repositorio en nuestra computadora.
+
+Primero crea una carpeta donde guardar tus proyectos.
+
+Desde PowerShell y Terminal:
+
+```powershell
+cd Documents
+mkdir repos_clases
+cd repos_clases
+```
+
+En ambos sistemas coloca:
+
+```bash
+git clone git@github.com:LDataLab/intro-ds-eco.git
+```
+
+Esto creará una nueva carpeta:
+
+```text
+github
+└── REPOSITORIO
+```
+
+Entra a ella:
+
+```bash
+cd REPOSITORIO
+```
+
+y verifica:
+
+```bash
+git status
+```
+
+Deberías observar algo similar a:
+
+```text
+On branch main
+Your branch is up to date with 'origin/main'.
+```
+
+
+## 8. Abrir el proyecto en Visual Studio Code
+
+Desde la carpeta del repositorio ejecuta:
+
+```bash
+code .
+```
+
+El punto:
+
+```text
+.
+```
+
+significa **la carpeta actual**.
+
+Por lo tanto:
+
+```bash
+code .
+```
+
+significa:
+
+> abre esta carpeta como proyecto en Visual Studio Code.
+
+Intenta abrir tus proyectos de esta manera, en lugar de abrir archivos individuales.
+
+Esto permite que Visual Studio Code reconozca correctamente la estructura completa del proyecto.
+
+
+
+
+# 9. Crear un ambiente virtual
+
+Dentro del repositorio crea un ambiente virtual:
+
+```bash
+uv venv
+```
+
+Se creará una carpeta:
+
+```text
+.venv
+```
+
+Nuestro proyecto podría verse así:
+
+```text
+repositorio/
+├── .venv/
+├── data/
+├── notebooks/
+├── src/
+├── README.md
+└── ...
+```
+
+La carpeta `.venv` contiene el ambiente de Python correspondiente únicamente a este proyecto.
+
+---
+
+# 10. Activar el ambiente virtual
+
+Aquí sí cambia el comando según el sistema operativo.
+
+### Windows
+
+En PowerShell:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+Si se activó correctamente, verás algo parecido a:
+
+```text
+(.venv) PS C:\Users\usuario\Documents\github\repositorio>
+```
+
+### macOS
+
+En Terminal:
+
+```bash
+source .venv/bin/activate
+```
+
+Si se activó correctamente, verás algo parecido a:
+
+```text
+(.venv) usuario@MacBook repositorio %
+```
+
+En ambos casos:
+
+```text
+(.venv)
+```
+
+nos indica que estamos trabajando dentro del ambiente virtual.
+
+---
+
+# 11. Instalar paquetes
+
+Una vez dentro del ambiente podemos instalar las librerías que necesitemos.
+
+En ambos sistemas:
+
+```bash
+uv pip install pandas numpy matplotlib
+```
+
+Podemos revisar las librerías instaladas con:
+
+```bash
+uv pip list
+```
+
+Más adelante veremos formas más reproducibles de especificar las dependencias de un proyecto.
+
+Por ahora lo importante es entender que:
+
+```text
+computadora
+│
+├── Python
+│
+└── proyecto
+      │
+      ├── código
+      ├── datos
+      │
+      └── .venv
+            └── librerías de este proyecto
+```
+
+
+# 12. Flujo de trabajo habitual
+
+Cada vez que quieras trabajar en el proyecto:
+
+### Windows
+
+```powershell
+cd ~/Documents/github/REPOSITORIO
+code .
+```
+
+Después:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+### macOS
+
+```bash
+cd ~/Documents/github/REPOSITORIO
+code .
+```
+
+Después:
+
+```bash
+source .venv/bin/activate
+```
+
+A partir de ahí podremos ejecutar Python, trabajar con notebooks o correr scripts.
+
+

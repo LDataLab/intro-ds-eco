@@ -10,13 +10,39 @@ format:
 date: today
 ---
 
-
+# Objetivo de la sesión
 
 En esta sesión aprenderemos un flujo básico para trabajar en proyectos de ciencia de datos.
 
 La idea no es aprender todas las herramientas de Git, Python o la terminal, sino aprender **lo mínimo necesario para trabajar de manera ordenada y reproducible**.
 
+Nuestro flujo será:
 
+```text
+GitHub
+   ↓
+clonar repositorio
+   ↓
+abrir proyecto en VS Code
+   ↓
+crear una rama
+   ↓
+configurar Python con uv
+   ↓
+trabajar en un notebook
+   ↓
+git add
+   ↓
+git commit
+   ↓
+git push
+   ↓
+GitHub
+```
+
+Durante el curso intentaremos mantener esta misma forma de trabajo.
+
+---
 
 # 1. Nuestro espacio de trabajo
 
@@ -31,7 +57,7 @@ No necesitamos dominar todas estas herramientas.
 
 Por ahora nos interesa entender cómo se conectan.
 
-```python
+```text
 Computadora
 │
 ├── Terminal
@@ -47,8 +73,9 @@ Computadora
     └── uv.lock
 ```
 
+---
 
-## Trabajo básico desde la terminal
+# 2. Trabajo básico desde la terminal
 
 Dependiendo de tu sistema operativo estarás utilizando:
 
@@ -57,47 +84,150 @@ Dependiendo de tu sistema operativo estarás utilizando:
 
 Muchos de los comandos básicos que utilizaremos funcionan de forma similar en ambos sistemas.
 
-- **¿Dónde estoy?**
-    - Muestra la carpeta en la que estamos trabajando.
-    ```bash
-    pwd
-    ```
+## ¿Dónde estoy?
 
-- **Enlistar archivos**
-    - Muestra los archivos y carpetas del directorio actual.
-    ```bash
-    ls
-    ```
+```bash
+pwd
+```
 
-- **Cambiar de carpeta**
-    - Para entrar a una carpeta:
-    ```bash
-    cd Documents
-    ```
-    ```bash
-    cd nombre_carpeta
-    ```
-    
-    - Para regresar una carpeta:
-    
-    ```bash
-    cd ..
-    ```
-    
+Muestra la carpeta en la que estamos trabajando.
 
-- **Crear una carpeta**
+Por ejemplo:
 
-    ```bash
-    mkdir proyectos
-    ```
-    
-    Después podemos entrar:
-    
-    ```bash
-    cd proyectos
-    ```
+```text
+C:\Users\elena\Documents
+```
 
-## Instrucciones para la clase
+o en macOS:
+
+```text
+/Users/elena/Documents
+```
+
+---
+
+## Ver archivos
+
+```bash
+ls
+```
+
+Muestra los archivos y carpetas del directorio actual.
+
+---
+
+## Cambiar de carpeta
+
+```bash
+cd Documents
+```
+
+Para entrar a una carpeta:
+
+```bash
+cd nombre_carpeta
+```
+
+Para regresar una carpeta:
+
+```bash
+cd ..
+```
+
+---
+
+## Crear una carpeta
+
+```bash
+mkdir proyectos
+```
+
+Después podemos entrar:
+
+```bash
+cd proyectos
+```
+
+---
+
+## Algunas ideas importantes
+
+### `.`
+
+Representa la carpeta actual.
+
+```text
+.
+```
+
+### `..`
+
+Representa la carpeta anterior.
+
+```text
+..
+```
+
+Por ejemplo:
+
+```bash
+cd ..
+```
+
+significa:
+
+> regresar a la carpeta anterior.
+
+---
+
+# 3. Git y GitHub
+
+Git y GitHub no son exactamente lo mismo.
+
+**Git** mantiene versiones de nuestros archivos en nuestra computadora.
+
+**GitHub** permite almacenar y compartir esos repositorios en internet.
+
+```text
+Tu computadora                    GitHub
+----------------                  ----------------
+Repositorio local   <---------->  Repositorio remoto
+        Git                        Git + plataforma
+```
+
+Durante el curso utilizaremos ambos.
+
+---
+
+# 4. Configurar Git
+
+Antes de comenzar debemos indicar qué nombre queremos que aparezca en nuestros commits.
+
+```bash
+git config --global user.name "Tu Nombre"
+```
+
+También debemos configurar nuestro correo:
+
+```bash
+git config --global user.email "tu_correo@ejemplo.com"
+```
+
+Podemos verificar la configuración con:
+
+```bash
+git config --global --list
+```
+
+Esto solamente necesita hacerse una vez en cada computadora.
+
+---
+
+# 5. Clonar un repositorio
+
+Normalmente un proyecto comenzará como un repositorio en GitHub.
+
+En lugar de descargar un archivo `.zip`, utilizaremos Git para crear una copia en nuestra computadora.
 
 Primero ve a la carpeta donde guardarás tus proyectos.
 
@@ -129,134 +259,9 @@ Entramos al repositorio:
 cd intro-ds-eco
 ```
 
-Enlistamos lo que hay dentro del repositorio:
-
-
-```bash
-ls
-```
-
-Y abrimos Visual Studio:
-
-```bash
-code .
-```
-
-::: {.callout-important collapse="true"}
-## Configurar usuario de Git
-
-Antes de comenzar debemos indicar qué nombre queremos que aparezca en nuestros commits.
-
-```bash
-git config --global user.name "Tu Nombre"
-```
-
-También debemos configurar nuestro correo:
-
-```bash
-git config --global user.email "tu_correo@ejemplo.com"
-```
-
-Podemos verificar la configuración con:
-
-```bash
-git config --global --list
-```
-
-Esto solamente necesita hacerse una vez en cada computadora.
-
-:::
-
-
-
-
-
-
-# 3. Git y GitHub
-
-Git y GitHub no son exactamente lo mismo.
-
-**Git** mantiene versiones de nuestros archivos en nuestra computadora.
-
-**GitHub** permite almacenar y compartir esos repositorios en internet.
-
-```text
-Tu computadora                    GitHub
-----------------                  ----------------
-Repositorio local   <---------->  Repositorio remoto
-        Git                        Git + plataforma
-```
-
-Durante el curso utilizaremos ambos.
-
-
-
-## Git status, add, commit y push
-
-Supongamos que creamos:
-
-```text
-notebooks/exploracion.ipynb
-```
-
-Primero revisamos:
-
-```bash
-git status
-```
-
-Git nos mostrará los archivos nuevos o modificados.
-
 ---
 
-## Paso 1. Seleccionar los cambios
-
-```bash
-git add notebooks/exploracion.ipynb
-```
-
-También podemos agregar los archivos que describen nuestro ambiente:
-
-```bash
-git add pyproject.toml uv.lock
-```
-
-Después revisamos:
-
-```bash
-git status
-```
-
----
-
-## Paso 2. Crear un commit
-
-Un **commit** registra una versión de nuestro proyecto.
-
-```bash
-git commit -m "Agrega exploración inicial de datos"
-```
-
-El mensaje debe describir brevemente qué hicimos.
-
----
-
-## Paso 3. Subir nuestra rama
-
-La primera vez que subimos una nueva rama utilizamos:
-
-```bash
-git push -u origin exploracion-datos
-```
-
-Después de eso, normalmente bastará con:
-
-```bash
-git push
-```
-
-Ahora nuestra rama también existe en GitHub.
-
+# 6. Siempre revisa dónde estás
 
 Uno de los comandos que más utilizaremos será:
 
@@ -294,6 +299,7 @@ git status
 y lee el mensaje.
 :::
 
+---
 
 # 7. Trabajar en una rama
 
@@ -345,6 +351,7 @@ main
 
 Podemos experimentar y realizar cambios en nuestra rama sin modificar directamente `main`.
 
+---
 
 # 8. Abrir el proyecto en VS Code
 
@@ -383,6 +390,7 @@ Esto permite que VS Code reconozca correctamente:
 - Python;
 - el ambiente virtual.
 
+---
 
 # 9. Python y ambientes virtuales
 
@@ -422,6 +430,82 @@ Esto ayuda a que los proyectos sean:
 - reproducibles.
 
 Durante este curso utilizaremos **uv** para administrar nuestros proyectos de Python.
+
+---
+
+# 10. Crear un proyecto con uv
+
+Dentro de la carpeta del proyecto ejecutamos:
+
+```bash
+uv init
+```
+
+Esto crea, entre otras cosas, un archivo:
+
+```text
+pyproject.toml
+```
+
+Este archivo describe nuestro proyecto y sus dependencias.
+
+Por ejemplo, después de agregar paquetes podemos encontrar algo similar a:
+
+```toml
+[project]
+name = "analisis-economia"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas",
+    "matplotlib"
+]
+```
+
+No necesitamos editar este archivo manualmente.
+
+`uv` lo hará por nosotros.
+
+---
+
+# 11. Agregar paquetes
+
+Si necesitamos `pandas`:
+
+```bash
+uv add pandas
+```
+
+Si también necesitamos `matplotlib`:
+
+```bash
+uv add matplotlib
+```
+
+Podemos agregar varios paquetes al mismo tiempo:
+
+```bash
+uv add pandas matplotlib seaborn
+```
+
+Para trabajar con notebooks podemos agregar:
+
+```bash
+uv add ipykernel
+```
+
+Cada vez que utilizamos:
+
+```bash
+uv add
+```
+
+`uv` actualiza automáticamente:
+
+```text
+pyproject.toml
+uv.lock
+```
 
 ---
 
@@ -505,6 +589,106 @@ proyecto/
 ```
 
 ---
+
+# 14. Abrir un notebook en VS Code
+
+Podemos crear una carpeta para nuestros notebooks:
+
+```bash
+mkdir notebooks
+```
+
+Después, desde VS Code, creamos:
+
+```text
+notebooks/exploracion.ipynb
+```
+
+Al abrir el notebook, VS Code nos pedirá seleccionar un **kernel de Python**.
+
+Debemos seleccionar el Python correspondiente al ambiente:
+
+```text
+.venv
+```
+
+Ahora podemos probar:
+
+```python
+import pandas as pd
+
+print(pd.__version__)
+```
+
+Si el código funciona, estamos utilizando correctamente el ambiente del proyecto.
+
+---
+
+# 15. Guardar nuestro trabajo con Git
+
+Supongamos que creamos:
+
+```text
+notebooks/exploracion.ipynb
+```
+
+Primero revisamos:
+
+```bash
+git status
+```
+
+Git nos mostrará los archivos nuevos o modificados.
+
+---
+
+## Paso 1. Seleccionar los cambios
+
+```bash
+git add notebooks/exploracion.ipynb
+```
+
+También podemos agregar los archivos que describen nuestro ambiente:
+
+```bash
+git add pyproject.toml uv.lock
+```
+
+Después revisamos:
+
+```bash
+git status
+```
+
+---
+
+## Paso 2. Crear un commit
+
+Un **commit** registra una versión de nuestro proyecto.
+
+```bash
+git commit -m "Agrega exploración inicial de datos"
+```
+
+El mensaje debe describir brevemente qué hicimos.
+
+---
+
+## Paso 3. Subir nuestra rama
+
+La primera vez que subimos una nueva rama utilizamos:
+
+```bash
+git push -u origin exploracion-datos
+```
+
+Después de eso, normalmente bastará con:
+
+```bash
+git push
+```
+
+Ahora nuestra rama también existe en GitHub.
 
 ---
 

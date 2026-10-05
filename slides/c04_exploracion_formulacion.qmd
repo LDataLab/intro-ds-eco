@@ -181,8 +181,9 @@ Notas clínicas, descripción de un delito, comentarios en redes sociales, respu
 
 ## 5. Geoespaciales
 
-+ Las coordenadas se expresan como **(latitud, longitud)**
-+ La **latitud** indica norte (+) o sur (−); la **longitud** indica este (+) u oeste (−)
++ Alguna información geoespacial se puede expesar con coordenadas se expresan como **(latitud, longitud)**
+    + La **latitud** indica norte (+) o sur (−); la **longitud** indica este (+) u oeste (−)
++ También, se puede expersar como polígonos, que delimitan un espacio
 
 ::: {.callout-warning}
 ## ¿Qué buscar?

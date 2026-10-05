@@ -38,14 +38,14 @@ bibliography: slides/references.bib
 
 
 ::: {.callout-tip collapse="false"}
-### 03: Datos, adquisición, almacenamiento
+### 03: Datos, adquisición e infraestructura
 
 - Tipos de datos, formato *tidy*, almacenamiento, retos de limipieza
     - [Slides 03](slides/c03_almacenamiento_rl.html) 
 
 :::
 
-::: {.callout-caution collapse="true"}
+::: {.callout-tip collapse="false"}
 
 ### 03: EDA y GEDA
 

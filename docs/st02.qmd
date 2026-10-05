@@ -136,6 +136,13 @@ Enlistamos lo que hay dentro del repositorio:
 ls
 ```
 
+Corremos la siguiente línea:
+
+```bash
+uv sync
+```
+
+
 Y abrimos Visual Studio:
 
 ```bash
@@ -169,16 +176,13 @@ Esto solamente necesita hacerse una vez en cada computadora.
 
 
 
-
-
-
-# 3. Git y GitHub
+# 2. Git y GitHub
 
 Git y GitHub no son exactamente lo mismo.
 
-**Git** mantiene versiones de nuestros archivos en nuestra computadora.
+- **Git** mantiene versiones de nuestros archivos en nuestra computadora.
 
-**GitHub** permite almacenar y compartir esos repositorios en internet.
+- **GitHub** permite almacenar y compartir esos repositorios en internet.
 
 ```text
 Tu computadora                    GitHub
@@ -191,12 +195,12 @@ Durante el curso utilizaremos ambos.
 
 
 
-## Git status, add, commit y push
+## Flujo escencial con git
 
-Supongamos que creamos:
+Supongamos que hicimos un cambio en el archivo de exploracion, agregamos el cambio:
 
-```text
-notebooks/exploracion.ipynb
+```bash
+git add src/exploracion.py
 ```
 
 Primero revisamos:
@@ -205,20 +209,19 @@ Primero revisamos:
 git status
 ```
 
-Git nos mostrará los archivos nuevos o modificados.
+Git nos mostrará los archivos nuevos o modificados, y si queremos ver qué cambio: 
 
----
-
-## Paso 1. Seleccionar los cambios
 
 ```bash
-git add notebooks/exploracion.ipynb
+git diff
 ```
 
-También podemos agregar los archivos que describen nuestro ambiente:
+
+
+### Seleccionar los cambios
 
 ```bash
-git add pyproject.toml uv.lock
+git add src/exploracion_01.py
 ```
 
 Después revisamos:
@@ -227,9 +230,8 @@ Después revisamos:
 git status
 ```
 
----
 
-## Paso 2. Crear un commit
+### Crear un commit
 
 Un **commit** registra una versión de nuestro proyecto.
 
@@ -239,23 +241,14 @@ git commit -m "Agrega exploración inicial de datos"
 
 El mensaje debe describir brevemente qué hicimos.
 
----
 
-## Paso 3. Subir nuestra rama
+### Subir cambios al repositorio
 
-La primera vez que subimos una nueva rama utilizamos:
-
-```bash
-git push -u origin exploracion-datos
-```
-
-Después de eso, normalmente bastará con:
+Para subir los a main
 
 ```bash
-git push
+git push 
 ```
-
-Ahora nuestra rama también existe en GitHub.
 
 
 Uno de los comandos que más utilizaremos será:
@@ -295,19 +288,13 @@ y lee el mensaje.
 :::
 
 
-# 7. Trabajar en una rama
+# 3. Trabajar en una rama
 
-Un repositorio puede contener diferentes **ramas**.
+Una rama (branch) es una línea separada de trabajo dentro de un repositorio.
 
-La rama principal normalmente se llama:
+Sirve para hacer cambios sin modificar directamente la versión principal del proyecto, que normalmente está en `:w
+main`.
 
-```text
-main
-```
-
-Para nuestros ejercicios evitaremos trabajar directamente sobre `main`.
-
-Primero podemos revisar las ramas existentes:
 
 ```bash
 git branch
@@ -316,7 +303,7 @@ git branch
 Para crear una nueva rama y movernos a ella:
 
 ```bash
-git switch -c exploracion-datos
+git switch -c nueva-rama
 ```
 
 Ahora podemos verificar:
@@ -328,63 +315,20 @@ git status
 Deberíamos observar algo similar a:
 
 ```text
-On branch exploracion-datos
-```
-
-La idea puede representarse así:
-
-```text
-main
- |
- o
- |
- o
-  \
-   o  exploracion-datos
+On branch nueva-rama
 ```
 
 Podemos experimentar y realizar cambios en nuestra rama sin modificar directamente `main`.
 
 
-# 8. Abrir el proyecto en VS Code
-
-Desde la carpeta del repositorio ejecutamos:
+Para subir los cambios al repositorio:
 
 ```bash
-code .
+git push -u origin nueva-rama
 ```
 
-El punto:
 
-```text
-.
-```
-
-significa:
-
-> la carpeta actual.
-
-Por lo tanto:
-
-```bash
-code .
-```
-
-significa:
-
-> abre esta carpeta como proyecto en VS Code.
-
-Es preferible abrir **la carpeta completa del proyecto** en lugar de abrir archivos individuales.
-
-Esto permite que VS Code reconozca correctamente:
-
-- la estructura del proyecto;
-- Git;
-- Python;
-- el ambiente virtual.
-
-
-# 9. Python y ambientes virtuales
+# 4. Python y ambientes virtuales
 
 Los proyectos de Python normalmente necesitan paquetes adicionales.
 
@@ -404,12 +348,12 @@ Por eso utilizamos un **ambiente virtual**.
 Podemos imaginarlo como una pequeña instalación de Python asociada únicamente a nuestro proyecto.
 
 ```text
-Proyecto A
+Proyecto inegi
 ├── pandas
 ├── matplotlib
 └── Python
 
-Proyecto B
+Proyecto fiscal
 ├── pandas
 ├── scikit-learn
 └── Python
@@ -423,9 +367,8 @@ Esto ayuda a que los proyectos sean:
 
 Durante este curso utilizaremos **uv** para administrar nuestros proyectos de Python.
 
----
 
-# 12. `pyproject.toml` y `uv.lock`
+## `pyproject.toml` y `uv.lock`
 
 Nuestro proyecto tendrá dos archivos importantes:
 
@@ -434,7 +377,7 @@ pyproject.toml
 uv.lock
 ```
 
-## `pyproject.toml`
+### `pyproject.toml`
 
 Describe qué necesita nuestro proyecto.
 
@@ -446,14 +389,15 @@ matplotlib
 seaborn
 ```
 
-## `uv.lock`
+### `uv.lock`
 
 Guarda las versiones exactas utilizadas.
 
 Esto permite que otra persona pueda reproducir nuestro ambiente.
 
-::: {.callout-important}
 Estos archivos **sí deben guardarse en Git**.
+
+::: {.callout-important}
 
 La carpeta:
 
@@ -464,9 +408,8 @@ La carpeta:
 no debe subirse a GitHub.
 :::
 
----
 
-# 13. Crear el ambiente del proyecto
+### Crear el ambiente del proyecto
 
 Cuando ejecutamos:
 
@@ -504,88 +447,95 @@ proyecto/
 └── .venv/
 ```
 
----
 
----
-
-# 16. El flujo completo
+# 5. El flujo completo
 
 El flujo que utilizaremos durante el curso puede resumirse así:
 
-```text
 1. Ir al proyecto
 
+```bash
 cd mi-proyecto
 ```
 
-```text
-2. Revisar Git
+2. Abrir VS Code
 
-git status
-```
-
-```text
-3. Crear una rama
-
-git switch -c exploracion-datos
-```
-
-```text
-4. Abrir VS Code
-
+```bash
 code .
 ```
 
-```text
-5. Agregar dependencias si hacen falta
+3.  Hacer cambios en los archivos dentro de Visual Studio Code 
 
-uv add pandas matplotlib
-```
+4. Revisar Git
 
-```text
-6. Sincronizar el ambiente
-
-uv sync
-```
-
-```text
-7. Trabajar en Python
-
-notebooks/exploracion.ipynb
-```
-
-```text
-8. Revisar cambios
-
+```bash
 git status
 ```
 
-```text
-9. Seleccionar cambios
 
+5. Seleccionar cambios
+
+```bash
 git add notebooks/exploracion.ipynb
-git add pyproject.toml uv.lock
 ```
 
-```text
-10. Crear commit
 
+6. Crear commit
+```bash
 git commit -m "Agrega análisis exploratorio"
 ```
 
-```text
-11. Subir la rama
 
+7. Subir información al repositorio en lína
+
+```bash
+git push
+```
+
+8. Bajar información del repositorio en línea
+
+```bash
+git pull
+```
+
+# 6. Comandos útiles 
+
+- Subir una rama nueva:
+
+```bash
 git push -u origin exploracion-datos
 ```
 
----
+- Agregar dependencias si hacen falta
 
-# 17. ¿Qué archivos subimos a GitHub?
+```bash
+uv add pandas matplotlib
+```
+
+- Sincronizar el ambiente
+
+```bash
+uv sync
+```
+
+- Cambiar de ramas existentes
+```bash
+git swich rama
+```
+
+- Crear una nueva rama
+
+```bash
+git switch -c exploracion-datos
+```
+
+
+
+# 7. ¿Qué archivos subimos a GitHub?
 
 Sí queremos subir:
 
-```text
+```python
 README.md
 pyproject.toml
 uv.lock
@@ -593,37 +543,29 @@ notebooks/
 src/
 ```
 
-Normalmente no queremos subir:
+Normalmente no queremos subir, que son archivos ocultos o de funcionamiento. Los puedes distinguir
+porque comienzan con un `.` ó con `__`
 
-```text
+```bash
 .venv/
 __pycache__/
 .DS_Store
 ```
 
-Para indicarle esto a Git podemos utilizar un archivo:
+Para a Git que no suba estos archivos utilizamos:
 
 ```text
 .gitignore
 ```
 
-Por ejemplo:
 
-```text
-.venv/
-__pycache__/
-.DS_Store
-```
-
----
-
-# 18. Idea para el trabajo en parejas
+# 8. Idea para el trabajo en parejas
 
 Para las siguientes actividades trabajaremos con **un repositorio por pareja**.
 
 Una estructura mínima podría ser:
 
-```text
+```bash
 proyecto/
 │
 ├── README.md

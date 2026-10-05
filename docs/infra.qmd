@@ -150,11 +150,18 @@ La infraestructura más sencilla es simplemente archivos organizados:
 proyecto/
 ├── data/
 │   ├── raw/        (datos originales)
-│   ├── processed/  (datos limpios)
-│   └── external/   (datos externos)
+│   ├── clean/  (datos limpios)
+│   └── ontology/   (datos para modelado)
 ├── src/            (código)
 └── outputs/        (resultados)
 ```
+
+
+
+::: {.callout-note}
+Se usa el concepto de `ontology` como referencia de sistemas de datos estructurados que definen conceptos y 
+relaciones en un área específica del conocimiento. Otras arquitecturas como el *Medallion* pueden utilizar: los concepto de `bronce`, `plata` y `oro`. 
+:::
 
 **Formatos comunes y cuándo usarlos:**
 
@@ -220,7 +227,7 @@ Organización típica (*arquitectura medallion* o de capas):
 ```text
 raw/          → como llega (JSON, CSV, PDF)
 clean/        → tipos definidos, duplicados removidos
-curated/      → listo para análisis y modelos
+ontology/      → listo para análisis y modelos
 ```
 
 **Nunca sobrescribas los datos crudos.** El almacenamiento es barato; la recuperabilidad es cara.

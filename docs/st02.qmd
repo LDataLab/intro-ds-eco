@@ -1,6 +1,6 @@
 ---
 title: "Sesión técnica 2"
-subtitle: "Configuración del ambiente de trabajo"
+subtitle: "Trabajo básico con git/python/vs"
 format:
   html:
     toc: true
@@ -11,9 +11,55 @@ date: today
 ---
 
 
-## 7. Descargar el repositorio del curso
+# Espacio de trabajo
 
-Los materiales del curso estarán almacenados en un repositorio de GitHub.
+- Trabajo en la terminal
+- Git/Github
+- Trabajo en Python con uv
+
+
+## Trabajo en la terminal
+
+Comando básicos de bash
+
+- cd
+- mv
+- rf
+- rutas absolutas y relativas
+- 
+
+
+
+## 1. Git y GitHub 
+
+```python
+Tu computadora                 GitHub
+-----------------              -----------------
+repositorio local   <------>   repositorio remoto
+        Git                        Git + plataforma
+```
+
+## Parte 5. Configurar Git
+
+Configura el nombre que aparecerá en tus commits:
+
+```bash
+git config --global user.name "Tu Nombre"
+```
+
+Configura también tu correo electrónico:
+
+```bash
+git config --global user.email "tu_correo@ejemplo.com"
+```
+
+Verifica la configuración:
+
+```bash
+git config --global --list
+```
+
+Deberás poder identificar tu nombre y correo.
 
 En lugar de descargar manualmente archivos `.zip`, utilizaremos Git para crear una copia del repositorio en nuestra computadora.
 
@@ -60,6 +106,132 @@ Your branch is up to date with 'origin/main'.
 ```
 
 
+
+---
+
+## 2. Tres espacios a distinguir
+
+Cuando trabajamos con Git es útil imaginar tres estados de nuestros archivos:
+
+```python
+Working directory
+      |
+      | git add
+      v
+Staging area
+      |
+      | git commit
+      v
+Repositorio local
+      |
+      | git push
+      v
+Repositorio remoto (GitHub)
+```
+
+### Working directory
+
+Son los archivos que estás modificando en tu computadora.
+
+### Staging area
+
+Es la selección de cambios que quieres incluir en el siguiente commit.
+
+```bash
+git add <archivo>
+```
+
+### Repositorio local
+
+Contiene los commits que ya registraste en tu computadora.
+
+```bash
+git commit -m "Descripción del cambio"
+```
+
+### Repositorio remoto
+
+Es la versión del repositorio almacenada en GitHub.
+
+```bash
+git push
+```
+
+
+## 3. Antes de empezar: identifica dónde estás
+
+Uno de los comandos más importantes de Git es:
+
+```bash
+git status
+```
+
+Úsalo con frecuencia.
+
+`git status` puede decirte:
+
+- en qué rama estás;
+- si tienes archivos modificados;
+- si tienes archivos nuevos;
+- si tienes cambios preparados para un commit;
+- si tu rama está adelantada o atrasada respecto a GitHub;
+- si existe un conflicto pendiente.
+
+También puedes consultar las ramas con:
+
+```bash
+git branch
+```
+
+::: {.callout-tip}
+## Una regla útil: NO entres en pánico
+
+Si no sabes qué está pasando, **no empieces a probar comandos al azar**.
+
+Primero corre:
+
+```bash
+git status
+```
+
+Después **LEE** e interpreta el mensaje.
+:::
+
+
+## 4. Clonar un repositorio
+
+Para crear una copia local de un repositorio existente:
+
+```bash
+git clone <URL_DEL_REPOSITORIO>
+```
+
+
+## Python
+
+
+### Ambientes Virtuales para Python
+
+Un ambiente virtual es una herramienta que ayuda a **mantener separadas las dependencias** requeridas por diferentes proyectos que utilizan Python sin interferir con otros proyectos. Estos básicamente resuelven conflictos de versiones de paquetes entre diferentes proyectos.
+
+Son importantes porque **mantienen los proyectos aislados** y **facilitan la replicabilidad**.
+
+Existen herramientas populares para crear ambientes virtuales:
+- `venv` que viene ya incluido en python desde la versión 3.3
+- `virtualenv` que es una herramienta externa que crea ambientes virtuales
+- `pyenv` instala diferentes versiones de Python así como ambientes virtuales dentro de diferentes versiones de python. 
+- `poetry` esta es una herramienta moderna para gestionar dependencias y empaquetar proyectos en Python y es lo que estaremos usando a lo largo de la clase para manejar dependencias de python. 
+
+#### ¿Por qué necesitamos un ambiente virtual?
+
+Imagine un escenario en el que está trabajando en dos proyectos Python y uno de ellos usa Pandas 1.9 y el otro usa Pandas 1.10. En tales situaciones, el ambiente virtual puede ser realmente útil para mantener las dependencias de ambos proyectos. En particular, los ambientes virtuales son soluciones simples que:
+
+1. Resuelven problemas de dependencia al permitirle usar diferentes versiones de un paquete para diferentes proyectos. Por ejemplo, podría usar el Paquete A v2.7 para el Proyecto X y el Paquete A v1.3 para el Proyecto Y.
+2. Permiten que cada proyecto sea independiente y reproducible capturando todas las dependencias de los paquetes en un archivo de requisitos.
+3. Facilitan el ordenamiento el directorio global site-packages/ al eliminar la necesidad de instalar paquetes en todo el sistema, que es posible que solo necesite para un proyecto.
+
+
+
 ## 8. Abrir el proyecto en Visual Studio Code
 
 Desde la carpeta del repositorio ejecuta:
@@ -91,145 +263,5 @@ Intenta abrir tus proyectos de esta manera, en lugar de abrir archivos individua
 Esto permite que Visual Studio Code reconozca correctamente la estructura completa del proyecto.
 
 
-
-
-# 9. Crear un ambiente virtual
-
-Dentro del repositorio crea un ambiente virtual:
-
-```bash
-uv venv
-```
-
-Se creará una carpeta:
-
-```text
-.venv
-```
-
-Nuestro proyecto podría verse así:
-
-```text
-repositorio/
-├── .venv/
-├── data/
-├── notebooks/
-├── src/
-├── README.md
-└── ...
-```
-
-La carpeta `.venv` contiene el ambiente de Python correspondiente únicamente a este proyecto.
-
----
-
-# 10. Activar el ambiente virtual
-
-Aquí sí cambia el comando según el sistema operativo.
-
-### Windows
-
-En PowerShell:
-
-```powershell
-.venv\Scripts\Activate.ps1
-```
-
-Si se activó correctamente, verás algo parecido a:
-
-```text
-(.venv) PS C:\Users\usuario\Documents\github\repositorio>
-```
-
-### macOS
-
-En Terminal:
-
-```bash
-source .venv/bin/activate
-```
-
-Si se activó correctamente, verás algo parecido a:
-
-```text
-(.venv) usuario@MacBook repositorio %
-```
-
-En ambos casos:
-
-```text
-(.venv)
-```
-
-nos indica que estamos trabajando dentro del ambiente virtual.
-
----
-
-# 11. Instalar paquetes
-
-Una vez dentro del ambiente podemos instalar las librerías que necesitemos.
-
-En ambos sistemas:
-
-```bash
-uv pip install pandas numpy matplotlib
-```
-
-Podemos revisar las librerías instaladas con:
-
-```bash
-uv pip list
-```
-
-Más adelante veremos formas más reproducibles de especificar las dependencias de un proyecto.
-
-Por ahora lo importante es entender que:
-
-```text
-computadora
-│
-├── Python
-│
-└── proyecto
-      │
-      ├── código
-      ├── datos
-      │
-      └── .venv
-            └── librerías de este proyecto
-```
-
-
-# 12. Flujo de trabajo habitual
-
-Cada vez que quieras trabajar en el proyecto:
-
-### Windows
-
-```powershell
-cd ~/Documents/github/REPOSITORIO
-code .
-```
-
-Después:
-
-```powershell
-.venv\Scripts\Activate.ps1
-```
-
-### macOS
-
-```bash
-cd ~/Documents/github/REPOSITORIO
-code .
-```
-
-Después:
-
-```bash
-source .venv/bin/activate
-```
-
-A partir de ahí podremos ejecutar Python, trabajar con notebooks o correr scripts.
 
 

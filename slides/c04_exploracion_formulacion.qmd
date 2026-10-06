@@ -179,36 +179,28 @@ Notas clínicas, descripción de un delito, comentarios en redes sociales, respu
 - ¿Hay mezcla de idiomas? Afecta el preprocesamiento y los modelos de NLP.
 :::
 
+
 ## 5. Geoespaciales
 
-+ Alguna información geoespacial se puede expesar con coordenadas se expresan como **(latitud, longitud)**
-    + La **latitud** indica norte (+) o sur (−); la **longitud** indica este (+) u oeste (−)
-+ También, se puede expersar como polígonos, que delimitan un espacio
+Representan la **ubicación o forma de objetos en el espacio**: 
+
+* **Puntos**, mediante coordenadas geográficas `(latitud, longitud)`.
+  * La **latitud** indica la posición norte (+) o sur (−).
+  * La **longitud** indica la posición este (+) u oeste (−).
+
+* **Líneas**, por ejemplo para representar calles, rutas o ríos.
+
+* **Polígonos**, que delimitan una superficie (municipio, colonia o estado).
 
 ::: {.callout-warning}
+
 ## ¿Qué buscar?
-- ¿Las coordenadas caen dentro del área geográfica esperada? Coordenadas en el océano para datos de una ciudad son un error.
-- ¿Latitud y longitud están intercambiadas? Los valores de longitud en México rondan -90 a -118; la latitud entre 14 y 32. Si ves lo contrario, están al revés.
-- ¿Hay coordenadas en (0, 0)? Es el valor por default cuando no se capturó la ubicación real.
-:::
 
-## 6. Imágenes
+* ¿Las coordenadas caen dentro del área geográfica esperada?
+  Por ejemplo, coordenadas en el océano para una base de datos de una ciudad pueden indicar un error.
 
-Necesitaremos convertir a arrays numéricos para poder analizarlas — a partir de ahí se tratan como datos numéricos.
-
-  + Número de imágenes y formatos: `png`, `jpg`, `dcm` *(formato especial para imágenes médicas)*
-  + Tamaños (e.g., 200×600 px) — ¿son consistentes?
-
-::: {.callout-note}
-## Ejemplos de variables de imagen
-Radiografías (`dcm`), fotos de escenas del crimen, capturas de cámaras de tráfico, imágenes satelitales
-:::
-
-::: {.callout-warning}
-## ¿Qué buscar?
-- ¿Todos los tamaños son iguales? Modelos como CNNs requieren input de tamaño fijo.
-- ¿Las imágenes están en escala de grises o en color (RGB)? Determina la forma del array: `(H, W)` vs `(H, W, 3)`.
-- ¿Hay imágenes corruptas o completamente negras/blancas? Son equivalentes a valores faltantes.
+* ¿Todas las observaciones utilizan el mismo sistema de coordenadas?
+  Dos conjuntos de datos pueden representar la misma ubicación utilizando sistemas de referencia distintos.
 :::
 
 

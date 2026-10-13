@@ -1,0 +1,202 @@
+---
+title: "Tarea 3: Exploración de datos"
+
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    theme: cosmo
+    highlight-style: github
+
+date: today
+---
+
+
+## Hacer un repositorio de trabajo
+
+- Crear un repositorio con 
+
+```
+.
+├── data/
+├── docs/
+├── notebooks/
+├── src/
+├── .gitignore
+├── uv.lock
+├── pyproject.toml
+└── README.md
+```
+
+Para esto ya tuvieron que haber creado un proyecto con uv.
+
+Realizarán un análisis de datos descriptivo y exploratorio en parejas trabajando con ramas
+
+
+
+
+## Base de datos
+
+Falsas alarmas a llamados de ambulancias en la CDMX (C5 — Centro de Comando, Control, Cómputo, Comunicaciones y Contacto Ciudadano).
+
+La información original se encuentra en:
+
+- [Incidentes viales CDMX-C5](https://datos.cdmx.gob.mx/dataset/incidentes-viales-c5)
+
+(*Si no tienes acceso, dejo la información como viene en la página:*)
+
+En este conjunto se reporta: folio, fecha de creación del reporte, hora de creación del reporte, día de la semana de creación del reporte, fecha de cierre de reporte, hora de cierre de reporte, motivo del incidente dependiendo del tipo de emergencia, alcaldía donde sucedió el incidente, latitud y longitud del incidente, código de cierre del incidente reportado, clasificación del incidente, origen del incidente por tipo, alcaldía en que se dio resolución al incidente o emergencia.
+
+Los registros que se reciben en el C5 se clasifican internamente por medio de un código de cierre:
+
+- A = “Afirmativo”: Una unidad de atención a emergencias fue despachada, llegó al lugar de los hechos y confirmó la emergencia reportada
+
+- N = “Negativo”: Una unidad de atención a emergencias fue despachada, llegó al lugar de los hechos, pero en el sitio del evento nadie confirmo la emergencia ni fue solicitado el apoyo de la unidad
+
+- I = “Informativo”: Corresponde a solicitudes de información
+
+- F = “Falso”: El incidente reportado inicialmente fue considerado como falso en el lugar de los hechos.
+
+- D = “Duplicados”: El incidente reportado se registró en dos o más ocasiones procediendo a mantener un solo reporte como el original. Para el uso e interpretación correctos de la información, debe considerarse:
+
+1) Para contabilizar aquellos incidentes “reales”, es decir, aquellos confirmados por las autoridades en el lugar de los hechos, se debe trabajar con los códigos de cierre “Afirmativo”.
+
+2) Para contabilizar los registros recibidos en la institución, se debe trabajar con todos los códigos de cierre.
+
+*Recomendamos consultar el descriptor de archivo (diccionario de datos) publicado aquí para realizar un análisis más preciso de los datos:* <a href='../data/diccionario-incidentes-viales-c5.xlsx' download='diccionario-incidentes-viales-c5.xlsx'>Diccionario C5</a>"
+
+---
+
+Existe una versión reducida que puedes cargar directamente en tu base:
+
+```python
+df = pd.read_csv(
+    'https://raw.githubusercontent.com/ElenaVillano/databases/refs/heads/main/db_falsas_alarmas.csv'
+)
+```
+
+- También puedes utilizar una base de datos propia si deseas hacer EDA y GEDA sobre otro tema de tu interés. 
+
+## Guía de exploración y evaluación
+
+Las secciones deberán ser las siguientes. En cada una debes incluir celdas de texto donde describas lo que entiendes de los resultados y expliques tus decisiones durante el análisis.
+
+#### 1. Estructura y contexto de los datos (2.5/20)
+
+- ¿Cuál es el contexto de la base de datos? ¿Qué fenómeno registra? ¿Quién la generó y con qué propósito?
+- ¿Cuántas variables y registros tiene la tabla?
+- ¿Qué significa cada variable? (define cada columna con tus propias palabras)
+    - Revisa el diccionario de variables
+
+#### 2. Identificación de entidades y eventos (2.5/20)
+
+- ¿Cuáles son las entidades más relevantes en este contexto?
+- ¿Cómo identificas cada entidad en la tabla?
+- ¿Cuáles son los eventos registrados? ¿Qué quieren decir esos eventos respecto a la entidad?
+
+#### 3. Exploración inicial y limpieza (3/20)
+
+- Listado de variables disponibles
+- Tipo de dato de cada variable (`float`, `str`, `int`, `datetime`, etc.)
+- ¿Tienen el formato correcto? Si no, realiza la conversión adecuada (especialmente variables temporales)
+- Explica por qué hiciste ciertas transformaciones o conversiones
+
+#### 4. Data profiling por tipo de variable (4/20)
+
+- **Categóricas:** valores únicos, frecuencias, valores nulos
+- **Numéricas:** estadísticas descriptivas
+- **Temporales:** rango temporal, granularidad
+
+No solo reportes números: interpreta qué significan y qué implicaciones podrían tener para entender el fenómeno.
+
+#### 5. Visualizaciones informativas (6/20)
+
+- Sigue los principios de visualización y lo que revisamos en clase
+- Mínimo 5 gráficos, cada uno acompañado de una **interpretación en celda de texto**
+- Los gráficos que propongas deberán tener una pregunta de análisis detrás
+    - No quiero gráficos “por cumplir”; quiero visualizaciones que ayuden a responder preguntas.
+- Responde preguntas con respecto a tus entidades, eventos y características de las mismas. 
+
+
+Escríbanme si quedan dudas. 
+
+¡Suerte!
+
+E.
+
+# 10. Crear un proyecto con uv
+
+Dentro de la carpeta del proyecto ejecutamos:
+
+```bash
+uv init
+```
+
+Esto crea, entre otras cosas, un archivo:
+
+```text
+pyproject.toml
+```
+
+Este archivo describe nuestro proyecto y sus dependencias.
+
+Por ejemplo, después de agregar paquetes podemos encontrar algo similar a:
+
+```toml
+[project]
+name = "analisis-economia"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas",
+    "matplotlib"
+]
+```
+
+No necesitamos editar este archivo manualmente.
+
+`uv` lo hará por nosotros.
+
+---
+
+# 11. Agregar paquetes
+
+Si necesitamos `pandas`:
+
+```bash
+uv add pandas
+```
+
+Si también necesitamos `matplotlib`:
+
+```bash
+uv add matplotlib
+```
+
+Podemos agregar varios paquetes al mismo tiempo:
+
+```bash
+uv add pandas matplotlib seaborn
+```
+
+Para trabajar con notebooks podemos agregar:
+
+```bash
+uv add ipykernel
+```
+
+Cada vez que utilizamos:
+
+```bash
+uv add
+```
+
+`uv` actualiza automáticamente:
+
+```text
+pyproject.toml
+uv.lock
+```
+
+
+

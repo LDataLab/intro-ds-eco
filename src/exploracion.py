@@ -1,3 +1,3 @@
-print(1)
-
-print(3)
+print('hola')
+print('Adios')
+print("NUeva linea de cambios")

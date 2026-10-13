@@ -292,18 +292,30 @@ y lee el mensaje.
 
 Una rama (branch) es una línea separada de trabajo dentro de un repositorio.
 
-Sirve para hacer cambios sin modificar directamente la versión principal del proyecto, que normalmente está en `:w
-main`.
+Sirve para hacer cambios sin modificar directamente la versión principal del proyecto, que normalmente está en `main`.
 
+Para ver las ramas locales coloca: 
 
 ```bash
 git branch
 ```
 
+Para actualizar los cambios más recientes de main:
+
+```bash
+git pull origin main
+```
+
 Para crear una nueva rama y movernos a ella:
 
 ```bash
-git switch -c nueva-rama
+git switch -c <nombre-nueva-rama>
+```
+
+Ejemplo:
+
+```bash
+git switch -c exploracion
 ```
 
 Ahora podemos verificar:
@@ -314,17 +326,34 @@ git status
 
 Deberíamos observar algo similar a:
 
-```text
-On branch nueva-rama
+```markdown
+On branch exploracion
 ```
 
-Podemos experimentar y realizar cambios en nuestra rama sin modificar directamente `main`.
+Esto quiere decir que puedes hacer los cambios que gustes y explorar en esta rama, sin modificar
+directamente `main`. Para esta primera práctica, genera un nuevo archivo, guárdalo y agregalo
+al controlador de versiones con `git add <nombre_archivo_modificado>` y `git commit -m "<Mensaje>`.
 
-
-Para subir los cambios al repositorio:
+Para subir por primera vez los cambios de la nueva rama al repositorio:
 
 ```bash
 git push -u origin nueva-rama
+```
+
+Este es el flujo de trabajo una vez que ya tienes tu rama tanto en el repositorio remoto como en el
+local: 
+
+```bash
+git add <nombre_archivo_modificado>
+git commit -m "<Mensaje que especifica tu cambio>"
+git push 
+```
+
+
+Recuerda que solo si quieres actualizar tu rama con respecto a lo que tiene main se hace el pull:
+
+```bash
+git pull origin main
 ```
 
 
@@ -334,7 +363,7 @@ Los proyectos de Python normalmente necesitan paquetes adicionales.
 
 Por ejemplo:
 
-```text
+```markdown
 pandas
 matplotlib
 seaborn
@@ -347,7 +376,7 @@ Por eso utilizamos un **ambiente virtual**.
 
 Podemos imaginarlo como una pequeña instalación de Python asociada únicamente a nuestro proyecto.
 
-```text
+```markdown
 Proyecto inegi
 ├── pandas
 ├── matplotlib
@@ -372,18 +401,18 @@ Durante este curso utilizaremos **uv** para administrar nuestros proyectos de Py
 
 Nuestro proyecto tendrá dos archivos importantes:
 
-```text
+```bash
 pyproject.toml
 uv.lock
 ```
 
-### `pyproject.toml`
+### El archivo `pyproject.toml`
 
 Describe qué necesita nuestro proyecto.
 
 Por ejemplo:
 
-```text
+```bash
 pandas
 matplotlib
 seaborn
@@ -417,24 +446,15 @@ Cuando ejecutamos:
 uv sync
 ```
 
-`uv` lee:
+`uv` lee los archivos `pyproject.toml` y `uv.lock` y crea el ambiente necesario para ejecutar el proyecto. Esto generará una nueva carpeta (oculta):
 
-```text
-pyproject.toml
-uv.lock
-```
-
-y crea el ambiente necesario para ejecutar el proyecto.
-
-Normalmente aparecerá una carpeta:
-
-```text
+```bash
 .venv/
 ```
 
 Nuestra estructura podría verse así:
 
-```text
+```markdown
 proyecto/
 │
 ├── notebooks/
@@ -486,13 +506,13 @@ git commit -m "Agrega análisis exploratorio"
 ```
 
 
-7. Subir información al repositorio en lína
+7. Subir información al repositorio remoto
 
 ```bash
 git push
 ```
 
-8. Bajar información del repositorio en línea
+8. Bajar información del repositorio remoto
 
 ```bash
 git pull
@@ -554,7 +574,7 @@ __pycache__/
 
 Para a Git que no suba estos archivos utilizamos:
 
-```text
+```bash
 .gitignore
 ```
 
@@ -565,7 +585,7 @@ Para las siguientes actividades trabajaremos con **un repositorio por pareja**.
 
 Una estructura mínima podría ser:
 
-```bash
+```markdown
 proyecto/
 │
 ├── README.md
@@ -582,7 +602,7 @@ Cada integrante podrá trabajar en una rama diferente.
 
 Por ejemplo:
 
-```text
+```markdown
 main
 ├── exploracion-elena
 └── exploracion-ana

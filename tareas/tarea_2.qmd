@@ -124,40 +124,6 @@ Escríbanme si quedan dudas.
 
 E.
 
-# 10. Crear un proyecto con uv
-
-Dentro de la carpeta del proyecto ejecutamos:
-
-```bash
-uv init
-```
-
-Esto crea, entre otras cosas, un archivo:
-
-```text
-pyproject.toml
-```
-
-Este archivo describe nuestro proyecto y sus dependencias.
-
-Por ejemplo, después de agregar paquetes podemos encontrar algo similar a:
-
-```toml
-[project]
-name = "analisis-economia"
-version = "0.1.0"
-requires-python = ">=3.12"
-dependencies = [
-    "pandas",
-    "matplotlib"
-]
-```
-
-No necesitamos editar este archivo manualmente.
-
-`uv` lo hará por nosotros.
-
----
 
 # 11. Agregar paquetes
 

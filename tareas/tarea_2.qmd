@@ -12,6 +12,29 @@ date: today
 ---
 
 
+## Hacer un repositorio de trabajo
+
+- Crear un repositorio con 
+
+```
+.
+├── data/
+├── docs/
+├── notebooks/
+├── src/
+├── .gitignore
+├── uv.lock
+├── pyproject.toml
+└── README.md
+```
+
+Para esto ya tuvieron que haber creado un proyecto con uv.
+
+Realizarán un análisis de datos descriptivo y exploratorio en parejas trabajando con ramas
+
+
+
+
 ## Base de datos
 
 Falsas alarmas a llamados de ambulancias en la CDMX (C5 — Centro de Comando, Control, Cómputo, Comunicaciones y Contacto Ciudadano).
@@ -175,6 +198,5 @@ pyproject.toml
 uv.lock
 ```
 
----
 
 

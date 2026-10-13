@@ -20,6 +20,11 @@ website:
             href: docs/st01.html
           - text: "Sesión técnica 02"
             href: docs/st02.html
+      - section: "**Tareas**"
+        contents:
+          - text: "Exploracion de datos"
+            href: tareas/tarea_2.html
+
 
 html:
   theme: minty

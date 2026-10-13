@@ -1,5 +1,5 @@
 ---
-title: "Tarea 2: Exploración de datos"
+title: "Tarea 3: Exploración de datos"
 
 format:
   html:

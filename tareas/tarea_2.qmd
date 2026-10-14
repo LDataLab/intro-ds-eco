@@ -239,7 +239,7 @@ Formulen **al menos cinco preguntas** que puedan responder con los datos. Por ej
 - ¿Cómo cambia el número de reportes según el día de la semana?
 - ¿Cuánto tiempo transcurre entre la creación y el cierre de los reportes?
 
-Estas son sugerencias, formulen nuevas preguntas y que combinen información entre variables, (no solo hagan gráficos simples que describan una variable). 
+Estas son sugerencias, formulen nuevas preguntas y que combinen información entre variables.
 
 #### 5.6. Visualizaciones e interpretación (5 puntos)
 

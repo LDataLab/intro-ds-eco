@@ -239,27 +239,24 @@ Formulen **al menos cinco preguntas** que puedan responder con los datos. Por ej
 - ¿Cómo cambia el número de reportes según el día de la semana?
 - ¿Cuánto tiempo transcurre entre la creación y el cierre de los reportes?
 
-Estas son sugerencias, formulen nuevas preguntas y que combinen información entre variables, (no solo hagan gráficos simples que describan una variable). Distingan entre el **número de reportes** y **tasas de prevalencia**.
-
-::: {.callout-tip}
-## ¿Qué queremos explorar?
-
-No se limiten a generar gráficos de una sola variable. Intenten **combinar dos o más variables** para identificar relaciones, diferencias o patrones que no serían evidentes al analizarlas por separado.
-
-Antes de construir cada gráfico, pregúntense: **¿Qué quiero descubrir y qué variables necesito relacionar para responderlo?**
-
-No se trata de generar gráficos por cumplir, sino de formular preguntas interesantes sobre los datos, explorar posibles respuestas e interpretar sus hallazgos.
-:::
-
+Estas son sugerencias, formulen nuevas preguntas y que combinen información entre variables, (no solo hagan gráficos simples que describan una variable). 
 
 #### 5.6. Visualizaciones e interpretación (5 puntos)
 
 - Elaboren **mínimo cinco gráficos**, cada uno asociado a las preguntas del punto anterior.
 - Elijan el tipo de gráfico adecuado, con títulos, ejes, unidades y leyendas cuando correspondan.
 - Debajo de cada gráfico escriban una interpretación en una celda Markdown.
-- Señalen al menos una limitación del análisis: cobertura temporal, valores faltantes, sesgos de registro o interpretación de códigos, por ejemplo.
 
-No quiero gráficos solo por cumplir: cada visualización debe aportar información sobre las entidades, los eventos o sus características.
+::: {.callout-tip}
+## ¿Qué queremos explorar?
+
+No se limiten a generar gráficos de una sola variable. Intenten **combinar dos o más variables** para identificar relaciones, diferencias o patrones que no serían evidentes al analizarlas por separado.
+
+Distingan entre el **número de reportes** y **tasas de prevalencia**.
+
+No se trata de generar gráficos por cumplir, sino de formular preguntas interesantes sobre los datos, explorar posibles respuestas e interpretar sus hallazgos.
+:::
+
 
 ## 6. Integrar los cambios con pull requests
 

@@ -393,7 +393,7 @@ Un modelo puede aprender tan bien los datos con los que lo entrenamos que simple
 
 - El caso contrario también existe: un modelo demasiado simple que no aprende ni los patrones básicos, **subajuste** (*underfitting*).
 
-> La meta no es un modelo que recuerde el pasado, sino uno que **anticipe el futuro**.
+> El objetivo no es un modelo que recuerde el pasado, sino uno que **anticipe el futuro**.
 
 ## El problema de generalización 
 

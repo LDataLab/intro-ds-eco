@@ -111,32 +111,23 @@ Ejemplos:
 
 ## ¿Qué busca?
 
-El aprendizaje supervisado busca encontrar una función que mapee los predictores a la etiqueta:
 
-$$f(X) = Y$$
+El aprendizaje supervisado busca aprender una función que permita **predecir una etiqueta a partir de los predictores**:
 
-- **X**, los predictores (*features*): información relacionada a la entidad
-- **Y**, la etiqueta (*outcome*): lo que queremos predecir
-- **f**, el modelo: la función que aprende la relación entre X y Y
+$$
+\hat{Y} = \hat{f}(X)
+$$
 
-    - *¿En el ejemplo de graduados, quién sería qué?*
-
-. . .
-
-::: {.callout-tip}
-### Ejemplo: estudiantes en riesgo
-
-- **X**: calificaciones, créditos cursados, asistencia, materias reprobadas
-- **Y**: ¿el estudiante se graduará en 3 años? (sí / no)
-- **f**: el modelo aprende qué combinación de esos factores anticipa que un estudiante no terminará
-
-:::
+- **X**, los predictores (*features*): información disponible sobre la entidad.
+- **Y**, la etiqueta (*outcome*): lo que queremos predecir.
+- **$\hat{Y}$**, la predicción: el valor estimado de la etiqueta.
+- **$\hat{f}$**, el modelo entrenado: la función aprendida a partir de los datos.
 
 ---
 
 ## Función *f* 
 
-La función cuya forma es definida por el **algoritmo**, y cuyos **parámetros** son aprendidos durante el entrenamiento.
+El **algoritmo** establece cómo se aprende una función a partir de los datos. Durante el entrenamiento, se obtiene un **modelo** con parámetros o estructuras aprendidas.
 
 - El modelo es el algoritmo + los datos
      - Un **algoritmo** es un conjunto de reglas que resuelven un problema

@@ -47,7 +47,7 @@ bibliography: slides/references.bib
 
 ::: {.callout-tip collapse="false"}
 
-### 03: EDA y GEDA
+### 04: EDA y GEDA
 
 - Estadísticas generales
 - Principios de visualización
@@ -58,7 +58,7 @@ bibliography: slides/references.bib
 
 ::: {.callout-tip collapse="false"}
 
-### 04: Aprendizaje de máquina supervisado
+### 05: Aprendizaje de máquina supervisado
 
 - Elementos de modelado para un problema de política pública:
     - Etiqueta, predictores
@@ -76,7 +76,7 @@ bibliography: slides/references.bib
 
 ::: {.callout-caution collapse="true"}
 
-### 05: Aprendizaje de máquina no supervisado y NLP
+### 06: Aprendizaje de máquina no supervisado y NLP
 
 - Algorítmos de aprendizaje no supervisado
     - [Slides 08](slides/c08_no_supervisado.html) 
@@ -89,7 +89,7 @@ bibliography: slides/references.bib
 
 ::: {.callout-caution collapse="true"}
 
-### 06: Evaluación de resultados en proyectos de ciencia de datos para política pública.
+### 07: Evaluación de resultados en proyectos de ciencia de datos para política pública.
 
 - Ética
     - [Slides 10](slides/c10_etica.html) 

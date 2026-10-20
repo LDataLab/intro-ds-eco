@@ -136,7 +136,8 @@ $$f(X) = Y$$
 
 ## Función *f* 
 
-La función cuya forma es definida por el **algoritmo**, y cuyos **parámetros** son aprendidos durante el entrenamiento.
+El **algoritmo** establece cómo se aprende una función a partir de los datos. Durante el entrenamiento, se obtiene un **modelo** con parámetros o estructuras aprendidas.
+
 
 - El modelo es el algoritmo + los datos
      - Un **algoritmo** es un conjunto de reglas que resuelven un problema

@@ -253,11 +253,10 @@ En general, la matriz de confusión tiene esta forma:
 
 $$\frac{VP+VN}{VP+VN+FP+FN}=\frac{aciertos}{total}$$
 
-- Problema de los techos (30 casas): detectar los techos con daño estructural para priorizar inspección
+- **Escenario 1:** Problema de los techos (30 casas) donde se predice riesgo de daño estructural para priorizar inspección.
 
 :::: {.columns}
-::: {.column style="width:50%; font-size: 0.7em;"}
-
+::: {.column style="width:60%; font-size: 0.9em;"}
 
 
 | N = 30       | Pred  = 1 | Pred  = 0 |
@@ -268,7 +267,7 @@ $$\frac{VP+VN}{VP+VN+FP+FN}=\frac{aciertos}{total}$$
 :::
 ::: {.column width="5%"}
 :::
-::: {.column style="width:40%; font-size: 0.7em;"}
+::: {.column style="width:30%; font-size: 0.7em;"}
 
 
 $$\frac{10+12}{30}=\frac{22}{30}=0.73$$
@@ -282,12 +281,12 @@ $$\frac{10+12}{30}=\frac{22}{30}=0.73$$
 ### Accuracy no es sufieciente
 
 :::: {.columns}
-::: {.column style="width:50%; font-size: 0.7em;"}
+::: {.column style="width:60%; font-size: 0.9em;"}
 
-Considera este escenario alternativo: el modelo predijo casi todo como negativo.
+**Escenario 2**: el modelo predijo casi todo como negativo.
 
 - Accuracy sube a **0.76**: parece mejor que el ejemplo anterior
-- Pero solo detecta **1 de 13** casas dañadas
+- Pero solo detecta **1 de 3** casas dañadas
 
 | N = 30       | Pred  = 1 | Pred  = 0 |
 |--------------|-----------|-----------|
@@ -299,7 +298,7 @@ $$\frac{1+22}{30}=\frac{23}{30}=0.76$$
 :::
 ::: {.column width="5%"}
 :::
-::: {.column style="width:40%; font-size: 0.7em;"}
+::: {.column style="width:30%; font-size: 0.7em;"}
 
 <br><br>
 
@@ -700,13 +699,16 @@ $$\text{cobertura@5} = \frac{TP \in k}{Positivos} = \frac{2}{4} = 0.50$$
 ::: {.column style="width:40%; font-size: 0.8em;"}
 
 
-- Sí determinamos en riesgo a todos los estudiantes a partir de un umbral de 0.6, estaríamos prediciendo sobre un número de estudiantes indeterminado
+- Sí determinamos en riesgo a todos los estudiantes a partir de un umbral de 0.6, estaríamos prediciendo sobre un número de estudiantes indeterminado:
 
     - Eficiencia = 4/8 (50%)
     - Cobertura = 4/6 (66%)
 
-- Yo solo tengo presupuesto para 4 becas
-- Observa el score
+- Pero solo tengo presupuesto para 4 becas:
+
+    - Eficiencia = 3/4 (75%)
+    - Cobertura = 3/6 (50%)
+
 
 :::
 
@@ -719,20 +721,20 @@ $$\text{cobertura@5} = \frac{TP \in k}{Positivos} = \frac{2}{4} = 0.50$$
 
 
 
-|   id  |   score |   predicción umbral=0.6   | etiqueta real | 
-|------|:-----------:|:---------:|:---------:|
-| 68    |  0.99 |         1 |         1 | 
-| 32    |  0.96 |         1 |         1 | 
-| 70    |  0.78 |         1 |         0 | 
-| 28    |  0.75 |         1 |         1 | 
-| 59    |  0.72 |         1 |         1 | 
-| 17    |  0.70 |         1 |         0 | 
-| 04    |  0.66 |         1 |         0 | 
-| 47    |  0.60 |         1 |         0 | 
-| 84    |  0.22 |         0 |         1 | 
-| 28    |  0.20 |         0 |         0 | 
-| 21    |  0.12 |         0 |         0 | 
-| 48    |  0.01 |         0 |         1 | 
+|   id  | score | umbral=0.6 | k=4  | etiqueta real | 
+|-------|:-----:|:---------:|:---------:|---------:|
+| 68    |  0.99 |         1 |          1 |        1 | 
+| 32    |  0.96 |         1 |          1 |        1 | 
+| 70    |  0.78 |         1 |          1 |        0 | 
+| 28    |  0.75 |         1 |          1 |        1 | 
+| 59    |  0.72 |         1 |          0 |        1 | 
+| 17    |  0.70 |         1 |          0 |        0 | 
+| 04    |  0.66 |         1 |          0 |        0 | 
+| 47    |  0.60 |         1 |          0 |        0 | 
+| 84    |  0.22 |         0 |          0 |        1 | 
+| 28    |  0.20 |         0 |          0 |        0 | 
+| 21    |  0.12 |         0 |          0 |        0 | 
+| 48    |  0.01 |         0 |          0 |        1 | 
 
 
 
@@ -751,8 +753,11 @@ $$\text{cobertura@5} = \frac{TP \in k}{Positivos} = \frac{2}{4} = 0.50$$
     - Eficiencia = 1/1 (100%)
     - Cobertura = 1/6 (16%)
 
-- Yo solo tengo presupuesto para 4 becas
-- Observa el score
+- Pero solo tengo presupuesto para 4 becas:
+
+    - Eficiencia = 3/4 (75%)
+    - Cobertura = 3/6 (50%)
+
 
 :::
 
@@ -765,70 +770,28 @@ $$\text{cobertura@5} = \frac{TP \in k}{Positivos} = \frac{2}{4} = 0.50$$
 
 
 
-| id  |   score |   predicción umbral=0.6  | etiqueta real | 
-|-----|:-----------:|:---------:|:---------:|
-| 68   |     0.64 |         1 |         1 | 
-| 32   |     0.59 |         0 |         1 | 
-| 70   |     0.48 |         0 |         0 | 
-| 28   |     0.35 |         0 |         1 | 
-| 59   |     0.33 |         0 |         1 | 
-| 17   |     0.25 |         0 |         0 | 
-| 04   |     0.23 |         0 |         0 | 
-| 47   |     0.11 |         0 |         0 | 
-| 84   |     0.12 |         0 |         1 | 
-| 28   |     0.10 |         0 |         0 | 
-| 21   |     0.02 |         0 |         0 | 
-| 48   |     0.01 |         0 |         1 | 
+| id  |   score | umbral=0.6 | k=4  | etiqueta real | 
+|-----|:---------:|:---------:|:---------:|---------:|
+| 68   |     0.64 |         1 |          1 |        1 | 
+| 32   |     0.59 |         0 |          1 |        1 | 
+| 70   |     0.48 |         0 |          1 |        0 | 
+| 28   |     0.35 |         0 |          1 |        1 | 
+| 59   |     0.33 |         0 |          0 |        1 | 
+| 17   |     0.25 |         0 |          0 |        0 | 
+| 04   |     0.23 |         0 |          0 |        0 | 
+| 47   |     0.11 |         0 |          0 |        0 | 
+| 84   |     0.12 |         0 |          0 |        1 | 
+| 28   |     0.10 |         0 |          0 |        0 | 
+| 21   |     0.02 |         0 |          0 |        0 | 
+| 48   |     0.01 |         0 |          0 |        1 | 
 
 
 
 :::
 ::::
+
 
 ## Escenario 4
-
-### Becas
-
-:::: {.columns}
-::: {.column style="width:40%; font-size: 0.8em;"}
-
-
-- Al determinar la k, tomas en cuenta las restricciones de espacio
-    - Eficiencia@k = 3/4 (66%)
-    - Cobertura@k = 3/6 (50%)
-
-- Yo solo tengo presupuesto para 4 becas
-
-:::
-
-::: {.column width="10%"}
-<!-- empty column to create gap -->
-:::
-
-
-::: {.column style="width:40%; font-size: 0.7em;"}
-
-
-|   id |   score | predicción  k=4     | etiqueta real | 
-|-----:|:-----------:|:---------:|:---------:|
-|68    |     0.64 |         1 |         1 | 
-|32    |     0.59 |         1 |         1 | 
-|70    |     0.48 |         1 |         0 | 
-|28    |     0.35 |         1 |         1 | 
-|59    |     0.33 |         0 |         1 | 
-|17    |     0.25 |         0 |         0 | 
-|04    |     0.23 |         0 |         0 | 
-|47    |     0.11 |         0 |         0 | 
-|84    |     0.12 |         0 |         1 | 
-|28    |     0.10 |         0 |         0 | 
-|21    |     0.02 |         0 |         0 | 
-|48    |     0.01 |         0 |         1 | 
-
-:::
-::::
-
-
-## Escenario 5
 
 
 ### ¿Qué pasa si aumentamos k?
@@ -851,18 +814,18 @@ $$\text{cobertura@5} = \frac{TP \in k}{Positivos} = \frac{2}{4} = 0.50$$
 
 |  id | score | k=100% | real |
 |----:|------:|:------:|:----:|
-| 168 | 0.995 | **Sí** | 1 |
-| 132 | 0.966 | **Sí** | 1 |
-| 170 | 0.782 | **Sí** | 0 |
-| 128 | 0.753 | **Sí** | 1 |
-| 159 | 0.589 | **Sí** | 1 |
-| 117 | 0.336 | **Sí** | 0 |
-| 104 | 0.334 | **Sí** | 0 |
-| 147 | 0.318 | **Sí** | 0 |
-| 184 | 0.223 | **Sí** | 1 |
-| 128 | 0.201 | **Sí** | 0 |
-| 121 | 0.124 | **Sí** | 0 |
-| 148 | 0.017 | **Sí** | 1 |
+| 168 | 0.995 | 1  | 1 |
+| 132 | 0.966 | 1  | 1 |
+| 170 | 0.782 | 1  | 0 |
+| 128 | 0.753 | 1  | 1 |
+| 159 | 0.589 | 1  | 1 |
+| 117 | 0.336 | 1  | 0 |
+| 104 | 0.334 | 1  | 0 |
+| 147 | 0.318 | 1  | 0 |
+| 184 | 0.223 | 1  | 1 |
+| 128 | 0.201 | 1  | 0 |
+| 121 | 0.124 | 1  | 0 |
+| 148 | 0.017 | 1  | 1 |
 
 :::
 ::::
@@ -1009,7 +972,9 @@ También hay que incluir métricas relacionadas con **sesgo e inequidad**, el de
 -   Métrica por tema, o región
 :::
 
-# Ejemplo techos
+
+# Extra {background-color="#fdede8"}
+- Ejemplo techos
 
 ## Métricas generales
 ### Ejemplo

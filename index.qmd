@@ -74,7 +74,7 @@ bibliography: slides/references.bib
 :::
 
 
-::: {.callout-caution collapse="true"}
+::: {.callout-tip collapse="false"}
 
 ### 06: Aprendizaje de máquina no supervisado y NLP
 

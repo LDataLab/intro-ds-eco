@@ -190,7 +190,7 @@ Agrupa los datos en K clusters donde cada punto pertenece al cluster con el cent
 Como el algoritmo requiere que definas K manualmente, existen técnicas matemáticas de apoyo:
 
 - **Método del Codo (_Elbow Method_)**: Grafica la inercia (WCSS) contra diferentes k. Minimiza la distancia intra-cluster. Seleccionas donde la tasa de cambio decrece bruscamente. 
-- **Coeficiente de Silueta (_Silhouette Coefficient_)**: Mide qué similiar es un punto de datos respecto a su propio cluster comparado con los otros. Balancea cohesión y separación. Seleccionas la k con mayor valor. 
+- **Coeficiente de Silueta (_Silhouette Coefficient_)**: Mide qué tan similiar es un punto de datos respecto a su propio cluster comparado con los otros. Balancea cohesión y separación. Seleccionas la k con mayor valor. 
 
 
 
@@ -431,4 +431,11 @@ Igual que K-Means usa el método del codo, PCA usa una curva de
 - **Visualización exploratoria**: proyectar solicitudes de
   transparencia o registros de gasto en 2D para detectar patrones
 
+## Referncias
 
+- James, G., Witten, D., Hastie, T., Tibshirani, R., & Taylor, J. (2023).
+*Unsupervised learning*. En *An Introduction to Statistical Learning:
+With Applications in Python* (pp. 503–556). Springer.
+https://doi.org/10.1007/978-3-031-38747-0_12
+- Daumé III, H. (2017). *A Course in Machine Learning*.
+Self-published. https://ciml.info/

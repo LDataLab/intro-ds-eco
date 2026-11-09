@@ -8,6 +8,7 @@ dependencies = [
     "jupyter>=1.1.1",
     "jupyter-cache>=1.0.1",
     "matplotlib>=3.10.9",
+    "nltk>=3.10.4",
     "numpy>=2.4.6",
     "pandas>=3.0.3",
     "pyarrow>=26.0.0",

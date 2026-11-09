@@ -24,7 +24,7 @@ bibliography: references.bib
 ## Natural Language Processing
 ### NLP
 
-- Si las computadores solo pueden procesar datos binarios (0 y 1), ¿cómo hacemos que puedan representar y procesar el lenguaje humano?
+- Si las computadoras solo pueden procesar datos binarios (0 y 1), ¿cómo hacemos que puedan representar y procesar el lenguaje humano?
 - El lenguaje natural es la principal forma de comunicarnos entre los seres humanos.
 
 > Área de las ciencias computacionales que desarrolla métodos para analizar, modelar y entender el lenguaje humano. [@vajjala2020practical]
@@ -33,9 +33,10 @@ bibliography: references.bib
 ## Introducción a NLP
 
 1. Preprocesamiento de texto
-3. Modelos básicos
-4. Embeddings
-5. Ejemplos 
+2. Modelos básicos
+3. Embeddings
+4. Tareas
+5. Ejemplos
 
 # Preprocesamiento de texto {background-color="#fdede8"}
 
@@ -46,7 +47,7 @@ bibliography: references.bib
 ## Limpieza
 ### Quita ruido y errores evidentes del texto
 
-Elimina cosas que claramento no aportan significado lingüístico útil para etapas posteriores.
+Elimina cosas que claramente no aportan significado lingüístico útil para etapas posteriores.
 
 - Eliminar caracteres raros
 - Quitar emojis (si así se requiere)
@@ -84,7 +85,7 @@ más manejable para análisis computacional.
 - No existe un preprocesamiento “correcto” universal:
 	- depende del idioma, del dominio y del objetivo analítico.
 
-- Precedente para determinar qué es señal y qué es ruido en el texto.
+- Permite decidir qué es señal y qué es ruido en el texto.
 
 
 
@@ -127,7 +128,7 @@ porque define **qué es una unidad de análisis**.
 
 
 - ¿Cuáles son los tokens en la siguiente oración?
-    - Ayer pagué $12,543.25 por una televisión, me pareció barata. Hoy voy a estrenarla viendo el béisbol.
+    - Ayer pagué \$12,543.25 por una televisión, me pareció barata. Hoy voy a estrenarla viendo el béisbol.
 
 
 
@@ -197,6 +198,9 @@ documents = ["Perro muerde persona.", # D1
 | D1  | perro muerde persona  | 0     | 0    | 0      | 1      | 1     | 1       |
 | D2  | persona muerde perro  | 0     | 0    | 0      | 1      | 1     | 1       |
 | D3  | perro come carne      | 1     | 1    | 0      | 0      | 1     | 0       |
+| D4  | persona come comida   | 0     | 1    | 1      | 0      | 0     | 1       |
+
+- D1 y D2 tienen el mismo vector: BoW ignora el orden de las palabras.
 
 ## TF-IDF
 ###  Term Frequency–Inverse Document Frequency
@@ -212,12 +216,16 @@ documents = ["Perro muerde persona.", # D1
 
 
 
-| Documento               | afuera | carne | come | duerme |  el | gato | juega | mucho | perro | pescado |
-| ----------------------- | :----: | :---: | :--: | :----: | :-: | :--: | :---: | :---: | :---: | :-----: |
-| "El gato come pescado"  |    0   |   0   | 0.17 |    0   |  0  | 0.17 |   0   |   0   |   0   |   0.34  |
-| "El perro come carne"   |    0   |  0.34 | 0.17 |    0   |  0  |   0  |   0   |   0   |  0.17 |    0    |
-| "El gato duerme mucho"  |    0   |   0   |   0  |  0.34  |  0  | 0.17 |   0   |  0.50 |   0   |    0    |
-| "El perro juega afuera" |  0.34  |   0   |   0  |    0   |  0  |   0  |  0.50 |   0   |  0.17 |    0    |
+| Documento               | afuera | carne | come | duerme | gato | juega | mucho | perro | pescado |
+| ----------------------- | :----: | :---: | :--: | :----: | :--: | :---: | :---: | :---: | :-----: |
+| "El gato come pescado"  |   0    |   0   | 0.53 |   0    | 0.53 |   0   |   0   |   0   |   0.67  |
+| "El perro come carne"   |   0    | 0.67  | 0.53 |   0    |  0   |   0   |   0   | 0.53  |   0     |
+| "El gato duerme mucho"  |   0    |   0   |  0   |  0.62  | 0.49 |   0   | 0.62  |   0   |   0     |
+| "El perro juega afuera" | 0.62   |   0   |  0   |   0    |  0   | 0.62  |   0   | 0.49  |   0     |
+
+:::{.notes}
+Valores calculados con `TfidfVectorizer` de scikit-learn (stopword "el" eliminada, normalización L2 por documento). Los valores no son "redondos" a propósito: salen de la fórmula.
+:::
 
 :::
 ::::
@@ -457,11 +465,11 @@ Una matriz densa es una matriz donde la mayoría o casi todos sus elementos tien
 :::{.notes}
 
 - Para trabajar con cadenas de texto, el texto debe de convertirse en una forma matemática.
-- Modelo algebráico simple que representa cualquier unidad de texto. 
+- Modelo algebraico simple que representa cualquier unidad de texto. 
 - Se usa para:
-	- Information retrival
+	- Information retrieval
 	- Scoring de documentos
-	- Clasificción
+	- Clasificación
 	- Document clustering
 
 :::
@@ -470,7 +478,7 @@ Una matriz densa es una matriz donde la mayoría o casi todos sus elementos tien
 
 - La manera más común de ver qué tan similares son vectores
 - Es el coseno del ángulo entre sus vectores correspondientes
-- También se utiliza la distancia Euclideana entre vectores para captar similitud
+- También se usa la distancia euclidiana: entre menor distancia, más similares son los vectores
 
 
 ![](img/sim_cos.png)
@@ -505,7 +513,7 @@ Una representación por palabra:
 # Tareas {background-color="#fdede8"}
 
 
-## Corrección de spelling
+## Corrección ortográfica
 
 - Detectar errores ortográficos
 - Propone una o más correcciones plausibles
@@ -620,7 +628,6 @@ a partir de su contenido.
 TF-IDF reduce ruido porque:
 - baja peso a palabras comunes
 - sube palabras discriminativas.
-- (`n_col=vocab`)
 
 - En NLP, muchas veces el éxito no viene del modelo, sino de cómo el lenguaje organiza naturalmente los datos.
 
@@ -705,10 +712,8 @@ t-SNE:
 	- Topic Modeling: te dice que existen 5 temas con ciertas palabras.
 	- t-SNE: te dibuja los 1000 documentos en 2D.
 
--
-
 ::: {.callout-warning}
-t-SNE no es un método de modelado solo transforma de $\mathbb{R}^{300} \rightarrow \mathbb{R}^{2}$
+t-SNE no es un método de modelado: solo proyecta datos de $\mathbb{R}^{n} \rightarrow \mathbb{R}^{2}$ para visualizarlos
 :::
 
 
@@ -873,23 +878,10 @@ Para el modelo CT:
 
 ---
 
-## Proceso de clasificación de la mercancía (75%)
+## Proceso de clasificación de la mercancía (cobertura acumulada: 75%)
 ### Paso 3
 
 
 ![-](img/dm.png)
-
-## Aprendizaje por Refuerzo
-
-El modelo aprende **tomando decisiones en un entorno**, recibiendo recompensas cuando acierta y penalizaciones cuando se equivoca.
-
-> Así aprenden los niños a caminar: prueban, se caen (penalización) y ajustan hasta lograrlo (recompensa).
-
-Ejemplos:
-
-- Estrategias de atención al cliente
-- Asignación de líneas de crédito
-- Robots que aprenden a moverse
-
 
 ## Referencias

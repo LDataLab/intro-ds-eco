@@ -59,7 +59,7 @@ bibliography: references.bib
 
 - Encuentra patrones escondidos en los datos sin tener etiquetas o *respuestas correctas*.
 - El modelo busca patrones o grupos por su cuenta.
-- Sus algoritmos tienen como objetivo encontrar patrones y relaciones dentro de los datos sin ningún conocimiento a priori de lo que que significan los datos. 
+- Sus algoritmos tienen como objetivo encontrar patrones y relaciones dentro de los datos sin ningún conocimiento a priori de lo que significan los datos. 
 - En estadística, esto se conoce como análisis multivariado
 
 
@@ -160,7 +160,7 @@ Proceso donde se particionan un conjunto de datos en subconjuntos, cada subconju
 Agrupa los datos en K clusters donde cada punto pertenece al cluster con el centro más cercano (centroide)
 
 1. **Elección de K**: Define el número de cluster que quieres descubrir
-2. **Inicialización de centroides**: los colocas de manera aleatoria
+2. **Inicialización de centroides**: los colocas al azar, pero con k-means++ (el valor por defecto en scikit-learn) se eligen alejados entre sí
 3. **Asignación de puntos**: calculas las distancia de cada punto al centroide más cercano.
 4. **Actualizas los centroides**: Mueves cada centroide al promedio de todos los puntos asignados a su cluster, lo que **minimiza** la inercia (suma de **distancias** al cuadrado) dentro del cluster.
 5. **Repites hasta la convergencia**: el algoritmo se detiene cuando los centroides ya no cambian de posición entre una iteración y la siguiente 
@@ -189,8 +189,8 @@ Agrupa los datos en K clusters donde cada punto pertenece al cluster con el cent
 
 Como el algoritmo requiere que definas K manualmente, existen técnicas matemáticas de apoyo:
 
-- **Método del Codo (_Elbow Method_)**: Grafica la inercia (WCSS) contra diferentes k. Minimiza la distancia intra-cluster. Seleccionas donde la tasa de cambio decrece bruscamente. 
-- **Coeficiente de Silueta (_Silhouette Coefficient_)**: Mide qué tan similiar es un punto de datos respecto a su propio cluster comparado con los otros. Balancea cohesión y separación. Seleccionas la k con mayor valor. 
+- **Método del Codo (_Elbow Method_)**: Grafica la inercia (WCSS) contra diferentes k. La inercia siempre baja al aumentar k; seleccionas el punto donde la tasa de cambio decrece bruscamente (el "codo").
+- **Coeficiente de Silueta (_Silhouette Coefficient_)**: Mide qué tan similar es un punto de datos respecto a su propio cluster comparado con los otros. Balancea cohesión y separación. Seleccionas la k con mayor valor. 
 
 
 
@@ -225,7 +225,8 @@ Como el algoritmo requiere que definas K manualmente, existen técnicas matemát
 #### Limitaciones
 
 - **Trampa de la inicialización aleatoria**: Centroides iniciales mal ubicados
-  pueden llevar a soluciones subóptimas. 
+  pueden llevar a soluciones subóptimas. Se mitiga con k-means++ y corriendo
+  el algoritmo varias veces (`n_init`), quedándose con la de menor inercia.
 - **Sensible a valores atípicos**: Los _outliers_ sesgan la media y jalan el
   centroide lejos del centro real del cluster.
 - **Asume formas esféricas**: Tiene dificultades con geometrías complejas,
@@ -431,7 +432,7 @@ Igual que K-Means usa el método del codo, PCA usa una curva de
 - **Visualización exploratoria**: proyectar solicitudes de
   transparencia o registros de gasto en 2D para detectar patrones
 
-## Referncias
+## Referencias
 
 - James, G., Witten, D., Hastie, T., Tibshirani, R., & Taylor, J. (2023).
 *Unsupervised learning*. En *An Introduction to Statistical Learning:

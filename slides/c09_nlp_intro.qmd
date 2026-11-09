@@ -1,6 +1,6 @@
 ---
 title: "Introducción a NLP para políticas públicas"
-subtitle: "Material 09" 
+subtitle: "Material 09"
 
 format: clean-revealjs
 html-math-method:
@@ -30,19 +30,71 @@ bibliography: references.bib
 > Área de las ciencias computacionales que desarrolla métodos para analizar, modelar y entender el lenguaje humano. [@vajjala2020practical]
 
 
-## Introducción a NLP
+## Agenda (150 min)
 
-1. Preprocesamiento de texto
-2. Modelos básicos
-3. Embeddings
-4. Tareas
-5. Ejemplos
+1. Tareas de NLP (15 min)
+2. Preprocesamiento de texto (20 min)
+3. Representación: BoW, TF-IDF y coseno (20 min)
+4. Embeddings (10 min)
+5. Clasificación de texto (25 min)
+6. *Descanso* (10 min)
+7. Caso: clasificación de mercancías (20 min)
+8. Práctica en notebook (20 min)
+9. Cierre (10 min)
+
+# Tareas de NLP {background-color="#fdede8"}
+
+## Tareas comunes
+
+| Tarea | Pregunta que responde | Ejemplo en políticas públicas |
+|---|---|---|
+| Clasificación | ¿A qué categoría pertenece el texto? | Asignar quejas a un área de servicio |
+| NER | ¿Qué entidades aparecen? | Extraer personas, organizaciones y lugares de expedientes |
+| Sentimiento | ¿Qué tono tiene el texto? | Medir opinión ciudadana en respuestas abiertas |
+| Tópicos | ¿De qué temas trata la colección? | Explorar solicitudes de transparencia |
+| Búsqueda semántica | ¿Qué textos son parecidos a este? | Encontrar solicitudes similares a una nueva |
+
+- *Record linkage* (detectar registros duplicados con nombres distintos) ya lo vimos en c03.
+
+## Reconocimiento de entidades (NER)
+
+- Identificar y clasificar fragmentos de texto que representan entidades del mundo real: PERSON, ORGANIZATION, LOCATION, DATE, MONEY.
+
+```
+“El juez Julián Pérez dictó sentencia en la Ciudad de México”
+→ Julián Pérez: PERSON
+→ Ciudad de México: LOCATION
+```
+
+- Se usa para análisis de actores, redes de personas y organizaciones, deduplicación y búsquedas avanzadas.
+
+## Análisis de sentimiento
+
+- Asignar una polaridad al texto: positivo, neutral o negativo.
+
+| Texto | Sentimiento |
+|---|---|
+| "El trámite fue rápido y el personal muy amable" | Positivo |
+| "Llevo tres meses esperando una respuesta" | Negativo |
+| "Entregué los documentos el martes" | Neutral |
+
+- Es una clasificación multiclase: se entrena igual que cualquier otro clasificador.
+
+## Modelado de tópicos
+
+- Métodos no supervisados que descubren **temas latentes** en un corpus.
+- Cada tópico es un conjunto de palabras con alta probabilidad conjunta:
+    - Tópico 1: `police, suspect, arrest, investigation`
+    - Tópico 2: `container, terminal, yard, vessel`
+
+::: {.callout-warning}
+- Supone modelo *bag of words* (ignora el orden).
+- El número de tópicos se fija de antemano.
+- Un tópico es una construcción estadística, no una etiqueta verdadera.
+- Es sensible al preprocesamiento.
+:::
 
 # Preprocesamiento de texto {background-color="#fdede8"}
-
-- Limpieza
-- Normalización
-- Preprocesamiento (variaciones)
 
 ## Limpieza
 ### Quita ruido y errores evidentes del texto
@@ -59,77 +111,57 @@ Elimina cosas que claramente no aportan significado lingüístico útil para eta
 
 ## Normalización de texto
 
-Reduce **variaciones superficiales** del texto sin alterar su significado esencial. Transforma el texto para reducir variabilidad innecesaria.
+Reduce **variaciones superficiales** del texto sin alterar su significado esencial.
 
-
-- pasar a minúsculas
-- quitar signos de puntuación
-- normalizar acentos, números o variantes de palabras
-- Ejemplo: 
-
-		 "Árboles, niños y fútbol" → "arboles ninos y futbol"
-
-
+- Pasar a minúsculas
+- Quitar signos de puntuación
+- Normalizar acentos, números o variantes de palabras
+- Ejemplo: `"Árboles, niños y fútbol"` → `"arboles ninos y futbol"`
 
 ::: {.callout-warning}
-- Normalizar puede borrar información relevante
+- Normalizar puede borrar información relevante (por ejemplo, el acento que distingue *sí* de *si*).
 :::
 
 
+## Preprocesamiento
 
-## Preprocesamiento 
-
-- El preprocesamiento **transforma texto crudo** en una representación
-más manejable para análisis computacional.
-
-- No existe un preprocesamiento “correcto” universal:
-	- depende del idioma, del dominio y del objetivo analítico.
-
+- El preprocesamiento **transforma texto crudo** en una representación más manejable para análisis computacional.
+- No existe un preprocesamiento "correcto" universal: depende del idioma, del dominio y del objetivo analítico.
 - Permite decidir qué es señal y qué es ruido en el texto.
-
-
-
-## Stopwords
-
-Son palabras muy frecuentes en un idioma que, en ciertos contextos, aportan poco contenido semántico por sí mismas.
-
-- Ejemplos en español:
-	- artículos: *el, la, los, las*
-	- preposiciones: *de, con, sin*
-	- pronombres: *él, ella, nosotros*
-
-- Si no las controlas dominan frecuencias y pueden sesgar modelos
-
-:::{.notes} 
-a acá ahí al algo algún/a/o/s allá/í ambos ante antes aquel aquella/o/s aquí arriba así atrás aun aunque bien cada casi como con cual cuales cualquier/a/s cuan cuando cuanto/a/s de del demás desde donde dos el él ella/o/s en eres esa/e/o/s esta/s este/o/s etc ha hasta la/o/s me mi/s mía/s mientras muy ni nosotras/ nosotros nuestra/ nuestro/ nuestras / nuestros os otra/o/s para pero pues que qué si sí siempre siendo sin sino so sobre sr sra sres sta su/s te tu tus un/a/o/s usted/ ustedes vosotras/ vosotros vuestra/ vuestro/ vuestras / vuestros y ya yo
-
-Ejemplos donde importan:
-- análisis de estilo
-- análisis legal
-- modelos de lenguaje
-- embeddings modernos
-:::
 
 
 ## Tokenización
 
-
 - Proceso de dividir el texto en unidades más pequeñas llamadas *tokens*.
-
-- Es uno de los pasos más importantes del preprocesamiento,
-porque define **qué es una unidad de análisis**.
-
-- Tokens pueden ser:
-	- palabras
-	- subpalabras
-	- caracteres
-	- oraciones
-
-
+- Define **qué es una unidad de análisis**.
+- Tokens pueden ser palabras, subpalabras, caracteres u oraciones.
 
 - ¿Cuáles son los tokens en la siguiente oración?
     - Ayer pagué \$12,543.25 por una televisión, me pareció barata. Hoy voy a estrenarla viendo el béisbol.
 
+
+## Stopwords
+
+Son palabras muy frecuentes que, en muchos contextos, aportan poco contenido por sí mismas.
+
+- Ejemplos en español: artículos (*el, la*), preposiciones (*de, con*), pronombres (*él, nosotros*)
+- Si no se controlan, dominan las frecuencias y pueden sesgar los modelos
+- Conviene decidir caso por caso: en análisis de estilo o en modelos de lenguaje modernos, muchas veces se conservan.
+- La lista completa en español está disponible en `nltk.corpus.stopwords.words('spanish')`.
+
+
+## Lematización vs. *stemming*
+
+Dos formas de reducir palabras a una base común:
+
+| Palabra | *Stemming* (raíz cortada) | Lematización (forma de diccionario) |
+|---|---|---|
+| llegóoo / llegó | lleg | llegar |
+| camiones | camion | camión |
+| niños | niñ | niño |
+
+- *Stemming* es rápido pero produce raíces que no son palabras.
+- La lematización necesita un diccionario o un modelo lingüístico, pero da formas legibles.
 
 
 ## Preprocesamiento
@@ -142,22 +174,18 @@ porque define **qué es una unidad de análisis**.
 | Normalización      | `"el camion llego a las 10 30 pm"`             |
 | Preprocesamiento   | `["camion", "llegar", "10", "30", "pm"]`       |
 
+- Una vez preprocesado el texto, el siguiente paso es la exploración: tamaño del corpus, longitud de los textos, tamaño y frecuencia del vocabulario (c04).
 
+# Representación del texto {background-color="#fdede8"}
 
-- Una vez que ya hice un preprocesamiento, ¿qué se hace?
-    - Exploración de texto: Tamaño del corpus, longitud de texto, tamaño y frecuencia de vocabulario 
-
-
-# Modelos básicos {background-color="#fdede8"}
-
-- ¿Cómo la computadora puede leer el lenguaje? 
-    - BoW
+- ¿Cómo puede la computadora leer el lenguaje?
+    - *Bag of Words* (BoW)
     - TF-IDF
+    - Similitud del coseno
 
 ## Bags of Words (BoW)
 
-- Representa un texto como una colección de palabras.
-
+- Representa un texto como una colección de palabras, sin considerar el orden.
 
 ### Ejemplo
 
@@ -165,33 +193,19 @@ porque define **qué es una unidad de análisis**.
 ```
 documents = ["Perro muerde persona.", # D1
              "Persona muerde perro.", # D2
-			 "Perro come carne.",     # D3
-			 "Persona come comida."]  # D4
-```
-
-- Corpus limpio
-
-
-```
-['perro muerde persona',
- 'persona muerde perro',
- 'perro come carne',
- 'persona come comida']
+             "Perro come carne.",     # D3
+             "Persona come comida."]  # D4
 ```
 
 - Vocabulario
 
 ```
-{'perro': 4, 'muerde': 3, 'persona': 5, 'come': 1, 'carne': 0, 'comida': 2}
+{'carne': 0, 'come': 1, 'comida': 2, 'muerde': 3, 'perro': 4, 'persona': 5}
 ```
 
 ## Bags of Words (BoW)
 
 ### Ejemplo
-
-
-- Representación BoW
-
 
 | Doc | Texto preprocesado    | carne | come | comida | muerde | perro | persona |
 | --- | --------------------- | ----- | ---- | ------ | ------ | ----- | ------- |
@@ -209,12 +223,9 @@ documents = ["Perro muerde persona.", # D1
 :::: {.columns}
 ::: {.column style="width:100%; font-size: 0.8em;"}
 
-
-- Expresa cuán relevante es una palabra para una colección de documentos, y basa su cuantificación en la frecuencia de ocurrencia de esa misma palabra.
+- Expresa cuán relevante es una palabra para una colección de documentos, a partir de su frecuencia en el documento y de su rareza en la colección.
     - Las palabras muy comunes suelen tener un peso bajo o incluso de 0.
     - Las palabras más raras o distintivas tienen un peso más alto, ya que ayudan mejor a diferenciar los documentos.
-
-
 
 | Documento               | afuera | carne | come | duerme | gato | juega | mucho | perro | pescado |
 | ----------------------- | :----: | :---: | :--: | :----: | :--: | :---: | :---: | :---: | :-----: |
@@ -224,33 +235,42 @@ documents = ["Perro muerde persona.", # D1
 | "El perro juega afuera" | 0.62   |   0   |  0   |   0    |  0   | 0.62  |   0   | 0.49  |   0     |
 
 :::{.notes}
-Valores calculados con `TfidfVectorizer` de scikit-learn (stopword "el" eliminada, normalización L2 por documento). Los valores no son "redondos" a propósito: salen de la fórmula.
+Valores calculados con `TfidfVectorizer` de scikit-learn (stopword "el" eliminada, normalización L2 por documento). Los valores salen de la fórmula, no son redondeos arbitrarios.
 :::
 
 :::
 ::::
 
-
-:::{.notes}
-It's a commonly used representation
-scheme for information-retrieval systems, for extracting relevant documents from a
-corpus for a given text query.
-:::
-
 ## TF-IDF
-### Idea:
-- Si una palabra aparece varias veces en un documento pero no ocurre frecuentemente en la colección de documentos, entonces la palabra debe ser de gran importancia en el documento.
-    - La importancia de la palabra incrementa conforme su frecuencia en el documento.
-    - Pero si esa misma palabra es frecuente en la colección de documentos, reduce su relevancia.
+### Idea
+
+- Si una palabra aparece varias veces en un documento pero no es frecuente en la colección, es muy importante para ese documento.
+    - La importancia de la palabra crece con su frecuencia en el documento.
+    - Pero si la palabra es frecuente en toda la colección, reduce su relevancia.
 
 ### Características
 
 - Cada dimensión es una palabra del vocabulario
 - No entiende significado, solo **frecuencia y rareza**
 
+## Similitud del coseno
+
+- La manera más común de comparar qué tan parecidos son dos vectores de texto.
+- Es el coseno del ángulo entre ambos vectores.
+- Con TF-IDF normalizado, el coseno no depende de la longitud del documento.
+
+![](img/sim_cos.png)
+
+## Similitud del coseno
+### Mide el ángulo entre dos vectores
+
+$$\cos(\theta) = \frac{\mathbf{a} \cdot \mathbf{b}}{\|\mathbf{a}\| \|\mathbf{b}\|} = \frac{\sum_{i=1}^{n} a_i b_i}{\sqrt{\sum_{i=1}^{n} a_i^2} \cdot \sqrt{\sum_{i=1}^{n} b_i^2}}$$
+
+- **1**: vectores idénticos (muy similares)
+- **0**: vectores ortogonales (sin relación)
+- **-1**: vectores opuestos
 
 # Embeddings {background-color="#fdede8"}
-
 
 ¿Cómo describirían la palabra **Olímpicos** con solo números?
 
@@ -260,7 +280,7 @@ corpus for a given text query.
 
 ### Medición de características
 
-- Score: 38/100 
+- Score: 38/100
 
 ::: {.columns}
 
@@ -276,94 +296,9 @@ Tomado de @alammar2019illustrated
 
 ---
 
-### Medición de características
+### Embedding
 
-- Lo ponemos en un rango de -1 a 1
-
-::: {.columns}
-
-![-](img/s2.png)
-
-:::
-
----
-
-### Medición de características
-
-- Agregamos información (otra dimensión)
-- Representamos los scores como un vector desde el origen a ese punto de coincidencia
-
-::: {.columns}
-
-![-](img/s3.png)
-
-
-:::
-
----
-
-### Medición de características
-
-- Puedo agregar información de otras personas
-
-::: {.columns}
-
-![-](img/s4.png)
-
-:::
-
----
-
-### Medición de características
-
-- Quiero buscar alguien similar a Jay 
-
-::: {.columns}
-
-![-](img/s5.png)
-
-<small>
-
-Tomado de @alammar2019illustrated
-
-</small>
-
-
-:::
-
----
-
-### Medición de características
-
-- Pero necesito más información 
-
-::: {.columns}
-
-![-](img/s6.png)
-
-:::
-
----
-
-### Medición de características
-
-- Ya no es tan sencillo ver las flechas en dos dimensiones. 
-- En ML trabajamos con espacios de muchas dimensiones 
-	- pero podemos seguir viendo que tanto se parecen los vectores entre sí
-
-::: {.columns}
-
-![-](img/s7.png)
-
-:::
-
-
----
-
-### Medición de características
-
-- Podemos representar cosas (palabras) como vectores
-- Podemos ver qué tan similares son los vectores entre ellos. 
+- Podemos representar cosas (palabras) como vectores, y comparar qué tan parecidos son entre sí.
 
 ::: {.columns}
 
@@ -371,25 +306,17 @@ Tomado de @alammar2019illustrated
 
 :::
 
-
-
 ---
 
 ### Embedding
 
-Representación vectorial de una palabra, frase o documento.
-
-::: {.columns}
-
-- Es decir, la palabra la podemos representar con diferentes dimensiones, por ejemplo, la palabra **king** con: 
-
+Representación vectorial de una palabra, frase o documento. Por ejemplo, la palabra **king**:
 
 ```
 [ 0.50451 , 0.68607 , -0.59517 , -0.022801, ..., -2.223 , -1.0756 , -1.0783 , -0.34354 , 0.33505 , ... , -0.25663 , -0.8523 , 0.1661 , 0.40102 , 1.1685 , -1.0137 , -0.21585 , -0.15155 , 0.78321 , -0.91241 , -1.6106 , -0.64426 , -0.51042 ]
 ```
 
-- Si lo graficamos:
-
+::: {.columns}
 
 ![-](img/s9.png)
 
@@ -399,48 +326,17 @@ Tomado de @alammar2019illustrated
 
 </small>
 
-
-
 :::
-
 
 :::{.notes}
-
-Una matriz densa es una matriz donde la mayoría o casi todos sus elementos tienen valores distintos de cero.
-
+Una matriz densa es una matriz donde casi todos sus elementos tienen valores distintos de cero.
 :::
 
 ---
 
 ### Embeddings
 
-- Comparemos ahora **king** con otras palabras 
-- ¿Qué observas?
-
-::: {.columns}
-
-![-](img/s10.png)
-
-:::
-
----
-
-### Embeddings
-
-- Estas representaciones vectoriales capturan un poco de información/significado/asociación de estas palabras 
-
-::: {.columns}
-
-![-](img/s12.png)
-
-:::
-
-
----
-
-### Embeddings
-
-- Si hacemos operaciones con los vectores:
+- Si hacemos operaciones con los vectores, las relaciones entre palabras se conservan en parte:
 
 ::: {.columns}
 
@@ -450,143 +346,54 @@ Una matriz densa es una matriz donde la mayoría o casi todos sus elementos tien
 
 ## Word embeddings
 
-
-
-- **Vectores densos** que representan palabras, frases o documentos
-- Capturan **similitud semántica** en un espacio multidimensional
-- Las dimensiones dependen del modelo
-	- típicamente 100-768 dimensiones
-- Palabras con significados similares → vectores cercanos en el espacio
+- **Vectores densos** que representan palabras, frases o documentos.
+- Capturan **similitud semántica** en un espacio de muchas dimensiones.
+- Palabras con significados similares → vectores cercanos.
+- Típicamente de 100 a 768 dimensiones, según el modelo.
 
 ::: {.callout-note}
-**Vector Space Model (VSM)**: Modelo matemático que representa unidades de texto como vectores. 
+**Vector Space Model (VSM)**: modelo que representa unidades de texto como vectores.
 :::
 
-:::{.notes}
+## Embeddings estáticos (clásicos)
 
-- Para trabajar con cadenas de texto, el texto debe de convertirse en una forma matemática.
-- Modelo algebraico simple que representa cualquier unidad de texto. 
-- Se usa para:
-	- Information retrieval
-	- Scoring de documentos
-	- Clasificación
-	- Document clustering
+Un vector fijo por palabra:
 
-:::
-
-## Similitud del coseno
-
-- La manera más común de ver qué tan similares son vectores
-- Es el coseno del ángulo entre sus vectores correspondientes
-- También se usa la distancia euclidiana: entre menor distancia, más similares son los vectores
-
-
-![](img/sim_cos.png)
-
-## Similitud del coseno
-
-### Mide el ángulo entre dos vectores:
-
-$$\cos(\theta) = \frac{\mathbf{a} \cdot \mathbf{b}}{\|\mathbf{a}\| \|\mathbf{b}\|} = \frac{\sum_{i=1}^{n} a_i b_i}{\sqrt{\sum_{i=1}^{n} a_i^2} \cdot \sqrt{\sum_{i=1}^{n} b_i^2}}$$
-
-Donde:
-
-- $\mathbf{a} \cdot \mathbf{b}$ es el producto punto entre los dos vectores
-- $\|\mathbf{a}\|$ y $\|\mathbf{b}\|$ son las normas (magnitudes) de cada vector
-- El resultado está siempre entre $-1$ y $1$
-	- **1**: Vectores idénticos (muy similares)
-	- **0**: Vectores ortogonales (sin relación)
-	- **-1**: Vectores opuestos
-
-## Modelos clásicos de embeddings
-
-
-Una representación por palabra:
-
-- **Word2Vec** (2013): Skip-gram y CBOW, diseñado por Google
-- **GloVe** (2014): Basado en co-ocurrencias globales
-- **FastText** (2017): Considera sub-palabras
-
-
-
-
-# Tareas {background-color="#fdede8"}
-
-
-## Corrección ortográfica
-
-- Detectar errores ortográficos
-- Propone una o más correcciones plausibles
-- Puedes crear diccionarios manuales o implementaciones con similitud
-- Traducción si viene en varios idiomas**
-
-### Ejemplo: 
-
-```
-“sentensia” → “sentencia”
-“Juam Pérez” → “Juan Pérez”
-```
-
+- **Word2Vec** (2013): Skip-gram y CBOW, desarrollado por Google.
+- **GloVe** (2014): basado en co-ocurrencias globales.
+- **FastText** (2017): considera sub-palabras.
 
 ::: {.callout-warning}
-Corregir la ortografía no es entender significado
+"Banco" tiene un solo vector, aunque signifique institución financiera o asiento.
 :::
 
+## De estáticos a contextuales
 
-## Named Entity Recognition (NER)
+- Los modelos contextuales (desde BERT, 2018) producen un vector **según el contexto** de la palabra.
+- Los modelos de lenguaje grandes (LLM) usan esta misma idea a gran escala.
+- Para el curso basta la idea general: el mismo texto puede dar representaciones distintas según lo que lo rodea.
 
-- Proceso de identificar y clasificar fragmentos de texto que representan entidades del mundo real.
-- Se asigna un rol semántico o extracción de entidades como: 
-	- PERSON
-	- ORGANIZATION
-	- LOCATION / GPE
-	- DATE
-	- MONEY
-	- LAW / CASE (en dominio legal)
-- Más adelante veremos cómo funciona
+## ¿Qué método usar?
 
+| Método | Cuándo tiene sentido |
+|---|---|
+| Reglas y palabras clave | Pocos casos y reglas claras |
+| TF-IDF + modelo lineal | Datos etiquetados moderados; rápido, barato y explicable |
+| Embeddings o modelos preentrenados | Hay más variación de lenguaje; requiere más cómputo |
+| LLM sin entrenamiento (*zero-shot*) | No hay etiquetas; hay costo, riesgo de privacidad y resultados menos reproducibles |
 
-## Named Entity Recognition (NER)
+- Búsqueda semántica: con embeddings y similitud del coseno se pueden encontrar solicitudes parecidas a una nueva, aunque no compartan palabras exactas.
 
-### Ejemplo
+# Clasificación de texto {background-color="#fdede8"}
 
-```
-“El juez Julián Pérez dictó sentencia en la Ciudad de México”
-```
+## Tipos de clasificación supervisada
 
-- Salida NER:
-	- Julián Pérez → PERSON
-	- Ciudad de México → LOCATION
-
-### Se usa para:
-
-
-- análisis de actores
-- gráficos (personas–organizaciones)
-- deduplicación
-- búsquedas avanzadas
-- análisis temporal
-
+- **Binaria**: dos clases posibles (*sí o no*)
+- **Multiclase**: más de dos clases mutuamente excluyentes (positivo / neutral / negativo)
+- **Multi-etiqueta**: un documento puede tener varias clases a la vez
+    - "Derecho penal" + "Corrupción" + "Procedimiento"
 
 ## Clasificación de texto
-
-
-La categorización de texto consiste en asignar una o más etiquetas a un documento
-a partir de su contenido.
-
-- Se utilizan los algoritmos como Naive Bayes, Regresión logística, etc. 
-
-### Tipos de clasificación supervisada:
-
-- **Binaria**: Dos clases posibles (*ser o no ser*)
-- **Multiclase**: Más de dos clases mutuamente excluyentes (positivo / neutral / negativo)
-- **Multi-etiqueta**: Un documento puede pertenecer a varias clases simultáneamente. 
-	- "Derecho penal" + "Corrupción" + "Procedimiento"
-
-
-
-## Clasificación de texto
-
 ### Consideraciones
 
 :::: {.columns}
@@ -595,14 +402,11 @@ a partir de su contenido.
 
 **¿Por qué suele funcionar bien?**
 
-- Muchos temas utilizan vocabulario distintivo:
-
+- Muchos temas usan vocabulario distintivo:
   - Derecho: `juez, corte, evidencia`
   - Puertos: `contenedor, terminal, patio`
-
 - TF-IDF reduce el peso de palabras comunes y resalta términos informativos.
-
-- En muchos casos bastan pocos datos etiquetados para aprender una frontera de decisión útil.
+- En muchos casos bastan pocos datos etiquetados para aprender una frontera útil.
 
 :::
 
@@ -613,224 +417,59 @@ a partir de su contenido.
 
 **¿Qué hace difícil la clasificación de texto?**
 
-- Alta dimensionalidad del espacio de palabras
-- Vocabulario grande y disperso
+- Alta dimensionalidad y vocabulario grande y disperso
 - Clases desbalanceadas
-- Ambigüedad semántica: una palabra puede tener varios significados
+- Ambigüedad: una palabra puede tener varios significados
 - Dependencia del dominio: el lenguaje cambia entre contextos
 
 :::
 
 ::::
 
-:::{.notes}
+## Pipeline en scikit-learn
 
-TF-IDF reduce ruido porque:
-- baja peso a palabras comunes
-- sube palabras discriminativas.
+```python
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
 
-- En NLP, muchas veces el éxito no viene del modelo, sino de cómo el lenguaje organiza naturalmente los datos.
+modelo = Pipeline([
+    ("tfidf", TfidfVectorizer(stop_words=stopwords_es)),
+    ("clf", LogisticRegression(max_iter=1000)),
+])
+modelo.fit(X_train, y_train)
+modelo.predict(X_test)
+```
 
+- El vectorizador se ajusta **solo con el conjunto de entrenamiento**; así evitamos la fuga de datos (c05).
+
+## Evaluar un clasificador de texto
+
+- Usamos las mismas métricas que en supervisado: matriz de confusión, **eficiencia** (precision), **cobertura** (recall), F1 y validación cruzada.
+- Consulta c07 para su definición y su interpretación con umbrales.
+
+::: {.callout-tip}
+Práctica: el notebook `nb06_clasificacion_texto.ipynb` clasifica quejas ciudadanas con este pipeline.
 :::
 
+# Descanso {background-color="#fdede8"}
 
+10 minutos
 
-## Topic Modeling
+# Caso: clasificación de mercancías {background-color="#fdede8"}
 
-Conjunto de métodos no supervisados cuyo objetivo es:
+- Campo de texto libre que llenan los usuarios para describir mercancías.
+- Pueden dar una descripción explícita o un código de un catálogo internacional de aranceles.
+- Se trabajó por su relevancia para el proyecto.
 
-- Descubrir los **temas latentes** en un corpus
-- Explicar la co-ocurrencia de palabras mediante *variables ocultas*
-- Identifica las palabras con mayor probabilidad dentro de cada tópico
-	- Identifica los temas principales	con una mezcla palabras clave
-	- Interpreta una estructura temática emergente
-
-## Topic Modeling
-
-### Aplicaciones
-
-- Explorar grandes colecciones de texto
-- Organizar documentos por temática
-- Identificar patrones discursivos
-- Preprocesamiento para tareas supervisadas
-- Análisis exploratorio en investigación social
-
-
-## Topic Modeling
-### Interpretación de un tópico
-
-- Un tópico no es una etiqueta explícita.
-- Es un conjunto de palabras con alta probabilidad conjunta. Ejemplo:
-	- Tópico 1: `police, suspect, arrest, investigation`
-	- Tópico 2:  `container, terminal, yard, vessel`
-
-
-
-::: {.callout-warning}
-- Supone modelo Bag-of-Words (ignora orden)
-- Número de tópicos debe fijarse previamente
-- Los tópicos no son "verdades", son construcciones estadísticas
-- Sensible al preprocesamiento
-- Puede generar tópicos difíciles de interpretar
-:::
-
-
-## Clustering de documentos
-
-- Agrupar documentos similares (por proximidad geométrica).
-	- Basado en medidas de similitud (coseno, distancia euclídea).
-
-
-![](https://www.askpython.com/wp-content/uploads/2020/10/Final-clusters.jpeg)
-
-
----
-
-### Clustering vs Topic Modeling vs t-SNE
-
-Clustering:
-
-- Agrupa (por distancia) documentos similares.
-- ¿Qué documentos están cerca entres sí?
-
-Topic Modeling:
-
-- Descubre temas latentes 
-- ¿Qué temas explican la co-ocurrencia de palabras?
-
-t-SNE:
-
-- Visualiza datos de alta dimensión en 2D/3D.
-- ¿Cómo puedo visualizar la estructura de alta dimensión?
-
----
-
-### Clustering vs Topic Modeling vs t-SNE
-
-- Imagina 1000 documentos.
-	- Clustering: te dice que hay 5 grupos.
-	- Topic Modeling: te dice que existen 5 temas con ciertas palabras.
-	- t-SNE: te dibuja los 1000 documentos en 2D.
-
-::: {.callout-warning}
-t-SNE no es un método de modelado: solo proyecta datos de $\mathbb{R}^{n} \rightarrow \mathbb{R}^{2}$ para visualizarlos
-:::
-
-
-# Ejemplo 1 {background-color="#fdede8"}
-
-- Clasificación del delito 
-
-## Clasificación del delito
-### Contexto
-
-- Artículo: *Text mining and machine learning for crime classification: using unstructured narrative court documents in police academic*
-	- @bifari2024text
-
-Objetivo: Desarrollar un sistema automático de clasificación de delitos utilizando:
-
-- Documentos narrativos judiciales
-- Texto no estructurado
-- Casos etiquetados por tipo de delito
-
-
-## Clasificación del delito
-
-Se construye un modelo de Machine Learning en dos fases.
-
-- Modelo 1: *Crime Scene Existence* (CSE)
-	- Determina si el documento contiene información sobre la escena del crimen.
-	- Es una clasificación binaria (sí / no).
-
-- Modelo 2: *Crime Type* (CT)
-	- Determina el tipo de delito cometido según el contexto del texto.
-	- Es una clasificación multiclase.
-
-Ambos modelos utilizan vectores TF-IDF como representación del texto.
-
-:::{.notes}
-- Entrenan clasificadores supervisados con sus respectivas etiquetas.
-
-Para el modelo CT:
-
-- Solo se utilizan los documentos que fueron clasificados como positivos por el modelo CSE.
-:::
-
-
-
-## Pipeline
-
-![@bifari2024text](img/pipe_crime.png)
-
-## Resultados
-
-
-![@bifari2024text](img/resultados_crime.png)
-
-## Resultados
-
-
-![@bifari2024text](img/resultados_crime2.png)
-
-# Ejemplo 2 {background-color="#fdede8"}
-
-
-- Buscadores de empleo
-
-
-## Modelo de recomendaciones de ofertas para buscadores de trabajo
-### Servicio Nacional del Empleo
-
-- Su portal permite:
-	- a las personas que están en busca de empleo registrar su perfil o competencias laborales, 
-	- y que las empresas puedan registrar sus ofertas de empleo.
-
-
-## Modelo de recomendaciones de ofertas para buscadores de trabajo
-### Objetivos
-- Generar **recomendaciones** de vacantes y de personas tanto a buscadores de trabajo como a empresas de acuerdo a sus intereses. 
-- Asignar puntajes a la afinidad entre cada recomendación y cada usuario del sistema. 
-
-
-
-![](img/empleo.png)
-
-## Implementación
-
-![](img/empleo1.png)
-
-## Implementación
-
-![](img/empleo2.png)
-
-## Implementación
-
-![](img/empleo3.png)
-
-## Implementación
-
-![](img/empleo4.png)
-
-# Ejemplo 3 {background-color="#fdede8"}
-
-- Clasificación de la mercancía
-
-## Contexto
-
-- Campo de texto que se utiliza de manera libre de parte de los usuarios para describir mercancía
-- Descripción explícita o utilizando un código que se basa en un catálogo internacional de aránceles
-- Se utilizó por la relevancia al proyecto
-
-## Preprocesamiento
-
-### Paso 1
+## Paso 1: preprocesamiento
 
 :::: {.columns}
 ::: {.column style="width:30%; font-size: 0.8em;"}
 
 - Se encontraron varios idiomas
-- Se hizo traducción de palabras en español más repetidas, ej: papel, madera, aluminio, máquina, sales, etc.
-- Se quita la repetición de palabras como azzzulejo, por azulejo. 
+- Se tradujeron las palabras en español más repetidas, por ejemplo: papel, madera, aluminio, máquina, sales
+- Se corrigieron repeticiones de letras, como *azzzulejo* → *azulejo*
 
 :::
 ::: {.column width="5%"}
@@ -838,31 +477,22 @@ Para el modelo CT:
 :::
 ::: {.column style="width:60%; font-size: 0.6em;"}
 
-
 ![](img/preprocesing_dm.png)
 
 :::
 ::::
 
-
-## Catálogo HS
-
+## Paso 2: catálogo HS
 
 :::: {.columns}
 ::: {.column style="width:30%; font-size: 0.7em;"}
 
-### Paso 2
-
-- Se emplea para clasificar productos comerciales
-- Es utilizado internacionalmente
-	- 21 secciones
-	- 97 capítulos
-
-
-- Se hace la búsqueda de los códigos armónicos buscando la palabra code y los siguientes dos dígitos:
-	- ej. `graphite l hs code 8249965 etc saskia`
-- Solo el 25% tenía esta clasificación
-
+- El Sistema Armonizado (HS) se usa para clasificar productos comerciales internacionalmente.
+    - 21 secciones
+    - 97 capítulos
+- Se buscó el código armonizado usando la palabra *code* y los dos dígitos siguientes:
+    - ej. `graphite l hs code 8249965 etc saskia`
+- Solo el 25% de las mercancías tenía esta clasificación.
 
 :::
 ::: {.column width="5%"}
@@ -875,16 +505,25 @@ Para el modelo CT:
 :::
 ::::
 
+## Paso 3: clasificación con modelo
 
----
-
-## Proceso de clasificación de la mercancía
-### Paso 3
-
-- Antes del paso 3: **75%** de las mercancías seguían sin clasificar
-- Al final del proceso: alrededor de **88%** clasificadas
-
+- Antes de este paso: **75%** de las mercancías seguían sin clasificar.
+- Al final del proceso: alrededor de **88%** quedó clasificada.
 
 ![-](img/dm.png)
+
+# Cierre {background-color="#fdede8"}
+
+## Lo que aprendimos hoy
+
+- El texto se convierte en números: primero se limpia y se tokeniza, después se representa (BoW, TF-IDF o embeddings).
+- Con esa representación se aplican los mismos modelos y métricas del aprendizaje supervisado y no supervisado.
+- Los modelos con pocos datos son frágiles: leer los errores es parte del análisis.
+
+## Ética y límites
+
+- Las quejas y solicitudes contienen datos personales: tratarlos con cuidado (c10).
+- Un clasificador puede tener peor desempeño en ciertos grupos o dialectos: revisar métricas de equidad (c10).
+- Un modelo de lenguaje puede generar respuestas incorrectas con confianza; no sustituye la revisión humana.
 
 ## Referencias

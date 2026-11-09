@@ -30,18 +30,6 @@ bibliography: references.bib
 > Área de las ciencias computacionales que desarrolla métodos para analizar, modelar y entender el lenguaje humano. [@vajjala2020practical]
 
 
-## Agenda (150 min)
-
-1. Tareas de NLP (15 min)
-2. Preprocesamiento de texto (20 min)
-3. Representación: BoW, TF-IDF y coseno (20 min)
-4. Embeddings (10 min)
-5. Clasificación de texto (25 min)
-6. *Descanso* (10 min)
-7. Caso: clasificación de mercancías (20 min)
-8. Práctica en notebook (20 min)
-9. Cierre (10 min)
-
 # Tareas de NLP {background-color="#fdede8"}
 
 ## Tareas comunes
@@ -54,7 +42,6 @@ bibliography: references.bib
 | Tópicos | ¿De qué temas trata la colección? | Explorar solicitudes de transparencia |
 | Búsqueda semántica | ¿Qué textos son parecidos a este? | Encontrar solicitudes similares a una nueva |
 
-- *Record linkage* (detectar registros duplicados con nombres distintos) ya lo vimos en c03.
 
 ## Reconocimiento de entidades (NER)
 
@@ -280,7 +267,7 @@ $$\cos(\theta) = \frac{\mathbf{a} \cdot \mathbf{b}}{\|\mathbf{a}\| \|\mathbf{b}\
 
 ### Medición de características
 
-- Score: 38/100
+- Score: 38/100 
 
 ::: {.columns}
 
@@ -296,9 +283,94 @@ Tomado de @alammar2019illustrated
 
 ---
 
-### Embedding
+### Medición de características
 
-- Podemos representar cosas (palabras) como vectores, y comparar qué tan parecidos son entre sí.
+- Lo ponemos en un rango de -1 a 1
+
+::: {.columns}
+
+![-](img/s2.png)
+
+:::
+
+---
+
+### Medición de características
+
+- Agregamos información (otra dimensión)
+- Representamos los scores como un vector desde el origen a ese punto de coincidencia
+
+::: {.columns}
+
+![-](img/s3.png)
+
+
+:::
+
+---
+
+### Medición de características
+
+- Puedo agregar información de otras personas
+
+::: {.columns}
+
+![-](img/s4.png)
+
+:::
+
+---
+
+### Medición de características
+
+- Quiero buscar alguien similar a Jay 
+
+::: {.columns}
+
+![-](img/s5.png)
+
+<small>
+
+Tomado de @alammar2019illustrated
+
+</small>
+
+
+:::
+
+---
+
+### Medición de características
+
+- Pero necesito más información 
+
+::: {.columns}
+
+![-](img/s6.png)
+
+:::
+
+---
+
+### Medición de características
+
+- Ya no es tan sencillo ver las flechas en dos dimensiones. 
+- En ML trabajamos con espacios de muchas dimensiones 
+	- pero podemos seguir viendo que tanto se parecen los vectores entre sí
+
+::: {.columns}
+
+![-](img/s7.png)
+
+:::
+
+
+---
+
+### Medición de características
+
+- Podemos representar cosas (palabras) como vectores
+- Podemos ver qué tan similares son los vectores entre ellos. 
 
 ::: {.columns}
 
@@ -306,17 +378,25 @@ Tomado de @alammar2019illustrated
 
 :::
 
+
+
 ---
 
 ### Embedding
 
-Representación vectorial de una palabra, frase o documento. Por ejemplo, la palabra **king**:
+Representación vectorial de una palabra, frase o documento.
+
+::: {.columns}
+
+- Es decir, la palabra la podemos representar con diferentes dimensiones, por ejemplo, la palabra **king** con: 
+
 
 ```
 [ 0.50451 , 0.68607 , -0.59517 , -0.022801, ..., -2.223 , -1.0756 , -1.0783 , -0.34354 , 0.33505 , ... , -0.25663 , -0.8523 , 0.1661 , 0.40102 , 1.1685 , -1.0137 , -0.21585 , -0.15155 , 0.78321 , -0.91241 , -1.6106 , -0.64426 , -0.51042 ]
 ```
 
-::: {.columns}
+- Si lo graficamos:
+
 
 ![-](img/s9.png)
 
@@ -326,11 +406,42 @@ Tomado de @alammar2019illustrated
 
 </small>
 
+
+
 :::
 
+
 :::{.notes}
-Una matriz densa es una matriz donde casi todos sus elementos tienen valores distintos de cero.
+
+Una matriz densa es una matriz donde la mayoría o casi todos sus elementos tienen valores distintos de cero.
+
 :::
+
+---
+
+### Embeddings
+
+- Comparemos ahora **king** con otras palabras 
+- ¿Qué observas?
+
+::: {.columns}
+
+![-](img/s10.png)
+
+:::
+
+---
+
+### Embeddings
+
+- Estas representaciones vectoriales capturan un poco de información/significado/asociación de estas palabras 
+
+::: {.columns}
+
+![-](img/s12.png)
+
+:::
+
 
 ---
 
@@ -426,36 +537,6 @@ Un vector fijo por palabra:
 
 ::::
 
-## Pipeline en scikit-learn
-
-```python
-from sklearn.pipeline import Pipeline
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
-
-modelo = Pipeline([
-    ("tfidf", TfidfVectorizer(stop_words=stopwords_es)),
-    ("clf", LogisticRegression(max_iter=1000)),
-])
-modelo.fit(X_train, y_train)
-modelo.predict(X_test)
-```
-
-- El vectorizador se ajusta **solo con el conjunto de entrenamiento**; así evitamos la fuga de datos (c05).
-
-## Evaluar un clasificador de texto
-
-- Usamos las mismas métricas que en supervisado: matriz de confusión, **eficiencia** (precision), **cobertura** (recall), F1 y validación cruzada.
-- Consulta c07 para su definición y su interpretación con umbrales.
-
-::: {.callout-tip}
-Práctica: el notebook `nb06_clasificacion_texto.ipynb` clasifica quejas ciudadanas con este pipeline.
-:::
-
-# Descanso {background-color="#fdede8"}
-
-10 minutos
-
 # Caso: clasificación de mercancías {background-color="#fdede8"}
 
 - Campo de texto libre que llenan los usuarios para describir mercancías.
@@ -512,18 +593,60 @@ Práctica: el notebook `nb06_clasificacion_texto.ipynb` clasifica quejas ciudada
 
 ![-](img/dm.png)
 
-# Cierre {background-color="#fdede8"}
 
-## Lo que aprendimos hoy
 
-- El texto se convierte en números: primero se limpia y se tokeniza, después se representa (BoW, TF-IDF o embeddings).
-- Con esa representación se aplican los mismos modelos y métricas del aprendizaje supervisado y no supervisado.
-- Los modelos con pocos datos son frágiles: leer los errores es parte del análisis.
 
-## Ética y límites
+# Caso: Clasificación del delito {background-color="#fdede8"}
 
-- Las quejas y solicitudes contienen datos personales: tratarlos con cuidado (c10).
-- Un clasificador puede tener peor desempeño en ciertos grupos o dialectos: revisar métricas de equidad (c10).
-- Un modelo de lenguaje puede generar respuestas incorrectas con confianza; no sustituye la revisión humana.
+## Clasificación del delito
+### Contexto
+
+- Artículo: *Text mining and machine learning for crime classification: using unstructured narrative court documents in police academic*
+	- @bifari2024text
+
+Objetivo: Desarrollar un sistema automático de clasificación de delitos utilizando:
+
+- Documentos narrativos judiciales
+- Texto no estructurado
+- Casos etiquetados por tipo de delito
+
+
+## Clasificación del delito
+
+Se construye un modelo de Machine Learning en dos fases.
+
+- Modelo 1: *Crime Scene Existence* (CSE)
+	- Determina si el documento contiene información sobre la escena del crimen.
+	- Es una clasificación binaria (sí / no).
+
+- Modelo 2: *Crime Type* (CT)
+	- Determina el tipo de delito cometido según el contexto del texto.
+	- Es una clasificación multiclase.
+
+Ambos modelos utilizan vectores TF-IDF como representación del texto.
+
+:::{.notes}
+- Entrenan clasificadores supervisados con sus respectivas etiquetas.
+
+Para el modelo CT:
+
+- Solo se utilizan los documentos que fueron clasificados como positivos por el modelo CSE.
+:::
+
+
+
+## Pipeline
+
+![@bifari2024text](img/pipe_crime.png)
+
+## Resultados
+
+
+![@bifari2024text](img/resultados_crime.png)
+
+## Resultados
+
+
+![@bifari2024text](img/resultados_crime2.png)
 
 ## Referencias

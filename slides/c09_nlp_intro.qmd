@@ -878,8 +878,11 @@ Para el modelo CT:
 
 ---
 
-## Proceso de clasificación de la mercancía (cobertura acumulada: 75%)
+## Proceso de clasificación de la mercancía
 ### Paso 3
+
+- Antes del paso 3: **75%** de las mercancías seguían sin clasificar
+- Al final del proceso: alrededor de **88%** clasificadas
 
 
 ![-](img/dm.png)

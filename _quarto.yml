@@ -24,7 +24,8 @@ website:
         contents:
           - text: "Exploracion de datos"
             href: tareas/tarea_2.html
-
+          - text: "Aprendizaje de máquina"
+            href: tareas/tarea_3.html
 
 html:
   theme: minty

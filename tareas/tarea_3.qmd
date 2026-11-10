@@ -1,0 +1,195 @@
+---
+title: "Tarea 3: ¿Qué llamadas al C5 conviene verificar primero?"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    theme: cosmo
+    highlight-style: github
+date: today
+---
+
+## Objetivo
+
+Esta tarea es la **continuación de la Tarea 2**: trabajarán en parejas, **en el mismo repositorio** que crearon para esa tarea, con datos reales y la misma forma de colaborar con Git y pull requests. La pregunta de política pública es: **qué llamadas al C5 de la Ciudad de México conviene verificar primero con cámaras**, dado que solo hay recursos para verificar unas cuantas cada noche.
+
+Para responderla usarán tres enfoques vistos en clase:
+
+- **Aprendizaje supervisado** (Materiales 05 a 07): predecir qué llamadas son falsas alarmas.
+- **Aprendizaje no supervisado** (Material 08): encontrar zonas con alta densidad de reportes.
+- **Texto** (Material 09): una comparación breve sobre el campo de texto del reporte.
+
+::: {.callout-important}
+Entregarán **una sola recomendación** para el C5. Cada integrante desarrolla un notebook, pero ambos deben entender y poder explicar **los dos notebooks**.
+:::
+
+
+## Materiales de referencia
+
+- **Notebook 03 del repositorio del curso** (aprendizaje supervisado con este mismo problema): es el punto de partida. Cópienlo a `notebooks/` en su repositorio como referencia, pero **no entreguen una copia**: respondan las preguntas nuevas de esta tarea.
+- **Materiales 05 a 07:** formulación analítica, validación temporal y métricas @k.
+- **Material 08:** DBSCAN y agrupamiento.
+- **Material 09 y notebook 06:** representación de texto y clasificación.
+- **Material 10:** riesgos éticos y equidad.
+- **Su repositorio de la Tarea 2:** ahí están el `pyproject.toml`, el flujo de ramas y los notebooks 01 y 02 que ya tienen.
+
+
+## 1. Base de datos
+
+Usarán la misma base que en el notebook 03:
+
+```python
+import pandas as pd
+
+url = "https://raw.githubusercontent.com/ElenaVillano/databases/refs/heads/main/db_falsas_alarmas.csv"
+df = pd.read_csv(url)
+```
+
+Contiene cerca de **124 mil reportes** creados entre diciembre de 2021 y febrero de 2024. Los códigos de cierre aproximadamente se distribuyen así:
+
+| Código | Significado | Proporción aproximada |
+|---|---|---|
+| A | Afirmativo: la unidad llegó y confirmó la emergencia | 36% |
+| D | Duplicado: el mismo incidente se reportó más de una vez | 43% |
+| F | Falso: el incidente fue considerado falso en el lugar | 20% |
+| I | Informativo: solicitud de información | menos de 1% |
+
+::: {.callout-warning}
+La columna `clas_con_f_alarma` **no marca falsas alarmas**: contiene categorías de servicio (por ejemplo, *URGENCIAS MÉDICAS* o *EMERGENCIA*). Tampoco pueden usar `fecha_hora_cierre`, `alcaldia_cierre` ni `codigo_cierre` como predictores, porque se conocen después de decidir.
+:::
+
+
+## 2. Escenario operativo
+
+Cada noche, el C5 puede activar cámaras para **verificar 8 llamadas**. Un trimestre tiene aproximadamente 90 noches, así que el número de verificaciones disponibles es:
+
+$$k = 8 \times 90 = 720$$
+
+La pregunta que deben responder es: **¿qué 8 llamadas de cada noche conviene verificar, según el riesgo de que sea falsa alarma?**
+
+Cualquier supuesto adicional (por ejemplo, otro número de noches o de verificaciones) debe declararse y justificarse en el notebook.
+
+
+## 3. Parte A: aprendizaje supervisado
+
+**Notebook:** `notebooks/nb03_supervisado_c5.ipynb`
+
+**Responsable:** Integrante A.
+
+### A1. Definición de la etiqueta
+
+El notebook 03 usa `F` como falsa alarma (etiqueta 1) y trata `D` como emergencia real (etiqueta 0). Justifiquen esa decisión y comparen su modelo con una alternativa, por ejemplo, excluir los `D` del entrenamiento. Expliquen qué cambia en el desempeño y qué riesgo implica cada opción.
+
+### A2. Predictores disponibles al momento del reporte
+
+Revisen la tabla de predictores del notebook 03 y justifiquen **cada variable**: ¿existe en el momento en que entra el reporte?
+
+- Implementen la ingeniería de variables de la sección 3.3 (que en el notebook está comentada) y expliquen cuáles variables mejoran el modelo y por qué.
+- Propongan **al menos una variable nueva** y justifiquen por qué podría ayudar.
+- Expliquen qué información usa cada variable de historial (por colonia) y verifiquen que solo utiliza llamadas anteriores al reporte.
+
+### A3. Evaluación temporal
+
+El notebook 03 del curso tiene una validación cruzada aleatoria (sección 4) y una validación temporal (sección 7). Para la recomendación final, **usen solo la validación temporal**. Expliquen por qué la validación cruzada aleatoria puede dar resultados demasiado optimistas en este problema.
+
+Reporten al menos:
+
+- AUC por modelo;
+- eficiencia@720 y cobertura@720, con la definición vista en la sección 8 del notebook 03.
+
+### A4. Segundo escenario operativo
+
+Propongan un segundo escenario, distinto del de 8 llamadas por noche. Por ejemplo, un número distinto de verificaciones en fin de semana, o un límite por alcaldía. Evalúen los modelos con ese escenario y justifiquen cuál modelo recomendarían para cada uno.
+
+### A5. Equidad
+
+Calculen eficiencia@k y cobertura@k **por alcaldía** para el modelo que recomendarían. Si el modelo verifica menos reportes de algunas alcaldías o detecta peor sus falsas alarmas, discutan por qué podría pasar y qué implicaría para el C5 (ver Material 10).
+
+
+## 4. Parte B: aprendizaje no supervisado
+
+**Notebook:** `notebooks/nb04_no_supervisado_texto_c5.ipynb` (sección 1 de la parte B).
+
+**Responsable:** Integrante B.
+
+### B1. Zonas con alta densidad de reportes
+
+Usen **DBSCAN** (Material 08) sobre las coordenadas (`latitud`, `longitud`) de las llamadas que terminaron en `F` y de las que terminaron en `A`, por separado.
+
+- Justifiquen los parámetros `eps` y `min_samples`. Recuerden que, para usar distancia geográfica, las coordenadas deben convertirse a radianes con la métrica `haversine`.
+- Expliquen por qué DBSCAN es más adecuado que K-Means para este caso.
+
+### B2. Comparación de zonas
+
+- ¿Las zonas de falsas alarmas coinciden con las zonas de emergencias reales?
+- ¿Cómo se relacionan las zonas con las alcaldías y las colonias?
+- Un mapa con las zonas es suficiente; no es necesario un análisis extenso.
+
+### B3. Conexión con la parte A
+
+¿Las zonas identificadas aportan información que el modelo supervisado no tiene? Por ejemplo, comparen las zonas con la variable `tasa_f_colonia`.
+
+
+## 5. Parte C: texto (breve)
+
+**Notebook:** `notebooks/nb04_no_supervisado_texto_c5.ipynb` (sección 2 de la parte B).
+
+**Responsable:** Integrante B.
+
+El campo `incidente_c4` contiene textos cortos (por ejemplo, *Choque sin lesionados*, *Atropellado* o *Motociclista*).
+
+- Compare una representación TF-IDF de `incidente_c4` con la codificación *one hot* del notebook 03 para predecir si el reporte es falsa alarma (`F`).
+- ¿Cambia el desempeño? ¿Por qué un texto corto puede comportarse casi como una variable categórica?
+
+Esta parte debe ser breve: como máximo **20 minutos de trabajo**. No se evaluará la sofisticación del texto, sino la interpretación de la comparación.
+
+
+## 6. Ética y recomendación final
+
+En el memo final, incluyan:
+
+- **Un riesgo ético específico por cada parte:** por ejemplo, concentrar las verificaciones en algunas alcaldías, tratar datos de ubicación de personas, o dejar sin atención una emergencia real que el modelo clasificó como falsa alarma.
+- **Una recomendación concreta:** qué modelo, qué escenario operativo (`k` y reglas de prioridad) y qué condiciones deberían cumplirse antes de usarlo.
+
+
+## 7. Entregables
+
+**Trabajo en Git:** sigan el mismo flujo que en la Tarea 2, en su repositorio:
+
+- Las dependencias nuevas (por ejemplo, `scikit-learn` y `scipy`) las agrega **una sola persona en `main`** con `uv add`, y ambos suben `pyproject.toml` y `uv.lock`. La otra persona ejecuta `git pull origin main` y `uv sync`.
+- Cada integrante trabaja en su propia rama y hace commits frecuentes. Los cambios entran a `main` por pull request.
+- Ningún notebook debe depender de variables que solo existan en otro notebook.
+- No suban datos descargados ni `.venv/`.
+
+| Entregable | Responsable | Ubicación |
+|---|---|---|
+| Notebook de la parte A | Integrante A | `notebooks/nb03_supervisado_c5.ipynb` |
+| Notebook de las partes B y C | Integrante B | `notebooks/nb04_no_supervisado_texto_c5.ipynb` |
+| Memo de recomendación | Ambos | PDF de máximo **2 páginas**, entregado en Canvas |
+
+Cada notebook debe ejecutarse de principio a fin sin errores, con todas las respuestas escritas en celdas de texto.
+
+
+## 8. Rúbrica
+
+| Criterio | Peso | Excelente (100%) | Suficiente (70%) | Insuficiente (40%) |
+|---|---|---|---|---|
+| **A. Supervisado** | 40% | Etiqueta, predictores y evaluación temporal justificados; métricas @k correctas; segundo escenario bien argumentado. | Modelo entrenado y evaluado, con justificaciones parciales. | Hay fuga de información o la evaluación es aleatoria sin justificar. |
+| **B. No supervisado** | 25% | DBSCAN bien parametrizado y comparado con las alcaldías; conexión clara con la parte A. | DBSCAN aplicado, con poca interpretación. | Clustering sin interpretación o con parámetros sin justificar. |
+| **C. Texto** | 10% | Comparación clara y con interpretación de por qué cambia (o no) el desempeño. | Comparación realizada, interpretación general. | No se realiza la comparación. |
+| **Ética y recomendación** | 15% | Riesgos específicos por parte, con evidencia de la equidad por alcaldía, y recomendación concreta. | Riesgos mencionados de manera general. | No hay recomendación o no se discuten riesgos. |
+| **Reproducibilidad y Git** | 10% | Notebooks ejecutables de principio a fin; flujo de ramas y pull requests correcto. | Notebooks ejecutables con errores menores. | Notebooks dependen de estado de otro notebook o no se integraron a `main`. |
+
+
+## 9. Formato de entrega
+
+|                        |                                  |
+| ---------------------- | -------------------------------- |
+| **Trabajo**            | En parejas                       |
+| **Extensión del memo** | **Máximo 2 páginas**             |
+| **Formato del memo**   | PDF                              |
+| **Nombre del archivo** | `Tarea3_equipo_#.pdf`            |
+| **Método de entrega**  | Canvas                           |
+| **Fecha de entrega**   | Por definir                      |
+
+- El `#` se asignará en Canvas.

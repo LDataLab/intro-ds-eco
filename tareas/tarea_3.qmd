@@ -1,9 +1,9 @@
 ---
-title: "Tarea 3: Machine learning para analizar reportes del C5"
+title: "Tarea 3: Aprendizaje supervisado y no supervisado con datos del C5"
 format:
   html:
     toc: true
-    toc-depth: 3
+    toc-depth: 2
     theme: cosmo
     highlight-style: github
 date: today
@@ -11,37 +11,22 @@ date: today
 
 ## Objetivo
 
-Esta tarea continúa el proyecto de la **Tarea 2**. Trabajarán **en parejas y en el mismo repositorio** para pasar del análisis exploratorio a la construcción y evaluación de dos enfoques de *machine learning*:
+Continuarán **en parejas y en el mismo repositorio de la Tarea 2**. Utilizarán los resultados de su EDA para desarrollar dos análisis de *machine learning*:
 
-1. **Aprendizaje supervisado:** predecir qué reportes podrían terminar clasificados como falsas alarmas y evaluar una regla de priorización con capacidad limitada.
-2. **Aprendizaje no supervisado:** utilizar **DBSCAN** para identificar concentraciones espaciales de reportes y explorar su composición.
+- **Supervisado:** mejorar un modelo para identificar reportes que podrían cerrar como falsa alarma (`F`).
+- **No supervisado:** implementar **DBSCAN** para identificar concentraciones geográficas de reportes.
 
-La pregunta general es: **¿qué información pueden aportar ambos enfoques al C5 para comprender sus reportes y apoyar decisiones de verificación?**
+Cada integrante será responsable principal de un notebook, pero **ambos deben comprender los dos análisis** y elaborar conclusiones conjuntas.
 
-::: {.callout-important}
-## Un proyecto, dos notebooks
+## Materiales y datos
 
-Cada integrante desarrollará principalmente un notebook, pero **ambos son responsables de las definiciones, las decisiones metodológicas y la interpretación de los dos análisis**. El trabajo no debe parecer la suma de dos ejercicios independientes: debe conducir a **una recomendación conjunta**.
-:::
+- **Tarea 2:** notebooks de EDA y hallazgos sobre la base del C5.
+- **Notebook 03 de clase:** ejemplo de aprendizaje supervisado, validación temporal y evaluación de modelos. **Úsenlo como referencia; no entreguen una copia.**
+- **Notebook 04 de clase:** implementación y explicación de DBSCAN.
+- Materiales del curso sobre aprendizaje supervisado, métricas, validación y aprendizaje no supervisado.
+- [Sesión técnica 02](../docs/st02.html): flujo de trabajo con Git, GitHub y `uv`.
 
-::: {.callout-warning}
-## Qué no harán
-
-No deben copiar y entregar el notebook de aprendizaje supervisado que usamos en clase. **Úsenlo para consultar conceptos, sintaxis y procedimientos, y construyan su propio pipeline**, explicando qué hace cada etapa, por qué es necesaria y qué información utiliza. No se evaluará la cantidad de modelos o de gráficas, sino la coherencia del análisis y la comprensión de sus decisiones.
-:::
-
-## Materiales de referencia
-
-- **Tarea 2 y notebooks 01 y 02 de su repositorio:** recuperen los hallazgos sobre calidad, temporalidad, códigos de cierre y distribución geográfica.
-- **Notebook 03 de clase (aprendizaje supervisado):** referencia de código, **no plantilla para copiar**. Presten atención a qué decisiones de ese ejemplo deben reconsiderarse en este nuevo problema.
-- **Materiales 05–07:** formulación del problema, modelos, validación temporal y métricas de evaluación.
-- **Notebook 04 de clase (no supervisado) y Material 08:** K-Means, DBSCAN, parámetros y limitaciones.
-- **Material 10:** riesgos, posibles sesgos e implicaciones de usar modelos en decisiones públicas.
-- [Sesión técnica 02](../docs/st02.html): Git, GitHub, `uv`, ramas y pull requests. Consulten también los notebooks del [propedéutico](https://github.com/ElenaVillano/prope-programacion) si necesitan repasar Python o pandas.
-
-## 1. Datos y contexto
-
-Usarán la **misma versión de los datos** del C5 que aparece en el notebook de clase:
+Utilicen la misma base del notebook de clase:
 
 ```python
 import pandas as pd
@@ -50,211 +35,124 @@ url = "https://raw.githubusercontent.com/ElenaVillano/databases/refs/heads/main/
 df = pd.read_csv(url)
 ```
 
-La base contiene aproximadamente **124 mil reportes**, registrados entre finales de 2021 y principios de 2024. Consulten el [conjunto de datos original](https://datos.cdmx.gob.mx/dataset/incidentes-viales-c5) y los hallazgos de su Tarea 2 para contextualizar la información.
+Recuperen de su EDA las definiciones de códigos de cierre, las fechas y las variables disponibles. **No consideren automáticamente que los códigos `D`, `N` o `I` son falsas alarmas.**
 
-| Código de cierre | Interpretación |
-|---|---|
-| `A` | Afirmativo: se confirmó la emergencia. |
-| `N` | Negativo: no se confirmó la emergencia o la solicitud de apoyo. |
-| `F` | Falso: se consideró una falsa alarma. |
-| `D` | Duplicado: se reportó más de una vez el mismo incidente. |
-| `I` | Informativo: solicitud de información. |
+## 1. Escenario: priorización de recursos
 
-La frecuencia exacta de cada código **deben calcularla ustedes** para la versión de datos que usarán. No asuman que `D`, `N` o `I` equivalen a `F`.
+El C5 quiere utilizar un modelo para **priorizar reportes que podrían requerir verificación adicional mediante cámaras**, dadas sus capacidades limitadas. Para este ejercicio suponemos un presupuesto hipotético de **100 verificaciones por semana**.
 
-::: {.callout-warning}
-**Eviten fuga de información (*data leakage*).** La decisión de verificar se plantea en el momento de creación del reporte. Columnas como `codigo_cierre`, `fecha_hora_cierre` y `alcaldia_cierre` se conocen después: pueden utilizarse para construir o examinar la etiqueta, pero **no como predictores**. La columna `clas_con_f_alarma` es una clasificación de servicio, no una etiqueta binaria de falsa alarma.
-:::
-
-## 2. Escenario de decisión
-
-Supongan que el C5 cuenta con recursos para **verificar mediante cámaras hasta ocho reportes por noche**. El objetivo del modelo supervisado es ordenar los reportes elegibles según su probabilidad estimada de recibir un cierre `F`.
-
-**Regla operativa:** en cada noche del periodo de prueba, se seleccionan como máximo los **ocho reportes elegibles con mayor score de esa noche**, y no los ocho con mayor score de todo el trimestre. Si hay menos de ocho, se seleccionan únicamente los disponibles.
-
-Para hacer el ejercicio comparable, adopten y documenten una definición de *noche* (por ejemplo, de 20:00 a 05:59 del día siguiente). Expliquen cómo asignan los reportes de madrugada a la noche correspondiente. Evalúen solo las noches y los registros que cumplan su definición; reporten cuántas noches y llamadas efectivamente analizan.
-
-::: {.callout-note}
-**Simplificación para el ejercicio:** la selección retrospectiva de los ocho scores más altos de cada noche representa una **simulación de priorización**, no una política que pueda implementarse literalmente en tiempo real: cuando llega una llamada aún no se conocen las siguientes. Discutan brevemente cómo esta limitación podría cambiar una implementación real (por ejemplo, usando un umbral definido con datos previos o asignando capacidad por turno). **La verificación es apoyo a la operación, no una regla para negar o retrasar la atención de emergencias.**
-:::
-
-## 3. Parte A: aprendizaje supervisado
-
-**Entregable:** `notebooks/nb03_supervisado_c5.ipynb`  
-**Responsable principal:** integrante A.
-
-Construyan un **pipeline reproducible**. Organicen el notebook en secciones con títulos, código, resultados e interpretaciones. No basta con ejecutar funciones: deben explicar por qué cada paso corresponde a su problema.
-
-### A1. Formulación analítica
-
-Antes de entrenar cualquier modelo, respondan:
-
-- ¿Cuál es la **unidad de predicción** y cuál es la **unidad de decisión**?
-- ¿Qué se desea predecir? ¿Cuál es la etiqueta positiva? ¿En qué momento se haría la predicción?
-- ¿Qué decisión podría apoyar el score? ¿Qué haría el C5 sin el modelo (**línea base operativa**)?
-- ¿Qué harán con los códigos `D`, `I` y, si existe, `N`? Justifiquen si los incluirán en la clase negativa, los excluirán o usarán otro criterio. **No es obligatorio entrenar múltiples versiones de la etiqueta.**
-- ¿Cuál es la **tasa base** de la etiqueta en sus datos de entrenamiento? ¿Cambia entre periodos?
-
-### A2. Preparación e ingeniería de predictores
-
-Seleccionen variables conocidas **al crear el reporte**. Documenten su tipo y por qué podrían ayudar a predecir la etiqueta.
-
-- Limpien tipos y valores faltantes; documenten qué registros excluyen y por qué.
-- Construyan **al menos dos variables nuevas** a partir de información disponible en ese momento. Pueden revisar el ejemplo de variables temporales del notebook 03, pero justifiquen sus propias elecciones.
-- Identifiquen cuáles variables requieren codificación, imputación o escalamiento. Expliquen qué operaciones deben **ajustarse solo con entrenamiento**.
-- Utilicen `Pipeline` y, cuando tengan tipos de variables distintos, `ColumnTransformer` de `scikit-learn` para organizar preprocesamiento y estimador. Pueden consultar su documentación y los ejemplos de clase.
-
-::: {.callout-warning}
-**Variables de historial:** no es obligatorio crear tasas históricas por colonia. Si deciden hacerlo, no calculen tasas usando toda la base ni usen la etiqueta de la llamada actual. Comprueben que cada valor proviene de **resultados de cierres ya conocidos al momento de predicción**, no solo de llamadas creadas antes, y que no depende del periodo de prueba. El promedio global de etiquetas futuras tampoco es un valor de relleno válido. Si no pueden garantizar esto, **omitan esas variables** y explíquenlo.
-:::
-
-### A3. Diseño de validación temporal
-
-Implementen **al menos dos cortes temporales** de entrenamiento y prueba, sin mezclar fechas al azar:
-
-- Cada entrenamiento debe utilizar exclusivamente información disponible antes del periodo de prueba.
-- Expliquen las fechas de inicio y fin, el número de observaciones y la tasa base de cada partición.
-- Asegúrense de que cualquier transformación aprendida (imputación, codificación, escalamiento, etc.) se ajuste dentro de cada entrenamiento.
-- Expliquen por qué un *split* aleatorio puede dar una estimación poco realista del desempeño futuro.
-
-Pueden tomar como referencia el esquema de cortes del notebook 03, pero deberán **programarlo ustedes**, revisando cuidadosamente los límites de las fechas: si una fecha incluye hora, no deben perder registros del último día de cada periodo.
-
-### A4. Línea base y modelos
-
-Comparen, en cada corte:
-
-1. **Línea base predictiva:** un modelo sencillo que no utilice las variables para aprender patrones (por ejemplo, `DummyClassifier`). Distingan esta línea base de la **regla operativa** sin modelo definida en A1.
-2. **Regresión logística.**
-3. **Otro algoritmo supervisado** a su elección, por ejemplo, árbol de decisión o random forest.
-
-No es necesario probar todos los algoritmos del notebook de clase ni hacer una búsqueda exhaustiva de hiperparámetros. Reporten la configuración básica que eligieron y por qué. Si la línea base asigna scores iguales a todos los casos, expliquen cómo resuelven los empates al seleccionar reportes y por qué el orden importa.
-
-### A5. Evaluación: del score a la decisión
-
-Evalúen cada modelo, **solo sobre sus periodos de prueba**, con:
-
-- **AUC ROC:** mide la capacidad del score para ordenar positivos por encima de negativos, considerando distintos umbrales.
-- **Eficiencia de verificación:** de los reportes seleccionados para revisión, ¿qué proporción tiene realmente etiqueta `F`?
-- **Cobertura:** de las falsas alarmas elegibles del periodo de prueba, ¿qué proporción se seleccionó?
-
-Para un periodo de prueba, definan $S$ como el conjunto de reportes seleccionados al aplicar **hasta ocho verificaciones por noche**. Entonces:
-
-$$\operatorname{Eficiencia}(S)=\frac{\#\{i\in S:y_i=1\}}{|S|}$$
-
-$$\operatorname{Cobertura}(S)=\frac{\#\{i\in S:y_i=1\}}{\#\{i\in\text{reportes elegibles del periodo}:y_i=1\}}$$
-
-Si un denominador es cero, indiquen que la métrica no está definida en lugar de dividir entre cero. Son extensiones de eficiencia@k y cobertura@k, **pero aquí el presupuesto se aplica por noche** y el total de seleccionados se calcula a partir de las noches efectivamente observadas. No utilicen `k=720` directamente para ordenar todo el trimestre.
-
-Incluyan una **tabla comparativa** por corte y modelo. Al menos una visualización debe ayudar a comparar resultados, no repetir la tabla sin aportar información. Expliquen qué modelo recomendarían bajo la regla de ocho verificaciones por noche y qué evidencia respalda su elección. Eviten elegirlo únicamente por AUC.
-
-### A6. Alcances y riesgos
-
-- ¿El rendimiento es estable entre cortes? ¿Qué podría explicar las diferencias?
-- ¿Qué alcaldías aparecen más y menos entre las verificaciones? Comparen **número de reportes, proporción seleccionada y tasa base** antes de interpretar diferencias como inequidad.
-- Expliquen un riesgo de utilizar estos scores en la operación y una medida para mitigarlo.
-
-No se requiere una auditoría formal de equidad ni repetir todas las métricas por alcaldía, pero sí una reflexión basada en resultados.
-
-## 4. Parte B: aprendizaje no supervisado con DBSCAN
-
-**Entregable:** `notebooks/nb04_no_supervisado_c5.ipynb`  
-**Responsable principal:** integrante B.
-
-El objetivo **no es predecir falsas alarmas** ni reproducir los resultados del modelo supervisado, sino investigar **dónde existen concentraciones espaciales de reportes** y qué características tienen. Construyan su propio proceso utilizando como referencia la sección de DBSCAN agregada al notebook 04 de clase.
-
-### B1. Pregunta y datos
-
-- Formulen una pregunta espacial concreta relacionada con la distribución de reportes del C5.
-- Definan la unidad de observación y qué variables utilizarán para construir los clusters. Para el ejercicio obligatorio, utilicen **latitud y longitud**, **sin incluir `codigo_cierre` en el ajuste del algoritmo**.
-- Revisen coordenadas faltantes, no numéricas, fuera de rango, duplicadas o claramente incorrectas. Documenten qué casos conservan.
-- Si el volumen de datos dificulta la ejecución, utilicen una **muestra reproducible** (con semilla fija), o un subconjunto temporal o espacial justificado. Expliquen qué se pierde al reducir la muestra.
-
-### B2. Su implementación de DBSCAN
-
-- Apliquen `DBSCAN` de `scikit-learn` a los puntos válidos; si usan `metric="haversine"`, conviertan latitud y longitud a **radianes** y expresen `eps` en radianes (conversión a partir de una distancia en kilómetros). Verifiquen el **orden latitud–longitud**.
-- Expliquen `eps`, `min_samples`, puntos centrales, puntos frontera y etiqueta de **ruido (`-1`)**.
-- Prueben **al menos dos configuraciones** de parámetros y reporten número de clusters, porcentaje de ruido y tamaños de clusters. Expliquen qué cambia y por qué.
-- Elijan una configuración para la interpretación, **sin afirmar que es la única ni necesariamente la óptima**.
-
-::: {.callout-note}
-El notebook de clase muestra la **sintaxis y el funcionamiento de DBSCAN** con datos sintéticos y un ejemplo geográfico pequeño. En su entrega deben resolver la selección, limpieza, parámetros, visualizaciones e interpretación **con los datos del C5**. No basta con copiar el ejemplo.
-:::
-
-### B3. Visualizar e interpretar
-
-- Construyan **al menos un mapa** o una visualización espacial clara de los clusters y del ruido. Si hay demasiados puntos, hagan una visualización legible mediante muestreo y explíquenlo.
-- Examinen el tamaño de los clusters, su relación con las alcaldías y el porcentaje de reportes con código `F` y `A` **después de haber ajustado DBSCAN**.
-- Comparen concentraciones de reportes con tasas de falsas alarmas: **un cluster con muchos reportes no significa necesariamente un cluster de alto riesgo de falsa alarma**. Consideren los denominadores.
-- Discutan cómo cambian las conclusiones cuando modifican los parámetros, la cobertura geográfica o el periodo estudiado.
-
-### B4. ¿Qué aporta y qué no aporta DBSCAN?
-
-Respondan con base en sus hallazgos:
-
-- ¿Por qué DBSCAN puede encontrar agrupamientos de formas que K-Means representaría peor? ¿Cuándo podría fallar DBSCAN (densidades distintas, sensibilidad a `eps`, coordenadas repetidas, elección de distancia)?
-- ¿Qué información espacial muestra el análisis que no está explícitamente en el desempeño agregado del clasificador?
-- ¿Por qué **los clusters no sustituyen** una predicción supervisada ni son automáticamente zonas de falsas alarmas?
-- ¿Qué limitaciones del **enfoque supervisado** (dependencia de etiquetas históricas, posibles sesgos de registro, cambios en el tiempo, variables disponibles y errores de predicción) pueden motivar un análisis exploratorio complementario? ¿Cuáles de esas limitaciones **no resuelve** DBSCAN?
-
-## 5. Integración: una recomendación conjunta
-
-Ambos integrantes deben revisar y discutir el trabajo de la otra persona. El aprendizaje no supervisado **no tiene que alimentar como predictor al modelo supervisado**; la integración puede ser conceptual y operativa.
-
-Elaboren un **memo de máximo dos páginas** con:
-
-1. **Decisión y hallazgo central:** qué recomendarían al C5 sobre la priorización de verificaciones, usando la evidencia del supervisado.
-2. **Aporte de DBSCAN:** qué patrón espacial encontraron y por qué puede ser útil para comprender o monitorear los reportes.
-3. **Limitaciones y riesgos:** al menos una limitación sustantiva de cada enfoque, incluida la diferencia entre simulación retrospectiva y decisión en tiempo real, así como un riesgo de uso indebido de las predicciones.
-4. **Siguiente paso:** qué información adicional o prueba necesitarían antes de implementar una herramienta operativa.
-
-Eviten concluir que una llamada clasificada como falsa puede descartarse sin verificación, o que una concentración espacial implica mayor propensión individual a reportar falsas emergencias.
-
-## 6. Organización, Git y reproducibilidad
-
-Conserven el **mismo repositorio de la Tarea 2**, con sus notebooks de EDA y las dependencias ya instaladas. No creen un repositorio nuevo.
-
-- **Acuerdo inicial:** revisen juntos las definiciones, los resultados del EDA y el alcance de cada notebook. Acuerden cómo describirán los códigos de cierre y el periodo de análisis.
-- **Dependencias:** si necesitan nuevas librerías, una persona las agrega una sola vez y actualiza `pyproject.toml` y `uv.lock`. Integren ese cambio a `main` antes de que ambos sincronicen con `git pull origin main` y `uv sync`. Pueden usar `uv add scikit-learn scipy` si todavía no están instaladas.
-- **Ramas:** cada integrante trabaja en una rama distinta; por ejemplo, `ml-supervisado` y `ml-dbscan`. Realicen varios commits descriptivos, abran pull requests y revisen el trabajo de su pareja antes de integrarlo a `main`.
-- **Notebooks independientes:** ambos deben ejecutarse de principio a fin, desde una sesión limpia, sin depender de variables en memoria del otro notebook. Pueden compartir archivos de funciones si lo documentan, pero no es necesario.
-- **Documentación:** actualicen conjuntamente el `README.md` con la pregunta central, el orden recomendado de lectura (`01 → 02 → 03 → 04`), las dependencias y la manera de ejecutar el proyecto.
-- **Buenas prácticas:** no suban `.venv/`, credenciales ni copias innecesarias de los datos. Utilicen celdas Markdown con títulos (`#`, `##`, `###`), decisiones y conclusiones escritas con sus palabras. Procuren que cada visualización responda una pregunta.
+En cada semana del periodo de prueba se seleccionarán retrospectivamente los **100 reportes con mayor score de falsa alarma**. El objetivo es comparar qué tan bien distintos modelos aprovechan esa capacidad de verificación.
 
 ::: {.callout-important}
-**El trabajo en equipo también se evalúa en el contenido.** Aunque una persona escriba el notebook supervisado y la otra el de DBSCAN, ambas deben comprender la base, revisar los supuestos y conectar las conclusiones. En los pull requests dejen evidencia de revisión y colaboración, no solamente de que el código se integró correctamente.
+**Limitación operativa:** en la realidad las llamadas llegan de forma continua y las decisiones deben tomarse **conforme se reciben**, sin conocer los reportes que llegarán después. Aquí ordenaremos todos los reportes de cada semana **solo como simulación retrospectiva de priorización de recursos**. No estamos implementando un sistema de decisiones en tiempo real ni proponiendo retrasar o negar la atención de emergencias.
 :::
 
-## 7. Entregables
+## 2. Parte A: aprendizaje supervisado
 
-| Entregable | Responsable principal | Ubicación |
-|---|---|---|
-| Pipeline de aprendizaje supervisado | Integrante A | `notebooks/nb03_supervisado_c5.ipynb` |
-| Pipeline de DBSCAN | Integrante B | `notebooks/nb04_no_supervisado_c5.ipynb` |
-| Documentación de contexto y ejecución | Ambos | `README.md` del mismo repositorio |
-| Memo integrado de recomendación (máximo 2 páginas) | Ambos | `Tarea3_equipo_#.pdf` en Canvas |
-| Revisión e integración del trabajo | Ambos | Ramas, commits y pull requests en GitHub |
+**Notebook:** `notebooks/nb03_supervisado_c5.ipynb`  
+**Responsable principal:** integrante A.
 
-Los notebooks y el `README.md` deben estar integrados en `main` antes de la entrega. El `#` del PDF corresponde al número de equipo asignado en Canvas.
+**Objetivo:** construir un modelo inicial siguiendo la lógica del notebook 03 de clase, proponer mejoras y **comprobar si funcionan**. Organicen su trabajo en las siguientes etapas.
 
-## 8. Rúbrica
+### A1. Formulación y modelo inicial
 
-| Criterio | Peso | Qué se evalúa |
-|---|---:|---|
-| **A. Pipeline supervisado** | **25%** | Formulación coherente, predictores disponibles, ingeniería de variables, preprocesamiento y comparación con línea base y dos algoritmos. |
-| **B. Validación y métricas** | **20%** | Cortes temporales sin fuga de información, cálculo correcto de AUC y métricas de verificación por noche, selección e interpretación del modelo. |
-| **C. Pipeline no supervisado** | **25%** | Limpieza geográfica, implementación y sensibilidad de DBSCAN, visualización e interpretación cuidadosa de clusters y ruido. |
-| **D. Integración y reflexión** | **20%** | Relación entre enfoques, limitaciones del supervisado y de DBSCAN, riesgos y recomendación basada en evidencia. |
-| **E. Reproducibilidad y colaboración** | **10%** | Notebooks ejecutables e independientes, README, commits, revisiones y pull requests, integración en `main`. |
-| **Total** | **100%** | |
+1. Identifiquen la **unidad de predicción**, la **etiqueta**, el momento de predicción, los predictores disponibles, la **tasa base** y una **línea base**.
+2. Expliquen qué harán con los códigos de cierre distintos de `F`.
+3. Construyan su propio proceso de limpieza, selección de variables, preprocesamiento y entrenamiento, tomando como referencia el notebook de clase.
+4. Comparen una línea base predictiva (por ejemplo, `DummyClassifier`) y **al menos dos algoritmos supervisados**.
 
-## 9. Formato de entrega
+**Importante:** utilicen únicamente información disponible al momento en que se crea la llamada. El código y la fecha de cierre se pueden usar para definir o analizar la etiqueta, **no como predictores**.
 
-| | |
+### A2. Ingeniería de variables y experimentos
+
+Realicen **tres implementaciones comparables**:
+
+1. **Inicial:** modelos entrenados con un conjunto básico de variables, como en el ejemplo de clase.
+2. **Nuevas variables:** incorporen **al menos tres variables nuevas**, expliquen cómo las construyeron y por qué podrían mejorar la predicción.
+3. **Mejora adicional:** realicen al menos otro experimento, por ejemplo ajustar hiperparámetros, probar otro algoritmo o cambiar la selección o representación de predictores.
+
+Comparen las tres implementaciones utilizando **los mismos periodos de prueba y métricas**. No es obligatorio mejorar los resultados; sí explicar qué cambió y qué aprendieron.
+
+::: {.callout-warning}
+Eviten *data leakage*: las transformaciones que se ajustan con datos (imputación, escalamiento, codificación, etc.) deben aprenderse **solo con entrenamiento**. Si construyen variables históricas, utilicen únicamente información que habría estado disponible **antes de cada predicción**; no calculen tasas de falsas alarmas con las etiquetas del periodo de prueba.
+:::
+
+### A3. Validación temporal y evaluación semanal
+
+Mantengan el esquema de **cuatro cortes temporales del notebook de clase**, con los trimestres de 2023 como periodos de prueba. **No utilicen una partición aleatoria** para evaluar el desempeño.
+
+Para **cada modelo, implementación y trimestre de prueba**:
+
+1. Entrenen únicamente con los datos anteriores al trimestre y generen sus scores sobre el periodo de prueba.
+2. Calculen el **AUC ROC del trimestre**.
+3. Agrupen las predicciones por **semana de creación del reporte**.
+4. En cada semana, seleccionen hasta **100 reportes con mayor score** y calculen:
+   - **Tasa base semanal:** falsas alarmas / total de reportes de esa semana.
+   - **Eficiencia@100:** falsas alarmas entre los reportes seleccionados / número de seleccionados.
+   - **Cobertura@100:** falsas alarmas seleccionadas / total de falsas alarmas de esa semana.
+5. Calculen el **promedio de las métricas semanales por trimestre**. Cuando una semana no tenga falsas alarmas, la cobertura no está definida: repórtenla como faltante y no la incluyan en su promedio.
+
+Para simplificar, pueden trabajar con las semanas observadas dentro de cada trimestre, aunque las de sus extremos estén incompletas; **indíquenlo como limitación**. Si una semana contiene menos de 100 reportes, seleccionen solo los disponibles.
+
+Presenten una tabla comparativa de las tres implementaciones por trimestre y al menos una visualización que ayude a interpretar los cambios. **No es necesario reentrenar semanalmente** ni realizar validación cruzada aleatoria.
+
+### A4. Interpretación
+
+Respondan brevemente:
+
+- ¿Cuánto mejoran (o empeoran) los modelos respecto de la tasa base y de su implementación inicial?
+- ¿Qué variables o modificaciones tuvieron mayor efecto? ¿Se mantiene el desempeño entre trimestres?
+- ¿Qué modelo recomendarían para este escenario de priorización de recursos y cuáles son las principales limitaciones de la evaluación retrospectiva?
+
+## 3. Parte B: aprendizaje no supervisado con DBSCAN
+
+**Notebook:** `notebooks/nb04_no_supervisado_c5.ipynb`  
+**Responsable principal:** integrante B.
+
+El objetivo es identificar **concentraciones espaciales de reportes**, no predecir falsas alarmas.
+
+1. **Datos:** seleccionen latitud y longitud, revisen coordenadas faltantes o incorrectas y expliquen sus decisiones de limpieza. Si el volumen es demasiado grande, usen una muestra reproducible y justifíquenla.
+2. **DBSCAN:** implementen el algoritmo con `scikit-learn`, utilizando el notebook 04 como guía. Para distancias geográficas, conviertan las coordenadas a radianes y utilicen la métrica `haversine`.
+3. **Parámetros:** prueben **al menos tres combinaciones** de `eps` y `min_samples`; comparen número de clusters, tamaños y proporción de ruido (`-1`).
+4. **Interpretación:** muestren los resultados en una visualización espacial. Una vez construidos los clusters, examinen cómo se distribuyen los códigos de cierre (`F`, `A`, etc.) dentro y fuera de ellos. Consideren tanto conteos como proporciones.
+5. **Limitaciones:** expliquen qué descubre DBSCAN, cómo influyen los parámetros y por qué **una concentración de reportes no implica necesariamente una mayor tasa de falsas alarmas**.
+
+**Pregunta para discutir:** ¿qué información aporta DBSCAN que no se observa directamente en los resultados del supervisado? ¿Qué limitaciones del aprendizaje supervisado motiva explorar, y cuáles **no resuelve** DBSCAN?
+
+## 4. Conclusión conjunta
+
+Entreguen un **memo de máximo dos páginas** que incluya:
+
+- Modelo supervisado recomendado, con evidencia de la evaluación temporal y semanal.
+- Principal hallazgo geográfico de DBSCAN y cómo complementa al supervisado.
+- Limitaciones de ambos enfoques, incluida la diferencia entre **priorización retrospectiva semanal** y **decisiones en tiempo real**.
+- Un siguiente paso que necesitarían antes de considerar una implementación operativa.
+
+## 5. Colaboración y entrega
+
+Continúen en el **mismo repositorio de la Tarea 2**. Cada integrante trabajará en una rama diferente, con commits descriptivos, *pull request* y revisión de su pareja antes de integrar los cambios en `main`. Ambos deben conocer los datos y comprender los notebooks de la otra persona.
+
+Actualicen las dependencias con `uv` cuando sea necesario, y el `README.md` para explicar el objetivo, la estructura y cómo ejecutar el proyecto. Los notebooks deben ejecutarse de inicio a fin sin depender de variables de otra sesión. Utilicen Markdown para organizar el código y escribir interpretaciones, no solo gráficas.
+
+| Entregable | Ubicación |
 |---|---|
-| **Trabajo** | En parejas |
-| **Repositorio** | El mismo de la Tarea 2 |
-| **Extensión del memo** | Máximo 2 páginas |
-| **Formato del memo** | PDF |
-| **Nombre del PDF** | `Tarea3_equipo_#.pdf` |
-| **Método de entrega** | Canvas; el código debe quedar integrado en GitHub |
-| **Fecha de entrega** | Por definir |
+| Notebook supervisado | `notebooks/nb03_supervisado_c5.ipynb` |
+| Notebook DBSCAN | `notebooks/nb04_no_supervisado_c5.ipynb` |
+| Contexto e instrucciones de ejecución | `README.md` |
+| Memo conjunto (máx. 2 páginas) | `Tarea3_equipo_#.pdf` en Canvas |
+| Evidencia de colaboración | Ramas y pull requests en GitHub |
+
+Los cambios deben estar integrados en `main` al momento de entregar el memo.
+
+## 6. Rúbrica
+
+| Criterio | Peso |
+|---|---:|
+| Modelo supervisado inicial y comprensión de sus etapas | 20% |
+| Ingeniería de variables y experimentos de mejora | 20% |
+| Validación temporal y evaluación semanal; comparación de resultados | 20% |
+| Implementación, visualización e interpretación de DBSCAN | 25% |
+| Conclusiones, reproducibilidad y colaboración | 15% |
+| **Total** | **100%** |
+
+**Fecha de entrega:** por definir en Canvas.

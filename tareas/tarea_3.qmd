@@ -16,7 +16,7 @@ Continuarán **en parejas y en el mismo repositorio de la Tarea 2**. Utilizarán
 - **Supervisado:** mejorar un modelo para identificar reportes que podrían cerrar como falsa alarma (`F`).
 - **No supervisado:** implementar **DBSCAN** para identificar concentraciones geográficas de reportes.
 
-Cada integrante será responsable principal de un notebook, pero **ambos deben comprender los dos análisis** y elaborar conclusiones conjuntas.
+**Ambos integrantes deben comprender los dos análisis** y elaborar conclusiones conjuntas.
 
 ## Materiales y datos
 
@@ -24,7 +24,6 @@ Cada integrante será responsable principal de un notebook, pero **ambos deben c
 - **Notebook 03 de clase:** ejemplo de aprendizaje supervisado, validación temporal y evaluación de modelos. **Úsenlo como referencia; no entreguen una copia.**
 - **Notebook 04 de clase:** implementación y explicación de DBSCAN.
 - Materiales del curso sobre aprendizaje supervisado, métricas, validación y aprendizaje no supervisado.
-- [Sesión técnica 02](../docs/st02.html): flujo de trabajo con Git, GitHub y `uv`.
 
 Utilicen la misma base del notebook de clase:
 
@@ -43,14 +42,9 @@ El C5 quiere utilizar un modelo para **priorizar reportes que podrían requerir 
 
 En cada semana del periodo de prueba se seleccionarán retrospectivamente los **100 reportes con mayor score de falsa alarma**. El objetivo es comparar qué tan bien distintos modelos aprovechan esa capacidad de verificación.
 
-::: {.callout-important}
-**Limitación operativa:** en la realidad las llamadas llegan de forma continua y las decisiones deben tomarse **conforme se reciben**, sin conocer los reportes que llegarán después. Aquí ordenaremos todos los reportes de cada semana **solo como simulación retrospectiva de priorización de recursos**. No estamos implementando un sistema de decisiones en tiempo real ni proponiendo retrasar o negar la atención de emergencias.
-:::
-
 ## 2. Parte A: aprendizaje supervisado
 
 **Notebook:** `notebooks/nb03_supervisado_c5.ipynb`  
-**Responsable principal:** integrante A.
 
 **Objetivo:** construir un modelo inicial siguiendo la lógica del notebook 03 de clase, proponer mejoras y **comprobar si funcionan**. Organicen su trabajo en las siguientes etapas.
 
@@ -91,10 +85,20 @@ Para **cada modelo, implementación y trimestre de prueba**:
    - **Eficiencia@100:** falsas alarmas entre los reportes seleccionados / número de seleccionados.
    - **Cobertura@100:** falsas alarmas seleccionadas / total de falsas alarmas de esa semana.
 5. Calculen el **promedio de las métricas semanales por trimestre**. Cuando una semana no tenga falsas alarmas, la cobertura no está definida: repórtenla como faltante y no la incluyan en su promedio.
+6. Curva de eficiencia y cobertura para distintos valores de k. 
 
-Para simplificar, pueden trabajar con las semanas observadas dentro de cada trimestre, aunque las de sus extremos estén incompletas; **indíquenlo como limitación**. Si una semana contiene menos de 100 reportes, seleccionen solo los disponibles.
 
-Presenten una tabla comparativa de las tres implementaciones por trimestre y al menos una visualización que ayude a interpretar los cambios. **No es necesario reentrenar semanalmente** ni realizar validación cruzada aleatoria.
+Para simplificar, pueden trabajar con las semanas observadas dentro de cada trimestre. 
+
+Presenten una tabla comparativa de las tres implementaciones por trimestre y al menos una visualización que ayude a interpretar los cambios. 
+
+**No es necesario reentrenar semanalmente** ni realizar validación cruzada aleatoria.
+
+::: {.callout-caution}
+## Limitación operativa:
+
+En la realidad las llamadas llegan de forma continua y las decisiones deben tomarse **conforme se reciben**, sin conocer los reportes que llegarán después. Aquí ordenaremos todos los reportes de cada semana **solo como simulación retrospectiva de priorización de recursos**. No estamos implementando un sistema de decisiones en tiempo real ni proponiendo retrasar o negar la atención de emergencias.
+:::
 
 ### A4. Interpretación
 
@@ -107,7 +111,6 @@ Respondan brevemente:
 ## 3. Parte B: aprendizaje no supervisado con DBSCAN
 
 **Notebook:** `notebooks/nb04_no_supervisado_c5.ipynb`  
-**Responsable principal:** integrante B.
 
 El objetivo es identificar **concentraciones espaciales de reportes**, no predecir falsas alarmas.
 
@@ -121,16 +124,19 @@ El objetivo es identificar **concentraciones espaciales de reportes**, no predec
 
 ## 4. Conclusión conjunta
 
-Entreguen un **memo de máximo dos páginas** que incluya:
+Entreguen un **memo de entre 6 y 10 párrafos** que incluya:
 
 - Modelo supervisado recomendado, con evidencia de la evaluación temporal y semanal.
 - Principal hallazgo geográfico de DBSCAN y cómo complementa al supervisado.
 - Limitaciones de ambos enfoques, incluida la diferencia entre **priorización retrospectiva semanal** y **decisiones en tiempo real**.
 - Un siguiente paso que necesitarían antes de considerar una implementación operativa.
+- Colóquenlo como archivo `.md` en la carpeta de `docs` del repositorio. 
 
 ## 5. Colaboración y entrega
 
-Continúen en el **mismo repositorio de la Tarea 2**. Cada integrante trabajará en una rama diferente, con commits descriptivos, *pull request* y revisión de su pareja antes de integrar los cambios en `main`. Ambos deben conocer los datos y comprender los notebooks de la otra persona.
+Continúen en el **mismo repositorio de la Tarea 2**. Cada integrante trabajará en una rama diferente, con commits descriptivos, *pull request* y revisión de su pareja antes de integrar los cambios en `main`. 
+
+**Ambos son responsabes de los notebooks**, deben conocer los datos y comprender los notebooks de la otra persona, ustedes organicense en la colaboración. 
 
 Actualicen las dependencias con `uv` cuando sea necesario, y el `README.md` para explicar el objetivo, la estructura y cómo ejecutar el proyecto. Los notebooks deben ejecutarse de inicio a fin sin depender de variables de otra sesión. Utilicen Markdown para organizar el código y escribir interpretaciones, no solo gráficas.
 
@@ -139,20 +145,23 @@ Actualicen las dependencias con `uv` cuando sea necesario, y el `README.md` para
 | Notebook supervisado | `notebooks/nb03_supervisado_c5.ipynb` |
 | Notebook DBSCAN | `notebooks/nb04_no_supervisado_c5.ipynb` |
 | Contexto e instrucciones de ejecución | `README.md` |
-| Memo conjunto (máx. 2 páginas) | `Tarea3_equipo_#.pdf` en Canvas |
+| Memo conjunto | `docs/memo_trabajo.pdf` |
 | Evidencia de colaboración | Ramas y pull requests en GitHub |
 
-Los cambios deben estar integrados en `main` al momento de entregar el memo.
+Los cambios deben estar integrados en `main` al momento de entregar el reporte.
 
 ## 6. Rúbrica
 
 | Criterio | Peso |
 |---|---:|
-| Modelo supervisado inicial y comprensión de sus etapas | 20% |
-| Ingeniería de variables y experimentos de mejora | 20% |
-| Validación temporal y evaluación semanal; comparación de resultados | 20% |
-| Implementación, visualización e interpretación de DBSCAN | 25% |
-| Conclusiones, reproducibilidad y colaboración | 15% |
+| Modelo supervisado inicial y comprensión de sus etapas | 15% |
+| Ingeniería de variables y experimentos de mejora | 15% |
+| Validación temporal y evaluación semanal; comparación de resultados | 15% |
+| Implementación, visualización e interpretación de DBSCAN | 30% |
+| Conclusiones y colaboración | 15% |
+| Reproducibilidad | 10% |
 | **Total** | **100%** |
 
-**Fecha de entrega:** por definir en Canvas.
+
+
+

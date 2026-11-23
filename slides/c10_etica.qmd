@@ -76,6 +76,86 @@ La privacidad no es un estado binario (datos públicos vs. datos secretos). Es u
 A medida que descendemos en estos niveles, los controles deben ser más estrictos, porque el daño potencial es mayor y más difícil de detectar.
 :::
 
+## Anonimizar no basta
+
+- Quitar el nombre o el RFC no garantiza el anonimato.
+- Con solo **código postal, sexo y fecha de nacimiento**, Sweeney (2000) identificó de forma única a cerca del 87% de la población de Estados Unidos [@sweeneySimpleDemographics2000].
+- Narayanan y Shmatikov (2008) re-identificaron usuarios del conjunto de calificaciones de Netflix cruzándolo con datos públicos de IMDb [@narayananRobustDeanonymization2008].
+
+::: {.notes}
+El riesgo no está en un archivo aislado, sino en la combinación de variables. Pregunta a la clase: ¿qué variables de sus registros administrativos podrían funcionar como identificador aunque no tengan nombre?
+:::
+
+## Dos formas de proteger datos
+
+:::: {.columns}
+::: {.column width="50%"}
+
+**k-anonimato** [@sweeneyKAnonymity2002]
+
+- Cada registro debe ser indistinguible de al menos otros $k-1$ con las mismas variables cuasi-identificadoras.
+- Falla si todos los registros de un grupo comparten el mismo valor sensible.
+
+:::
+::: {.column width="50%"}
+
+**Privacidad diferencial** [@dworkDifferentialPrivacy2006]
+
+- El resultado de un análisis casi no cambia si una persona entra o sale del conjunto de datos.
+- Se controla con un parámetro $\varepsilon$: menor $\varepsilon$, más privacidad y más ruido.
+
+:::
+::::
+
+::: {.notes}
+Ambas tienen un costo: la anonimización reduce utilidad, y la privacidad diferencial vuelve ruidosas las estimaciones pequeñas, por ejemplo las de una colonia o un municipio pequeño. Eso conecta directamente con la focalización de programas: más privacidad puede significar menos precisión local. Verificar antes de clase qué tan extendido está el uso de privacidad diferencial en censos oficiales.
+:::
+
+## Privacidad como integridad contextual
+
+- Nissenbaum (2004): la privacidad no es secreto, sino que los flujos de información respeten las normas del contexto en que se generaron [@nissenbaumPrivacyContextualIntegrity2004].
+- Un dato puede ser técnicamente accesible y aun así usarse de forma inapropiada.
+- Ejemplo: los datos de un programa de becas no deberían usarse para vigilar a sus beneficiarios, aunque sean públicos.
+
+**Pregunta clave:** ¿el nuevo uso coincide con lo que esperaba quien dio el dato?
+
+::: {.notes}
+Esta idea responde a la primera pregunta de la lista de la sección anterior: ¿estás utilizando los datos para los fines para los que fueron recopilados? Un dato de un trámite administrativo cambia de significado cuando se vuelve insumo de un modelo predictivo.
+:::
+
+## Minimización de datos y finalidad
+
+- Recolectar solo lo necesario para el fin declarado.
+- Definir un **plazo de conservación** y quién puede acceder a cada base.
+- Separar los identificadores de los datos analíticos (seudonimización).
+- Documentar la **finalidad** de cada base: un registro administrativo se crea para un trámite, no para entrenar un modelo.
+
+::: {.notes}
+La seudonimización no equivale a anonimización: los datos seudonimizados siguen siendo datos personales si pueden re-vincularse. El RGPD lo aclara en su considerando 26. Es el punto más práctico de la sección: casi nunca se necesita el nombre para construir un modelo.
+:::
+
+## Marco legal de la privacidad en el sector público
+
+- En México, el tratamiento de datos por entidades públicas se rige por la **Ley General de Protección de Datos Personales en Posesión de Sujetos Obligados** (2017). Revisar las reformas recientes antes de citarla.
+- En la Unión Europea, el **RGPD** limita las decisiones basadas únicamente en tratamiento automatizado con efectos significativos (artículo 22).
+- Ambos marcos exigen finalidad, proporcionalidad y derechos de la persona sobre sus datos (en México, derechos ARCO: acceso, rectificación, cancelación y oposición).
+
+::: {.notes}
+Insistir en que el marco jurídico es el piso mínimo: cumplir la ley no garantiza que un sistema sea justo ni que sea ético. Antes de dar la clase, verificar el texto vigente y los artículos citados.
+:::
+
+## Ejercicio: ¿es privado?
+
+**Caso hipotético:** un municipio cruza el padrón de beneficiarios de un programa de apoyo con datos de consumo de agua para decidir a qué hogares visitar primero.
+
+- ¿Qué nivel de control de privacidad se vulnera: recopilar, dar acceso o inferir?
+- ¿Cambió la finalidad con la que se recopilaron los datos?
+- ¿Qué habría que hacer para que el caso sea aceptable?
+
+::: {.notes}
+Tiempo sugerido: 10 minutos en parejas, 5 minutos de discusión. Pedir que justifiquen su respuesta con uno de los niveles de control y con la idea de integridad contextual.
+:::
+
 ## Transparencia
 
 
@@ -95,6 +175,59 @@ Responder preguntas en múltiples niveles:
 
 La falta de transparencia en cualquiera de estos niveles **es un riesgo ético**, no solo técnico.
 
+
+## Transparencia no es lo mismo que explicabilidad
+
+| Concepto | Pregunta que responde |
+|---|---|
+| Transparencia | ¿Qué sistema existe, para qué sirve y quién lo opera? |
+| Explicabilidad | ¿Por qué se tomó esta decisión concreta? |
+| Rendición de cuentas | ¿Quién responde cuando el sistema falla? |
+
+::: {.notes}
+Una institución puede ser transparente (publica que usa un sistema) sin ser explicable (nadie puede decir por qué un caso salió mal). La rendición de cuentas necesita ambas. Ejemplo: un registro público que dice "usamos un modelo de riesgo" es transparencia; que el solicitante sepa qué variables pesaron en su caso es explicabilidad.
+:::
+
+## Explicaciones globales y locales
+
+- **Globales:** qué variables pesan más en el modelo en general.
+- **Locales:** por qué un caso específico recibió una puntuación determinada.
+- Herramientas comunes: LIME [@ribeiroWhyShouldTrust2016] y SHAP [@lundbergUnifiedApproach2017].
+- **Advertencia:** una explicación puede ser fiel al modelo y aun así no ser comprensible ni útil para la persona afectada.
+
+::: {.notes}
+Distinguir entre explicar el modelo y justificar la decisión. SHAP dice qué contribuyó a la predicción; no dice si esa contribución era legítima. Pregunta a la clase: si tuvieran que explicarle a un solicitante rechazado por qué su caso salió así, ¿qué le dirían en lenguaje claro?
+:::
+
+## ¿Existe un "derecho a una explicación"?
+
+- El RGPD exige informar sobre la "lógica" de las decisiones automatizadas (artículos 13 a 15) y regula las decisiones basadas solo en automatización (artículo 22).
+- Wachter, Mittelstadt y Floridi (2017) argumentan que el RGPD no garantiza una explicación ex post de cada decisión, sino solo información general sobre el sistema [@wachterWhyRight2017].
+- **Debate:** ¿qué información es suficiente para que una persona pueda impugnar una decisión?
+
+::: {.notes}
+El debate jurídico es real: la interpretación de si existe un derecho a explicación individual sigue abierta. Para política pública, la pregunta práctica es la misma: si no puedo entender la decisión, ¿puedo impugnarla? Ese es el derecho que más importa en la práctica.
+:::
+
+## Registros públicos de algoritmos
+
+- Ámsterdam y Helsinki publicaron en 2020 registros públicos de los sistemas algorítmicos que usa su gobierno.
+- Un registro suele incluir: propósito, tipo de datos, responsables y evaluación de riesgos.
+- **Límite:** un registro informa, pero no audita. Saber que existe un sistema no dice si funciona bien para todos.
+
+::: {.notes}
+Verificar las fechas y el contenido exacto de los registros de Ámsterdam y Helsinki antes de citarlos. Pregunta a la clase: si su gobierno local publicara un registro, ¿qué campo les gustaría ver primero?
+:::
+
+## Secreto comercial frente a escrutinio público
+
+- COMPAS es propietario: ProPublica tuvo que analizar sus resultados sin acceso al algoritmo.
+- En *State v. Loomis* (Wisconsin, 2016), la Suprema Corte del estado permitió usar COMPAS en sentencias, pero con advertencias, y sin que la defensa pudiera revisar la fórmula [@loomisWisconsin2016].
+- **Tensión:** propiedad intelectual de proveedores privados frente al derecho de defensa y al escrutinio público.
+
+::: {.notes}
+Este caso conecta con todo lo de sesgo: sin acceso al sistema, la única forma de auditarlo es desde afuera, con datos de resultados. Pregunta para discutir: ¿un proveedor privado debe poder mantener secreto sobre un sistema que decide sobre libertad o sobre apoyos sociales?
+:::
 
 # Sesgo, justicia y equidad {background-color="#fdede8"}
 
@@ -174,12 +307,12 @@ A partir de los aciertos y errores de un modelo, podemos calcular tasas que nos 
 |--------------------------------|------------------------------------------------------------------------------------|
 | Statistical/Demographic Parity | Igual proporción de decisiones positivas entre grupos.                             |
 | Impact Parity                  | Igual proporción de impacto de la decisión en distintos grupos.                    |
-| False Discovery Rate Parity    | Igual tasa de falsos positivos sobre todas las predicciones positivas por grupo.   |
-| False Omission Rate Parity     | Igual tasa de falsos negativos sobre todas las predicciones negativas por grupo.   |
+| False Discovery Rate Parity    | Igual proporción de errores entre las predicciones positivas: de los casos marcados como positivos, cuántos son realmente negativos. |
+| False Omission Rate Parity     | Igual proporción de errores entre las predicciones negativas: de los casos marcados como negativos, cuántos son realmente positivos. |
 | False Positive Rate Parity     | Igual tasa de falsos positivos sobre los casos realmente negativos por grupo.      |
 | False Negative Rate Parity     | Igual tasa de falsos negativos sobre los casos realmente positivos por grupo.      |
 
-Todas estas métricas son válidas. El problema es que **no se pueden satisfacer todas al mismo tiempo** cuando los grupos tienen prevalencias distintas [@chouldechovaFairPredictionDisparate2017; @kleinbergHumanDecisionsand2018].
+Todas estas métricas son válidas. El problema es que **no se pueden satisfacer todas al mismo tiempo** cuando los grupos tienen prevalencias distintas [@chouldechovaFairPredictionDisparate2017; @kleinbergInherentTradeOffs2017].
 
 
 
@@ -219,7 +352,7 @@ ProPublica identificó disparidades considerables:
 Sin embargo, Northpointe señaló que el modelo estaba bien balanceado en **precisión entre razas**: 
 
 - De todos los que el modelo acusó, ¿cuántos eran inocentes?
-    - ¿cuanto te señalo como peligroso, ¿qué tan seguido me equivoco?
+    - Dicho de otra forma: si te señala como de alto riesgo, ¿qué tan seguido se equivoca?
 
 ::: {.notes}
 Del libro @fosterBigDataSocial2021:
@@ -256,14 +389,14 @@ Del libro @fosterBigDataSocial2021:
 La respuesta es **no**: matemáticamente es imposible satisfacer ambas condiciones cuando los grupos tienen tasas de reincidencia distintas.
 
 ::: {.notes}
-Nota importante: COMPAS **NO** usa machine learning. Es un modelo estadístico basado en encuestas de riesgo.
+Nota importante: COMPAS no es un modelo de machine learning moderno. Es un instrumento propietario que combina un cuestionario con un modelo estadístico; sus detalles no son públicos.
 :::
 
 ## La incompatibilidad es matemática, no técnica
 
 ![Incompatibilidad entre métricas de equidad](img/Lecture19-FairnessOverview8.png)
 
-Chouldechova (2017) y Kleinberg et al. (2016/2018) demostraron de forma independiente que, cuando dos grupos tienen **tasas base distintas** en el resultado de interés, ningún clasificador puede satisfacer simultáneamente calibración e igualdad en tasas de error, salvo en el caso trivial de predicción perfecta [@chouldechovaFairPredictionDisparate2017; @kleinbergHumanDecisionsand2018].
+Chouldechova (2017) y Kleinberg, Mullainathan y Raghavan (2017) demostraron de forma independiente que, cuando dos grupos tienen **tasas base distintas** en el resultado de interés, ningún clasificador puede satisfacer simultáneamente calibración e igualdad en tasas de error. Las únicas excepciones son dos casos especiales: predicción perfecta o tasas base iguales [@chouldechovaFairPredictionDisparate2017; @kleinbergInherentTradeOffs2017].
 
 ## Entonces... ¿qué significa esto?
 
@@ -378,6 +511,120 @@ Estas ideas suenan razonables pero son incorrectas o incompletas:
 
 
 
+# IA generativa, documentación y regulación {background-color="#fdede8"}
+
+## ¿Qué cambia con la IA generativa?
+
+- Los modelos de lenguaje y de imagen se entrenan con corpus enormes, rara vez documentados.
+- Producen texto plausible pero no verificado: las **alucinaciones** son un riesgo central.
+- Pueden reproducir sesgos del corpus y amplificarlos en textos que parecen neutrales.
+- Escalan rápido: una decisión de diseño llega a millones de usuarios a la vez.
+
+::: {.notes}
+Las métricas de las secciones anteriores son para clasificación binaria: una predicción por caso, con un resultado verdadero. En IA generativa la salida es abierta y no hay una etiqueta única contra la cual medir el error. Por eso la evaluación y la documentación se vuelven tan importantes.
+:::
+
+## Los riesgos de escalar modelos de lenguaje
+
+Bender, Gebru, McMillan-Major y Mitchell (2021) plantean tres preocupaciones [@benderStochasticParrots2021]:
+
+- **Costos ambientales y financieros** de entrenar modelos cada vez más grandes.
+- **Datos opacos:** no sabemos bien qué contienen ni quién los produjo.
+- **Riesgo de reproducir patrones** sin comprensión, y de ocultar sesgos detrás de textos fluidos.
+
+::: {.notes}
+El artículo es polémico. Su metáfora de los "loros estocásticos" ha sido criticada: Yoav Goldberg (2021) argumenta que muchos de sus riesgos son de los modelos de lenguaje en general, no exclusivos de los grandes. Presentarlo como un debate abierto, no como una verdad establecida. Pregunta a la clase: ¿cuánto cuesta en energía y datos un modelo que su institución podría usar?
+:::
+
+## Documentar para rendir cuentas
+
+| Documento | Qué describe | Propuesto por |
+|---|---|---|
+| *Datasheet for datasets* | Origen, composición, recolección, usos previstos y no previstos del conjunto de datos | Gebru et al. [@gebruDatasheets2021] |
+| *Model card* | Uso previsto, desempeño por subgrupos, limitaciones y condiciones de evaluación | Mitchell et al. [@mitchellModelCards2019] |
+
+::: {.notes}
+Son documentación, no garantías. Un documento completo no evita un mal uso, pero obliga a la institución a responder preguntas que de otro modo se omiten, como ¿para qué NO debe usarse este modelo? Conectar con la sección de transparencia: estos documentos son la forma práctica de hacerla.
+:::
+
+## Auditorías algorítmicas
+
+Raji et al. (2020) proponen una auditoría interna de punta a punta: desde la definición del problema hasta el monitoreo posterior al despliegue [@rajiClosingAIAccountability2020].
+
+- Auditoría **interna** (antes del despliegue) y **externa** (por terceros).
+- Evidencia documentada en cada etapa del ciclo de vida.
+- Brecha: el *AI Index 2025* de Stanford reporta que las empresas reconocen los riesgos de IA responsable, pero actúan poco sobre ellos [@stanfordAIIndex2025].
+
+::: {.notes}
+Esta brecha entre reconocer y actuar es uno de los hallazgos más citados sobre la práctica actual. Pregunta para la clase: ¿qué evidencia pediría antes de aprobar el despliegue de un sistema en su institución?
+:::
+
+## Ética de fachada (*ethics washing*)
+
+- **Principios sin procesos:** códigos de ética que no cambian ninguna decisión.
+- **Comités sin poder:** comités de ética que no pueden vetar un proyecto.
+- **Señales de que la ética es decorativa:** no hay evaluación de impacto, no hay participación de las personas afectadas y no hay consecuencias cuando algo falla.
+
+::: {.notes}
+Esta crítica aplica a gobiernos, universidades y empresas por igual. Pregunta para la clase: ¿qué compromiso concreto de un proyecto propio sería verificable dentro de seis meses?
+:::
+
+## Principios internacionales: soft law
+
+- **OCDE** (2019, actualizados en 2024): principios para una IA confiable, inclusiva, transparente, robusta y con rendición de cuentas [@oecdAIPrinciples2019].
+- **UNESCO** (2021): Recomendación sobre la ética de la IA, adoptada por los Estados miembros. Pone énfasis en derechos humanos, diversidad, medio ambiente y supervisión humana [@unescoRecommendationEthicsAI2021].
+- Son **no vinculantes**: su fuerza depende de quien los implemente.
+
+::: {.notes}
+Verificar la fecha exacta de la actualización de los principios de la OCDE antes de citarla. La distinción clave es entre principios (qué queremos) y leyes (qué es obligatorio).
+:::
+
+## Regulación vinculante: la AI Act de la Unión Europea
+
+- Enfoque basado en **riesgo**: prácticas prohibidas, alto riesgo, riesgo limitado y riesgo mínimo [@euAIAct2024].
+- Las prácticas prohibidas, como la puntuación social por parte de autoridades públicas, aplican desde febrero de 2025.
+- Los sistemas de **alto riesgo** incluyen el acceso a servicios públicos esenciales y prestaciones sociales. Sus obligaciones se han pospuesto con el paquete *Omnibus*: verificar las fechas vigentes en el Diario Oficial.
+
+::: {.notes}
+Para una audiencia de política pública, este es el punto más relevante: un sistema que decide sobre apoyos sociales cae en la categoría de alto riesgo. Las fechas están en revisión, así que antes de la clase hay que consultar la versión vigente.
+:::
+
+## Regulación en la práctica: evaluación de impacto algorítmico
+
+- **Canadá:** la Directiva sobre Decisiones Automatizadas (2019) exige una evaluación de impacto algorítmico antes de desplegar sistemas en la administración federal [@canadaDirectiveADM2019].
+- Preguntas para diseñar una evaluación:
+    - ¿Qué decisión se automatiza?
+    - ¿Qué tan reversible es el error?
+    - ¿Quiénes son las personas afectadas?
+    - ¿Qué datos se usan y qué medidas de mitigación existen?
+
+::: {.notes}
+La evaluación de impacto obliga a pensar en el sistema completo, no solo en el modelo, lo que conecta con la idea de "un sistema justo" de la sección de sesgo. Pedir a la clase que proponga una evaluación de impacto para un caso de su institución.
+:::
+
+## Debate: ¿principios, leyes o auditorías?
+
+- **Principios:** flexibles, pero sin dientes.
+- **Leyes:** exigibles, pero lentas, y pueden quedar rezagadas frente a la tecnología.
+- **Auditorías:** dan evidencia concreta, pero dependen de métricas que ya vimos que son incompatibles entre sí.
+- ¿Qué instrumento conviene para cada nivel de riesgo?
+
+::: {.notes}
+Cerrar el bloque conectando con la primera sección: elegir una métrica de equidad también es una decisión política sobre qué instrumento y qué costos se aceptan. No hay un instrumento único; la combinación depende del contexto.
+:::
+
+# Preguntas para discutir {background-color="#fdede8"}
+
+1. Si un modelo predice mejor, pero sus errores caen más en un grupo, ¿qué prioriza su institución?
+2. ¿Qué datos administrativos de su trabajo podrían usarse para identificar personas aunque no tengan nombre?
+3. Si un algoritmo recomienda y un funcionario decide, ¿quién es responsable del resultado?
+4. ¿Debe toda persona poder pedir que una decisión automatizada sea revisada por un humano?
+5. Un gobierno quiere usar IA generativa para resumir expedientes de solicitantes de apoyo. ¿Qué evaluarían antes de aprobarlo?
+
+::: {.notes}
+Tiempo sugerido: 15 minutos. Pedir que respondan primero en silencio por escrito, luego en parejas. Anotar las respuestas: sirven como insumo para la discusión del siguiente bloque.
+:::
+
 ## Lo que aprendimos hoy
 
 1. Las preguntas éticas en datos no son nuevas, pero la **escala y opacidad** de los sistemas de IA las amplifican.
@@ -386,6 +633,8 @@ Estas ideas suenan razonables pero son incorrectas o incompletas:
 4. Existen **muchas métricas de equidad** y son matemáticamente incompatibles cuando los grupos tienen prevalencias distintas.
 5. La elección de métricas es una **decisión de valores**, no solo técnica: depende de quién asume el costo de los errores.
 6. El objetivo final es un **sistema justo**, no solo un modelo justo.
+7. La **anonimización** no basta: la re-identificación y la finalidad de los datos son riesgos centrales.
+8. La **IA generativa** amplifica los problemas de datos, sesgo y documentación; la **documentación**, las **auditorías** y la **regulación** son instrumentos concretos, más allá de los principios.
 
 ## Recursos útiles
 
